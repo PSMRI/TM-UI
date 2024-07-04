@@ -11,7 +11,7 @@ mat-input-container {
 }
 
 mat-card {
-  min-height: 400px;
+  /* min-height: 400px; */
   /* padding: 15px; */
 }
 
@@ -115,8 +115,8 @@ ul li div {
 }
 
 .centered {
-  justify-content: center;
-  display: flex;
+  text-align: center;
+  /* display: flex; */
 }
 
 .visitStatus.p-f-c::before {

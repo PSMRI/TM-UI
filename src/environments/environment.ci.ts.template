@@ -387,9 +387,7 @@ export const environment = {
   startHemoglobinurl: "/api/v1/wbpoct_tests/hemoglobin",
   startBloodGlucoseurl: "/api/v1/wbpoct_tests/blood_glucose",
   startRBSurl: '/api/v1/wbpoct_tests/blood_glucose',
-  //file upload
-  saveFile: `${COMMON_API}kmfilemanager/addFile`,
-  viewFileData: `${TM_API}common/getKMFile`,
+
 
   /*Doctor signature download */
   downloadSignUrl: `${COMMON_API}signature1/`,

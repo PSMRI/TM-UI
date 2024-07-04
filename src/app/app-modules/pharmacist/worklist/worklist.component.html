@@ -42,11 +42,12 @@
   <div class="row m-t-10 m-b-40">
     <div class="col-sm-12">
       <mat-card>
-        <section class="table-responsive">
+        <section class="">
           <table
             mat-table
             [dataSource]="dataSource"
             aria-describedby="pharmacistWorklist"
+            class="table table-striped"
           >
             <ng-container matColumnDef="sno">
               <th

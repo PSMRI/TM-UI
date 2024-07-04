@@ -492,7 +492,7 @@ h5 {
 }
 
 .mat-expansion-panel-body {
-  padding: 0 24px 0px !important;
+  padding: 0 24px 13px !important;
 }
 
 
@@ -706,7 +706,7 @@ control.mat-mdc-form-field-input-control {
   background-color: unset !important;
 }
 .mat-mdc-text-field-wrapper:not(.mdc-text-field--outlined) .mat-mdc-form-field-infix {
-  padding-top: 24px;
+  padding-top: 26px;
   padding-bottom: unset !important;
 }
 .mat-mdc-form-field-infix {
@@ -734,5 +734,8 @@ control.mat-mdc-form-field-input-control {
 }
 .mdc-text-field--filled .mdc-floating-label {
   font-family: SF-UI-Display-Regular !important;
+}
+.table>thead {
+  border-bottom: 2px solid #ddd !important;
 }
 

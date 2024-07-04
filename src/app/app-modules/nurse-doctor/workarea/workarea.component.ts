@@ -4088,7 +4088,9 @@ export class WorkareaComponent
   openBenPreviousisitDetails() {
     this.mdDialog.open(OpenPreviousVisitDetailsComponent, {
       disableClose: true,
-      width: '95%',
+      width: '100%',
+      height: 'auto',
+      maxWidth: '90vw',
       panelClass: 'preview-casesheet',
       data: {
         previous: true,

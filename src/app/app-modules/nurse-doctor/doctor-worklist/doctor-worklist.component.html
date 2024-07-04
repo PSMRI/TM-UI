@@ -41,9 +41,10 @@
   <div class="row">
     <div class="col-sm-12 m-t-10 m-b-40">
       <mat-card>
-        <section class="table-responsive" style="padding-bottom: 40px">
-          <div class="mat-elevation-z8 responsiveTable">
+        <section class="" style="padding-bottom: 40px">
+          <div class="">
             <table
+              class="table table-striped"
               mat-table
               [dataSource]="dataSource"
               aria-describedby="doctorWorklist"
@@ -191,12 +192,7 @@
                 >
                   {{ currentLanguageSet?.bendetails?.beneficiaryArrived }}
                 </th>
-                <td
-                  class="centered"
-                  mat-cell
-                  *matCellDef="let element"
-                  style="margin-top: 40px"
-                >
+                <td class="centered" mat-cell *matCellDef="let element">
                   <mat-checkbox
                     [disabled]="
                       element.statusCode === 1 ||
@@ -416,18 +412,18 @@
               </ul>
             </div>
           </div>
+          <div class="col-12" style="margin-top: 10px">
+            <mat-paginator
+              style="display: unset !important"
+              [pageSizeOptions]="[5, 10, 20]"
+              [hidden]="dataSource.data.length === 0"
+              [pageSize]="5"
+              showFirstLastButtons
+              aria-label="Select patient in doctorWorklist"
+            >
+            </mat-paginator>
+          </div>
         </section>
-        <div class="col-12" style="margin-top: 10px">
-          <mat-paginator
-            style="display: unset !important"
-            [pageSizeOptions]="[5, 10, 20]"
-            [hidden]="dataSource.data.length === 0"
-            [pageSize]="5"
-            showFirstLastButtons
-            aria-label="Select patient in doctorWorklist"
-          >
-          </mat-paginator>
-        </div>
       </mat-card>
     </div>
   </div>
