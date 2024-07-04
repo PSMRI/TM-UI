@@ -739,3 +739,7 @@ control.mat-mdc-form-field-input-control {
   border-bottom: 2px solid #ddd !important;
 }
 
+.mat-mdc-text-field-wrapper {
+  width: 100%;
+  padding-right: unset !important;
+}
