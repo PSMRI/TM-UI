@@ -521,7 +521,7 @@ export class QuickConsultComponent
           this.edlMaster = this.masterData.NonEdlMaster;
 
           this.loadVitalsFromNurse();
-          if (this.quickConsultMode === 'view') {
+          if (this.quickConsultMode == "view") {
             const specialistFlagString =
               localStorage.getItem('specialist_flag');
             const beneficiaryRegID = localStorage.getItem('beneficiaryRegID');

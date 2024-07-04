@@ -403,6 +403,39 @@
             </div>
           </mat-step>
 
+          <mat-step *ngIf="showQuickConsult">
+            <ng-template matStepLabel>{{
+              current_language_set?.historyData?.QuickConsultDetails
+                ?.quickconsult
+            }}</ng-template>
+            <app-doctor-quick-consult
+              [quickConsultMode]="quickConsultMode"
+              [patientQuickConsultForm]="patientQuickConsultForm"
+            ></app-doctor-quick-consult>
+
+            <div class="row m-t-20">
+              <div class="col-sm-12 step-btn m-b-40">
+                <button
+                mat-raised-button
+                class="mat_blue"
+                matStepperNext
+                type="button"
+              >
+                {{ current_language_set?.common?.next }}
+              </button>
+
+                <button
+                  mat-raised-button
+                  class="mat_blue"
+                  matStepperPrevious
+                  type="button"
+                >
+                  {{ current_language_set?.common?.back }}
+                </button>
+              </div>
+            </div>
+          </mat-step>
+
           <mat-step
             *ngIf="showRefer"
             label="{{ current_language_set?.Refeails?.refer }}"
@@ -429,7 +462,7 @@
                   {{ doctorSaveAndTCSave }}
                 </button>
                 <button
-                  *ngIf="isDoctorUpdate"
+                  *ngIf="isDoctorUpdate && visitCategory != 'General OPD (QC)'"
                   mat-raised-button
                   color="primary"
                   class="mat_blue"
@@ -441,6 +474,19 @@
                 </button>
 
                 <button
+                *ngIf="isDoctorUpdate && visitCategory == 'General OPD (QC)'"
+                mat-raised-button
+                color="primary"
+                class="mat_blue"
+                [disabled]="disableSubmitButton"
+                (click)="updateQuickConsultDiagnosisForm()"
+                type="submit"
+              >
+                {{ doctorUpdateAndTCSubmit }}
+              </button>
+
+
+                <button
                   mat-raised-button
                   color="primary"
                   class="mat_blue"
@@ -453,50 +499,7 @@
             </div>
           </mat-step>
 
-          <mat-step *ngIf="showQuickConsult">
-            <ng-template matStepLabel>{{
-              current_language_set?.historyData?.QuickConsultDetails
-                ?.quickconsult
-            }}</ng-template>
-            <app-doctor-quick-consult
-              [quickConsultMode]="quickConsultMode"
-              [patientQuickConsultForm]="patientQuickConsultForm"
-            ></app-doctor-quick-consult>
-
-            <div class="row m-t-20">
-              <div class="col-sm-12 step-btn m-b-40">
-                <button
-                  *ngIf="isDoctorSave"
-                  mat-raised-button
-                  class="mat_blue"
-                  [disabled]="disableSubmitButton"
-                  (click)="submitDoctorDiagnosisForm()"
-                  type="button"
-                >
-                  {{ doctorSaveAndTCSave }}
-                </button>
-                <button
-                  *ngIf="isDoctorUpdate"
-                  mat-raised-button
-                  class="mat_blue"
-                  [disabled]="disableSubmitButton"
-                  (click)="updateQuickConsultDiagnosisForm()"
-                  type="button "
-                >
-                  {{ doctorUpdateAndTCSubmit }}
-                </button>
-
-                <button
-                  mat-raised-button
-                  class="mat_blue"
-                  matStepperPrevious
-                  type="button"
-                >
-                  {{ current_language_set?.common?.back }}
-                </button>
-              </div>
-            </div>
-          </mat-step>
+      
         </mat-horizontal-stepper>
       </form>
     </div>

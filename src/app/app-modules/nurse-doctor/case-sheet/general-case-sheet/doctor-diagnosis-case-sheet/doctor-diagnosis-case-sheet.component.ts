@@ -27,6 +27,7 @@ import { ConfirmationService } from 'src/app/app-modules/core/services';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 import { RegistrarService } from 'src/app/app-modules/registrar/shared/services/registrar.service';
 import { NurseService, MasterdataService } from '../../../shared/services';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-doctor-diagnosis-case-sheet',
@@ -94,6 +95,9 @@ export class DoctorDiagnosisCaseSheetComponent
   cough_pattern: any;
   cough_severity_score: any;
   record_duration: any;
+  referDetails: any;
+  serviceList = '';
+  referralReasonList = '';
 
   constructor(
     private doctorService: DoctorService,
@@ -320,6 +324,66 @@ export class DoctorDiagnosisCaseSheetComponent
             );
         }
       }
+
+
+  
+      if (this.visitCategory === 'General OPD (QC)' && this.casesheetData && this.casesheetData.doctorData) {
+        this.referDetails = this.casesheetData.doctorData.Refer;
+        if (
+          this.referDetails &&
+          this.referDetails.refrredToAdditionalServiceList
+        ) {
+          console.log(
+            'institute',
+            this.referDetails.refrredToAdditionalServiceList,
+          );
+          for (
+            let i = 0;
+            i < this.referDetails.refrredToAdditionalServiceList.length;
+            i++
+          ) {
+            if (this.referDetails.refrredToAdditionalServiceList[i].serviceName) {
+              this.serviceList +=
+                this.referDetails.refrredToAdditionalServiceList[i].serviceName;
+              if (
+                i >= 0 && 
+                i < this.referDetails.refrredToAdditionalServiceList.length - 1
+              )
+                this.serviceList += ',';
+            }
+          }
+        }
+
+        if (this.referDetails && this.referDetails.referralReason) {
+          console.log('institute', this.referDetails.referralReason);
+          for (let i = 0; i < this.referDetails.referralReason.length; i++) {
+            if (this.referDetails.referralReason[i]) {
+              this.referralReasonList += this.referDetails.referralReason[i];
+              if (i >= 0 && i < this.referDetails.referralReason.length - 1)
+                this.referralReasonList += ',';
+            }
+          }
+        }
+      }
+      console.log(
+        'referDetailsForRefer',
+        JSON.stringify(this.referDetails, null, 4),
+      );
+  
+      if (
+        this.casesheetData &&
+        this.casesheetData.doctorData.Refer &&
+        this.referDetails.revisitDate &&
+        !moment(this.referDetails.revisitDate, 'DD/MM/YYYY', true).isValid()
+      ) {
+        const sDate = new Date(this.referDetails.revisitDate);
+        this.referDetails.revisitDate = [
+          this.padLeft.apply(sDate.getDate()),
+          this.padLeft.apply(sDate.getMonth() + 1),
+          this.padLeft.apply(sDate.getFullYear()),
+        ].join('/');
+      }
+
       this.downloadSign();
       this.getVaccinationTypeAndDoseMaster();
     }

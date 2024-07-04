@@ -103,10 +103,14 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
         }
       }
 
+      this.beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
+      this.visitID = localStorage.getItem('visitID');
+      this.visitCategory = localStorage.getItem('visitCategory');
       if (
         localStorage.getItem('referredVisitCode') === 'undefined' ||
         localStorage.getItem('referredVisitCode') === null
       ) {
+       
         this.getTestResults(
           this.beneficiaryRegID,
           this.visitID,

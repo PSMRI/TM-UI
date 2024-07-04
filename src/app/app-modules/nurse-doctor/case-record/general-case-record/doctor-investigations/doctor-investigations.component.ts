@@ -332,7 +332,7 @@ export class DoctorInvestigationsComponent
               this.idrsScoreService.haemoglobinPresentInMaster();
             }
           });
-          if (this.caseRecordMode === 'view') {
+          if (this.caseRecordMode == "view") {
             this.beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
             this.visitID = localStorage.getItem('visitID');
             this.visitCategory = localStorage.getItem('visitCategory');
