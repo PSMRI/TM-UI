@@ -199,7 +199,7 @@ export class CancerCaseRecordComponent
           }
           if (beneficiary !== null && beneficiary.genderName !== null) {
             this.getGraphData(beneficiary);
-            if (this.caseRecordMode == "view") {
+            if (this.caseRecordMode === 'view') {
               const beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
               const visitID = localStorage.getItem('visitID');
               const visitCategory = localStorage.getItem('visitCategory');

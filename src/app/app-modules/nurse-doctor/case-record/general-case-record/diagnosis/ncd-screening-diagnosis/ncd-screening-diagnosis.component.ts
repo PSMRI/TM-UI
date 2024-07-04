@@ -120,7 +120,7 @@ export class NcdScreeningDiagnosisComponent
   }
 
   ngOnChanges() {
-    if (this.caseRecordMode == "view") {
+    if (this.caseRecordMode === 'view') {
       const beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
       const visitID = localStorage.getItem('visitID');
       const visitCategory = localStorage.getItem('visitCategory');

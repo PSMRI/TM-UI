@@ -399,7 +399,6 @@ export class WorkareaComponent
             'patientReferForm',
           ) as FormGroup;
 
-
           this.visitMode = String(mode);
           this.showQuickConsult = true;
           this.quickConsultMode = String(mode);
@@ -2429,7 +2428,9 @@ export class WorkareaComponent
       this.patientMedicalForm.controls['patientQuickConsultForm']
     );
 
-    const referForm = <FormGroup>patientMedicalForm.controls['patientReferForm'];
+    const referForm = <FormGroup>(
+      patientMedicalForm.controls['patientReferForm']
+    );
 
     const caseRecordForm = <FormGroup>(
       patientMedicalForm.controls['patientCaseRecordForm']
@@ -2526,31 +2527,21 @@ export class WorkareaComponent
         referForm.controls['refrredToAdditionalServiceList'].value.length > 0
       ) {
         if (referForm.controls['referralReason'].errors) {
-          required.push(
-            this.current_language_set.Referdetails.referralReason,
-          );
+          required.push(this.current_language_set.Referdetails.referralReason);
         }
-      } else if (
-        referForm.controls['referredToInstituteName'].value !== null
-      ) {
+      } else if (referForm.controls['referredToInstituteName'].value !== null) {
         if (referForm.controls['referralReason'].errors) {
-          required.push(
-            this.current_language_set.Referdetails.referralReason,
-          );
+          required.push(this.current_language_set.Referdetails.referralReason);
         }
       }
     } else if (referForm.controls['referredToInstituteName'].value !== null) {
       if (this.visitCategory === 'FP & Contraceptive Services') {
         if (referForm.controls['referralReasonList'].errors) {
-          required.push(
-            this.current_language_set.Referdetails.referralReason,
-          );
+          required.push(this.current_language_set.Referdetails.referralReason);
         }
       } else {
         if (referForm.controls['referralReason'].errors) {
-          required.push(
-            this.current_language_set.Referdetails.referralReason,
-          );
+          required.push(this.current_language_set.Referdetails.referralReason);
         }
       }
     }
@@ -2571,8 +2562,7 @@ export class WorkareaComponent
    * Submit DOCTOR GENERAL QUICK CONSULT
    */
   submitQuickConsultDiagnosisForm() {
-
-    const tempObj = {
+    const otherQcDetails = {
       beneficiaryRegID: this.beneficiaryRegID,
       benVisitID: this.visitID,
       visitCode: localStorage.getItem('visitCode'),
@@ -2623,7 +2613,10 @@ export class WorkareaComponent
       patientQuickConsultFormValue.labTestOrders = labTestOrders;
       patientQuickConsultFormValue.test = undefined;
       patientQuickConsultFormValue.radiology = undefined;
-      patientQuickConsultFormValue.refer = this.doctorService.postGeneralRefer(this.patientReferForm, tempObj);
+      patientQuickConsultFormValue.refer = this.doctorService.postGeneralRefer(
+        this.patientReferForm,
+        otherQcDetails,
+      );
       patientQuickConsultFormValue = Object.assign(
         {},
         patientQuickConsultFormValue,
@@ -2739,11 +2732,10 @@ export class WorkareaComponent
   }
 
   mapDoctorQuickConsultDetails() {
-
     const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
     const vanID = JSON.parse(serviceLineDetails).vanID;
     const parkingPlaceID = JSON.parse(serviceLineDetails).parkingPlaceID;
-    const tempObj = {
+    const otherQcDetails = {
       beneficiaryRegID: this.beneficiaryRegID,
       benVisitID: this.visitID,
       providerServiceMapID: localStorage.getItem('providerServiceID'),
@@ -2801,8 +2793,10 @@ export class WorkareaComponent
     this.patientReferForm = this.patientMedicalForm.get(
       'patientReferForm',
     ) as FormGroup;
-    patientQuickConsultDetails.refer = this.doctorService.postGeneralRefer(this.patientReferForm, tempObj);
-
+    patientQuickConsultDetails.refer = this.doctorService.postGeneralRefer(
+      this.patientReferForm,
+      otherQcDetails,
+    );
 
     return patientQuickConsultDetails;
   }

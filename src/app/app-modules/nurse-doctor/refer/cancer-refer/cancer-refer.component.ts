@@ -84,7 +84,7 @@ export class CancerReferComponent implements OnInit, DoCheck, OnDestroy {
           this.additionalServices = masterData.additionalServices;
           this.revisitDate = masterData.revisitDate;
           this.referralReason = masterData.referralReason;
-          if (this.referMode == "view") {
+          if (this.referMode === 'view') {
             const beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
             const visitID = localStorage.getItem('visitID');
             const visitCategory = localStorage.getItem('visitCategory');
@@ -161,10 +161,11 @@ export class CancerReferComponent implements OnInit, DoCheck, OnDestroy {
     this.maxSchedulerDate = checkdate;
     this.tomorrow = d;
 
-    const localDate = new Date(revisitDate.getTime() - revisitDate.getTimezoneOffset() * 60000);
-   
+    const localDate = new Date(
+      revisitDate.getTime() - revisitDate.getTimezoneOffset() * 60000,
+    );
+
     this.referForm.patchValue({ revisitDate: localDate.toISOString() });
-    console.log("revisitDate" , revisitDate);
   }
 
   canDisable(service: any) {

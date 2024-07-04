@@ -325,33 +325,17 @@ export class DoctorDiagnosisCaseSheetComponent
         }
       }
 
-
-  
-      if (this.visitCategory === 'General OPD (QC)' && this.casesheetData && this.casesheetData.doctorData) {
+      if (
+        this.visitCategory === 'General OPD (QC)' &&
+        this.casesheetData &&
+        this.casesheetData.doctorData
+      ) {
         this.referDetails = this.casesheetData.doctorData.Refer;
-        if (
-          this.referDetails &&
-          this.referDetails.refrredToAdditionalServiceList
-        ) {
-          console.log(
-            'institute',
-            this.referDetails.refrredToAdditionalServiceList,
-          );
-          for (
-            let i = 0;
-            i < this.referDetails.refrredToAdditionalServiceList.length;
-            i++
-          ) {
-            if (this.referDetails.refrredToAdditionalServiceList[i].serviceName) {
-              this.serviceList +=
-                this.referDetails.refrredToAdditionalServiceList[i].serviceName;
-              if (
-                i >= 0 && 
-                i < this.referDetails.refrredToAdditionalServiceList.length - 1
-              )
-                this.serviceList += ',';
-            }
-          }
+        if (this.referDetails?.refrredToAdditionalServiceList) {
+          this.serviceList = this.referDetails.refrredToAdditionalServiceList
+            .map((service: any) => service.serviceName)
+            .filter((name: any) => name !== null && name !== '')
+            .join(',');
         }
 
         if (this.referDetails && this.referDetails.referralReason) {
@@ -369,7 +353,6 @@ export class DoctorDiagnosisCaseSheetComponent
         'referDetailsForRefer',
         JSON.stringify(this.referDetails, null, 4),
       );
-  
       if (
         this.casesheetData &&
         this.casesheetData.doctorData.Refer &&
