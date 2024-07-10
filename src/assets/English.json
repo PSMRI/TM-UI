@@ -1218,6 +1218,7 @@
                 "consultationDone": "Tele-Consultation Done",
                 "pendingForTC": "Pending For TC",
                 "tCCancelled": "TC Cancelled",
+                "beneficaryConsent":"Beneficiary Consent",
                 "pendingforLabtestResult": "Pending for labtest result",
                 "labtestDone": "Labtest done",
                 "consultation_done": "Consultation done",
@@ -1714,8 +1715,9 @@
         "minCharPassRequired": "Please provide atleast 8 character",
         "proceedWithOutPassword": "Do you want to proceed further without setting password for ABHA?",
         "benPreviousVisitDetails": "Beneficiary previous visit details",
-        "downloadAbhaCard":"Download ABHA Card"
-
+        "downloadAbhaCard":"Download ABHA Card",
+        "beneficaryConsent":"Beneficiary Consent",
+        "consentFormText": "To provide you with better service, we would,request your personal information. The information that you will providewill be kept confidential and will only be used for research and analysis."
 
     }  
     

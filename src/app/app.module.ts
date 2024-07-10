@@ -30,6 +30,7 @@ import { ResetPasswordComponent } from './app-modules/reset-password/reset-passw
 import { RegistrarModule } from './app-modules/registrar/registrar.module';
 import { NgFor } from '@angular/common';
 import { AudioRecordingService } from './app-modules/nurse-doctor/shared/services/audio-recording.service';
+import { SharedModule } from './app-modules/core/components/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { AudioRecordingService } from './app-modules/nurse-doctor/shared/service
     RegistrarModule,
     CoreModule.forRoot(),
     BrowserAnimationsModule,
+    SharedModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

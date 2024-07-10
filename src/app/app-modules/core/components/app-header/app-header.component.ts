@@ -173,17 +173,7 @@ export class AppHeaderComponent implements OnInit {
       {
         role: 'Registrar',
         label: this.currentLanguageSet.role_selection.Registrar,
-
-        work: [
-          {
-            link: '/registrar/registration',
-            label: this.currentLanguageSet.ro.registration,
-          },
-          {
-            link: '/registrar/search',
-            label: this.currentLanguageSet.common.search,
-          },
-        ],
+        link: '/registrar/search',
       },
       {
         role: 'Nurse',

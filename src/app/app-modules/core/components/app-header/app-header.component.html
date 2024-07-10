@@ -124,7 +124,7 @@
         class="nav navbar-nav ml-auto"
         *ngFor="let item of filteredNavigation; let isLast = last"
       >
-        <li class="nav-item" *ngIf="item.role === 'Registrar'">
+        <!-- <li class="nav-item" *ngIf="item.role === 'Registrar'">
           <button class="nav-btn" mat-button [matMenuTriggerFor]="items">
             {{ item.label }}
             <span class="caret"></span>
@@ -134,17 +134,25 @@
             #items="matMenu"
             yPosition="below"
             xPosition="after"
-            [overlapTrigger]="false"
-          >
+            [overlapTrigger]="false">
             <button
               mat-menu-item
               *ngFor="let value of item.work"
               [routerLink]="[value.link]"
-              routerLinkActive="active"
-            >
+              routerLinkActive="active">
               {{ value.label }}
             </button>
           </mat-menu>
+        </li> -->
+        <li class="nav-item" *ngIf="item.role === 'Registrar'">
+          <button
+            class="nav-btn"
+            mat-button
+            [routerLink]="[item.link]"
+            routerLinkActive="active"
+          >
+            {{ item.label }}
+          </button>
         </li>
         <li
           class="nav-item"

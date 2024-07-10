@@ -743,3 +743,10 @@ control.mat-mdc-form-field-input-control {
   width: 100%;
   padding-right: unset !important;
 }
+.mat-mdc-form-field-error {
+  margin-top: -20px !important;
+}
+.background_color{
+  background: #0277bd !important;
+
+}

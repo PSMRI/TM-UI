@@ -122,6 +122,11 @@
                   formControlName="districtBranchID"
                   name="districtBranchID"
                   [required]="true"
+                  (selectionChange)="
+                    onDistrictBranchSelection(
+                      servicePointForm.controls.districtBranchID.value
+                    )
+                  "
                 >
                   <mat-option
                     class="alignOption"

@@ -159,6 +159,7 @@ import { ExaminationCaseSheetComponent } from './case-sheet/general-case-sheet/e
 import { GeneralCaseSheetComponent } from './case-sheet/general-case-sheet/general-case-sheet.component';
 import { HistoryCaseSheetComponent } from './case-sheet/general-case-sheet/history-case-sheet/history-case-sheet.component';
 import { PncCaseSheetComponent } from './case-sheet/general-case-sheet/pnc-case-sheet/pnc-case-sheet.component';
+import { SharedModule } from '../core/components/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -176,6 +177,7 @@ import { PncCaseSheetComponent } from './case-sheet/general-case-sheet/pnc-case-
     MatChipsModule,
     MatDatepickerModule,
     NgxPaginationModule,
+    SharedModule,
   ],
   declarations: [
     NurseWorklistComponent,
