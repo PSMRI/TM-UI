@@ -98,6 +98,7 @@ export class DoctorDiagnosisCaseSheetComponent
   referDetails: any;
   serviceList = '';
   referralReasonList = '';
+  isCovidVaccinationStatusVisible = false;
 
   constructor(
     private doctorService: DoctorService,
