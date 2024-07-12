@@ -25,19 +25,19 @@
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
-const commonIP = 'http://183.82.107.186:8080';
-const tmIP = 'http://183.82.107.186:8080';
-const IP104 = 'http://183.82.107.186:8080';
-const mmuIP = 'http://183.82.107.186:8080';
-const schedulerIP = 'http://183.82.107.186:8080';
-const adminIP = 'http://183.82.107.186:8080';
-const FHIRIP = 'http://183.82.107.186:8080';
-const inventoryUI_IP = 'http://183.82.107.186:8080';
+const commonIP = 'https://amritwprdev.piramalswasthya.org';
+const tmIP = 'https://amritwprdev.piramalswasthya.org';
+const IP104 = 'https://amritwprdev.piramalswasthya.org';
+const mmuIP = 'https://amritwprdev.piramalswasthya.org';
+const schedulerIP = 'https://amritwprdev.piramalswasthya.org';
+const adminIP = 'https://amritwprdev.piramalswasthya.org';
+const FHIRIP = 'https://amritwprdev.piramalswasthya.org';
+const inventoryUI_IP = 'https://amritwprdev.piramalswasthya.org';
 
 const SERVER_IP = '10.208.122.39';
 
 const SWYMED_IP = 'swymed://14.143.13.109';
-const identityIP = 'http://183.82.107.186:8080/';
+const identityIP = 'https://amritwprdev.piramalswasthya.org/';
 
 // With API MAN Configuration
 // const COMMON_API_OPEN = `http://${IP}:8080/apiman-gateway/IEMR/Common/open/`;

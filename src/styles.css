@@ -464,7 +464,7 @@ mat-mdc-form-field-label-always-float {
   color: block !important;
   font-family: unset !important;
   line-height: var(--mat-table-header-headline-line-height);
-  font-size: unset !important;
+  font-size: 14px !important;
   font-weight: var(--mat-table-header-headline-weight, 500);
 }
 
@@ -749,4 +749,7 @@ control.mat-mdc-form-field-input-control {
 .background_color{
   background: #0277bd !important;
 
+}
+.mdc-text-field--outlined .mdc-notched-outline {
+  height: 40px !important;
 }
