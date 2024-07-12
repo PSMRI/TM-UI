@@ -50,6 +50,9 @@ import {
   styleUrls: ['./general-refer.component.css'],
   providers: [
     {
+      provide: DatePipe,
+    },
+    {
       provide: MAT_DATE_LOCALE,
       useValue: 'en-US', // Set the desired locale (e.g., 'en-GB' for dd/MM/yyyy)
     },
