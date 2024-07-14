@@ -256,8 +256,7 @@ md-expansion-panel {
 }
 
 .mat_form_field {
-    margin-left: -15px;
+    margin-left: 13px;
     margin-top: 40px;
-    min-width: 108%;
-
+    min-width: 100%;
 }

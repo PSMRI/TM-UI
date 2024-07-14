@@ -753,3 +753,10 @@ control.mat-mdc-form-field-input-control {
 .mdc-text-field--outlined .mdc-notched-outline {
   height: 40px !important;
 }
+.mdc-text-field--filled.mdc-text-field--disabled .mdc-line-ripple::before {
+  border-bottom-color: var(--mdc-filled-text-field-active-indicator-color) !important;
+  border-bottom-style: dotted !important;
+  /* background-color: transparent !important;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.42) 33%, transparent 0%) !important;
+  */
+}
