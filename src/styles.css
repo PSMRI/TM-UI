@@ -760,3 +760,11 @@ control.mat-mdc-form-field-input-control {
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0.42) 0%, rgba(0, 0, 0, 0.42) 33%, transparent 0%) !important;
   */
 }
+@media only screen and (min-width:768px) and (max-width:1023px) {
+	.box{
+		height: auto !important;
+		}
+    .custom-cell{
+      height: auto !important;
+  }
+}
