@@ -66,8 +66,7 @@
             </mat-form-field>
           </div>
 
-          <div
-            class="col-md-4 col-xs-12 col-md-4 col-lg-2 box"
+          <div   class="col-md-4 col-xs-12 col-md-4 col-lg-2 box"
             *ngIf="pastIllness.value.illnessType?.illnessType === 'Other'"
           >
             <mat-form-field [style.width]="'100%'" class="input-full-width">
