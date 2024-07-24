@@ -1,14 +1,14 @@
 <div class="row m-t-10" [formGroup]="abdominalExaminationForm">
   <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
     <div class="col-12 row">
-      <div class="col-6 custom-cell cell_postion">
+      <div class="col-6 cell_postion">
         <span>{{
           current_language_set?.ExaminationData?.cancerScreeningExamination
             ?.abdominal?.abdominalInspection
         }}</span>
       </div>
 
-      <div class="col-6 custom-cell">
+      <div class="col-6">
         <mat-radio-group
           name="abdominalInspection_Normal"
           formControlName="abdominalInspection_Normal"
@@ -30,14 +30,14 @@
     </div>
 
     <div class="clo-12 row">
-      <div class="col-6 custom-cell cell_postion">
+      <div class="col-6 cell_postion">
         <span>{{
           current_language_set?.ExaminationData?.cancerScreeningExamination
             ?.abdominal?.liver
         }}</span>
       </div>
 
-      <div class="col-6 custom-cell">
+      <div class="col-6">
         <mat-form-field [style.width]="'100%'">
           <mat-label class="mat-label-text">{{
             current_language_set?.common?.select
@@ -58,7 +58,7 @@
         </mat-form-field>
       </div>
 
-      <div class="col-xs-6 custom-cell">
+      <div class="col-xs-6">
         <span>{{
           current_language_set?.ExaminationData?.cancerScreeningExamination
             ?.abdominal?.ascites
@@ -67,7 +67,7 @@
     </div>
 
     <div class="col-12 row">
-      <div class="col-6 custom-cell cell_postion">
+      <div class="col-6 cell_postion">
         <mat-radio-group
           name="ascites_Present"
           formControlName="ascites_Present"
@@ -89,14 +89,14 @@
     </div>
 
     <div class="col-12 row">
-      <div class="col-6 custom-cell cell_postion">
+      <div class="col-6 cell_postion">
         <span>{{
           current_language_set?.ExaminationData?.cancerScreeningExamination
             ?.abdominal?.anyOtherMass
         }}</span>
       </div>
 
-      <div class="col-6 custom-cell">
+      <div class="col-6">
         <mat-radio-group
           name="anyOtherMass_Present"
           formControlName="anyOtherMass_Present"
@@ -118,14 +118,14 @@
     </div>
 
     <div class="col-12 row">
-      <div class="col-6 custom-cell cell_postion">
+      <div class="col-6 cell_postion">
         <span>{{
           current_language_set?.ExaminationData?.cancerScreeningExamination
             ?.abdominal?.lymphnode
         }}</span>
       </div>
 
-      <div class="col-6 custom-cell">
+      <div class="col-6">
         <mat-radio-group
           name="lymphNodes_Enlarged"
           formControlName="lymphNodes_Enlarged"

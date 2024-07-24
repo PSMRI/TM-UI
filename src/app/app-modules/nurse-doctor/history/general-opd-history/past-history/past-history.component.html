@@ -63,7 +63,7 @@
           </div>
 
           <div
-            class="col-2 box"
+            class="col-md-4 col-xs-12 col-md-4 col-lg-2 box"
             *ngIf="pastIllness.value.illnessType?.illnessType === 'Other'"
           >
             <mat-form-field [style.width]="'100%'" class="input-full-width">
@@ -83,7 +83,7 @@
             </mat-form-field>
           </div>
 
-          <div class="col-2 box">
+          <div class="col-md-4 col-xs-12 col-md-4 col-lg-2 box">
             <mat-form-field [style.width]="'100%'" class="input-full-width">
               <mat-label class="mat-label-text">{{
                 currentLanguageSet?.nurseData?.chiefComplaintsDetails?.duration
@@ -101,7 +101,7 @@
             </mat-form-field>
           </div>
 
-          <div class="col-3 box">
+          <div class="col-md-4 col-xs-12 col-md-4 col-lg-3 box">
             <mat-form-field [style.width]="'100%'">
               <mat-label class="mat-label-text">{{
                 currentLanguageSet?.DurationData?.timeperiodAgo
@@ -120,7 +120,10 @@
             </mat-form-field>
           </div>
 
-          <div class="col-2 box" style="margin-top: 15px">
+          <div
+            class="col-md-4 col-xs-12 col-md-4 col-lg-2 box"
+            style="margin-top: 15px"
+          >
             <button
               style="margin-right: 5px"
               mat-mini-fab
@@ -171,7 +174,7 @@
       [ngClass]="{ odd: !isOdd }"
     >
       <ng-container [formGroupName]="i">
-        <div class="col-3 box">
+        <div class="col-md-4 col-xs-12 col-md-4 col-lg-3 box">
           <mat-form-field [style.width]="'100%'">
             <mat-label class="mat-label-text">{{
               currentLanguageSet?.historyData?.ancHistory
@@ -195,7 +198,7 @@
         </div>
 
         <div
-          class="col-2 box"
+          class="col-md-4 col-xs-12 col-md-4 col-lg-2 box"
           *ngIf="pastSurgery.value.surgeryType?.surgeryType === 'Other'"
         >
           <mat-form-field [style.width]="'100%'" class="input-full-width">
@@ -215,7 +218,7 @@
           </mat-form-field>
         </div>
 
-        <div class="col-2 box">
+        <div class="col-md-4 col-xs-12 col-md-4 col-lg-2 box">
           <mat-form-field [style.width]="'100%'" class="input-full-width">
             <mat-label class="mat-label-text">{{
               currentLanguageSet?.nurseData?.chiefComplaintsDetails?.duration
@@ -233,7 +236,7 @@
           </mat-form-field>
         </div>
 
-        <div class="col-3 box">
+        <div class="col-md-4 col-xs-12 col-md-4 col-lg-3 box">
           <mat-form-field [style.width]="'100%'">
             <mat-label class="mat-label-text">{{
               currentLanguageSet?.DurationData?.timeperiodAgo
@@ -252,7 +255,10 @@
           </mat-form-field>
         </div>
 
-        <div class="col-2 box" style="margin-top: 15px">
+        <div
+          class="col-md-4 col-xs-12 col-md-4 col-lg-2 box"
+          style="margin-top: 15px"
+        >
           <button
             mat-mini-fab
             color="warn"
