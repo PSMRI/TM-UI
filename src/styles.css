@@ -768,3 +768,18 @@ control.mat-mdc-form-field-input-control {
       height: auto !important;
   }
 }
+
+@media screen  and (min-width:360px) and (max-width:430px) {
+  .mat-mdc-card {
+    overflow: auto !important;
+}
+.searchBox {
+ 
+  width: 360px !important;
+}
+button, input, optgroup, select, textarea {
+ 
+  font-size: revert !important;
+ 
+}
+}
