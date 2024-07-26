@@ -23,3 +23,68 @@ h5{
     width: 100%;
     border-bottom: 1px solid lightgray;
 }
+
+@media (min-width: 900px) {
+    /* CSS rules here */
+   
+  
+      .example-scrolling-content .row {
+         padding: 3px  !important;
+      }
+  }
+   
+  @media (min-width: 320px) {
+    /* CSS rules here */
+  
+  
+      .example-scrolling-content .row {
+         padding: 0px !important;
+      }
+  }
+   
+  /* Extra small devices (portrait phones, less than 576px) */
+  @media (max-width: 575.98px) {
+    /* CSS rules here */
+  
+  
+      .example-scrolling-content .row {
+         padding: 0px !important;
+      }
+  }
+   
+  /* Small devices (landscape phones, 576px and up) */
+  @media (min-width: 576px) {
+    /* CSS rules here */
+  
+  
+     .example-scrolling-content .row {
+         padding: 0px !important;
+      }
+  }
+  /* Medium devices (tablets, 768px and up) */
+  @media (min-width: 768px) {
+    /* CSS rules here */
+  
+     .example-scrolling-content .row {
+         padding: 3px !important;
+      }
+  }
+  /* Large devices (desktops, 992px and up) */
+  @media (min-width: 992px) {
+    /* CSS rules here */
+  
+  
+   .example-scrolling-content .row {
+         padding: 3px !important;
+      }
+  
+  }
+   
+  /* Extra large devices (large desktops, 1200px and up) */
+  @media (min-width: 1200px) {
+    /* CSS rules here */
+   .example-scrolling-content .row {
+         padding: 3px !important;
+      }
+  
+  }

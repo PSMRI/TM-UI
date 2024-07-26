@@ -18,8 +18,8 @@
       </button>
     </div>
     <div
-      class="col-12 row multi-row-select"
-      style="margin: 15px 0px 15px 0px; background-color: #f0f5f5"
+      class="col-xs-12 col-sm-6 col-md-3 row multi-row-select"
+      style="width: 100%; margin: 15px 0px 15px 0px; background-color: #f0f5f5"
       *ngFor="
         let familyDisease of getFamilyDiseases();
         let i = index;
@@ -29,7 +29,7 @@
       [ngClass]="{ odd: !isOdd }"
     >
       <ng-container [formGroupName]="i">
-        <div class="col-3 box">
+        <div class="col-xs-12 col-sm-6 col-md-3 box">
           <mat-form-field [style.width]="'100%'">
             <mat-label class="mat-label-text">{{
               currentLanguageSet?.historyData?.ancHistory
@@ -54,7 +54,7 @@
         </div>
 
         <div
-          class="col-3 box"
+          class="col-xs-12 col-sm-6 col-md-3 box"
           *ngIf="familyDisease.value.diseaseType?.diseaseType === 'Other'"
         >
           <mat-form-field class="input-full-width">
@@ -73,7 +73,7 @@
           </mat-form-field>
         </div>
 
-        <div class="col-3 box" [hidden]="true">
+        <div class="col-xs-12 col-sm-6 col-md-3 box" [hidden]="true">
           <mat-form-field class="input-full-width">
             <mat-label class="mat-label-text">{{
               currentLanguageSet?.historyData?.opdNCDPNCHistory?.otherVaccine
@@ -90,7 +90,7 @@
           </mat-form-field>
         </div>
 
-        <div class="col-3 box">
+        <div class="col-xs-12 col-sm-6 col-md-3 box">
           <mat-form-field class="input-full-width">
             <mat-label class="mat-label-text">{{
               currentLanguageSet?.historyData?.ancHistory
@@ -145,7 +145,7 @@
 
   <div class="col-xs-12">
     <div class="row m-t-10">
-      <div class="col-xs-12 col-sm-6 col-md-3 box">
+      <div class="col-xs-12 col-sm-6 col-md-3 box" style="margin-left: 12px">
         <label class="control-label" for="geneticDisorders">{{
           currentLanguageSet?.historyData?.ancHistory
             ?.familyHistoryDataANC_OPD_NCD_PNC?.H_geneticDisorders
@@ -155,6 +155,7 @@
           name="isGeneticDisorder"
           formControlName="isGeneticDisorder"
           (change)="resetOtherGeneticOrder()"
+          style="margin-left: -5px"
         >
           <mat-radio-button color="primary" [value]="true">{{
             currentLanguageSet?.common?.yes
@@ -183,7 +184,7 @@
         </mat-form-field>
       </div>
 
-      <div class="col-xs-12 col-sm-6 col-md-3 box">
+      <div class="col-xs-12 col-sm-6 col-md-3 box" style="margin-left: 12px">
         <label class="control-label" for="consanguineousMarriage">{{
           currentLanguageSet?.historyData?.ancHistory
             ?.familyHistoryDataANC_OPD_NCD_PNC?.consanguineousMarriage
@@ -192,6 +193,7 @@
         <mat-radio-group
           name="isConsanguineousMarrige"
           formControlName="isConsanguineousMarrige"
+          style="margin-left: -5px"
         >
           <mat-radio-button color="primary" [value]="true">{{
             currentLanguageSet?.common?.yes

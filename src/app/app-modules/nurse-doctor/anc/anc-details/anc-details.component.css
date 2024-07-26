@@ -17,3 +17,10 @@
 .mat-form-field {
   line-height: unset;
 }
+
+.mat-mdc-form-field {
+ width: 300px !important;
+}
+.input-full-width[_ngcontent-ng-c1990878134] {
+  width: 300px
+}
