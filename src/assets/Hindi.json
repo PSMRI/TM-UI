@@ -1713,7 +1713,9 @@
         "benPreviousVisitDetails": "Beneficiary previous visit details",
         "downloadAbhaCard":"Download ABHA Card",
         "beneficaryConsent":"Beneficiary Consent",
-        "consentFormText": "To provide you with better service, we would,request your personal information. The information that you will providewill be kept confidential and will only be used for research and analysis."
+        "consentFormText": "To provide you with better service, we would,request your personal information. The information that you will providewill be kept confidential and will only be used for research and analysis.",
+        "mobile":"Mobile",
+        "noRecordsFound":"No Records Found"
 
   }
 }
