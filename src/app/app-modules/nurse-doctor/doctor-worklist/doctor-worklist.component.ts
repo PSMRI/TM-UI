@@ -419,6 +419,7 @@ export class DoctorWorklistComponent implements OnInit, OnDestroy, DoCheck {
     localStorage.setItem('doctorFlag', beneficiary.doctorFlag);
     localStorage.setItem('nurseFlag', beneficiary.nurseFlag);
     localStorage.setItem('pharmacist_flag', beneficiary.pharmacist_flag);
+    localStorage.setItem('visitCode', beneficiary.visitCode);
 
     return true;
   }
