@@ -92,13 +92,12 @@ mat-label {
 }  
 .matCardService {
   width: 589px;
-  margin-left: 100px;
   margin-right: 10px;
   border-radius: 5px;
   align-items: center;
   min-height: 240px;
 }
-.circle[_ngcontent-ng-c2321707653] {
+.circle {
   position: relative;
   padding: 0;
   width: 390px;
