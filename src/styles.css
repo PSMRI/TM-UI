@@ -657,6 +657,7 @@ input:-webkit-autofill:active {
   display: block;
   width: 100%;
   height: auto !important;
+  overflow: visible !important;
 }
 
 control.mat-mdc-form-field-input-control {
