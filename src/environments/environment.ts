@@ -60,7 +60,7 @@ const ADMIN_API = `${adminIP}/adminapi-v1.0`;
 
 const IOT_API = 'http://localhost:8085/ezdx-hub-connect-srv';
 
-const FHIR_API = `${FHIRIP}/fhirapi-v1.1/`;
+const FHIR_API = `${FHIRIP}/fhirapi-v1.0/`;
 
 export const environment = {
   production: false,
