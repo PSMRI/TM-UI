@@ -116,12 +116,10 @@
                       [disabled]="
                         !complicationOptionConstraints[i]
                           .showAllPregComplication &&
-                        (((complication?.pregComplicationType === 'None' ||
-                          complication?.pregComplicationType === 'Nil') &&
+                        ((complication?.pregComplicationType === 'None' &&
                           complicationOptionConstraints[i]
                             ?.disableNonePregnancyComplication) ||
-                          ((complication?.pregComplicationType !== 'None' ||
-                            complication?.pregComplicationType !== 'Nil') &&
+                          (complication?.pregComplicationType !== 'None' &&
                             !complicationOptionConstraints[i]
                               .disableNonePregnancyComplication))
                       "
