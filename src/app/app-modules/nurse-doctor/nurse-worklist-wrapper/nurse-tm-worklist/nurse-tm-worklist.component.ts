@@ -239,16 +239,13 @@ export class NurseTmWorklistComponent implements OnInit, DoCheck, OnDestroy {
 
   filterBeneficiaryList(searchTerm: string) {
     if (!searchTerm) {
-       this.filteredBeneficiaryList = this.beneficiaryList;
-       this.dataSource.data = this.filteredBeneficiaryList;
-       this.dataSource.paginator = this.paginator;
-       this.dataSource.data.forEach(
-         (sectionCount: any, index: number) => {
-           sectionCount.sno = index + 1;
-         },
-       );
-    }
-    else {
+      this.filteredBeneficiaryList = this.beneficiaryList;
+      this.dataSource.data = this.filteredBeneficiaryList;
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.data.forEach((sectionCount: any, index: number) => {
+        sectionCount.sno = index + 1;
+      });
+    } else {
       this.filteredBeneficiaryList = [];
       this.dataSource.data = [];
       this.dataSource.paginator = this.paginator;
@@ -311,7 +308,6 @@ export class NurseTmWorklistComponent implements OnInit, DoCheck, OnDestroy {
         }
       });
     }
-   
   }
 
   toggleArrivalStatus(evt: any, benFlowID: any) {

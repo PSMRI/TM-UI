@@ -1175,11 +1175,8 @@ export class DoctorService {
     return this.generalHistory;
   }
 
-  getPreviousVisitAnthropometry(benRegId:any) {
-
-    
+  getPreviousVisitAnthropometry(benRegId: any) {
     return this.http.post(environment.getPreviousAnthropometryUrl, benRegId);
-
   }
 
   getGenericVitals(beneficiary: any): Observable<any> {
