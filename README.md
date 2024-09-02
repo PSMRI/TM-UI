@@ -25,11 +25,10 @@ Telemedicine plays a crucial role in the services provided by Health and Wellnes
 
 This microservice is built using Java and the Spring Boot framework, with MySQL as the underlying database. Before building the TM module, ensure you have the following prerequisites:
 
-- JDK 17
-- Maven
-- NPM/YARN
-- Spring Boot V2
-- MySQL
+* JDK 17
+* Maven 
+* Nodejs v18.10.0
+* MySQL
 
 To build the TM module from source, follow these steps:
 
@@ -64,12 +63,12 @@ It creates a `environment.ci.ts` file with all environment variables used in the
 
 To initialize the `Common-UI` submodule, follow these steps:
 
-1. Clone the `mmu-ui` project:
-   ```bash
-   git clone https://github.com/PSMRI/MMU-UI
+1. Clone the `tm-ui` project:
+
+   git clone https://github.com/PSMRI/TM-UI
 
 2. Navigate to the project directory and pull the latest changes from the develop branch
-   cd mmu-ui
+   cd tm-ui
    git checkout develop
    git pull origin develop
 

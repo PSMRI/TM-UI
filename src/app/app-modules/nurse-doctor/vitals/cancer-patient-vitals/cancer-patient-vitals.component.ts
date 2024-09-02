@@ -50,7 +50,7 @@ export class CancerPatientVitalsComponent
 
   female = false;
   benAge = 0;
-  BMI: any=null;
+  BMI: any = null;
 
   startWeightTest = environment.startWeighturl;
   startTempTest = environment.startTempurl;
@@ -116,7 +116,7 @@ export class CancerPatientVitalsComponent
     }
 
     this.attendant = this.route.snapshot.params['attendant'];
-    if(this.attendant == 'nurse') {
+    if (this.attendant === 'nurse') {
       this.getPreviousVisitAnthropometry();
     }
   }
@@ -125,18 +125,23 @@ export class CancerPatientVitalsComponent
   getPreviousVisitAnthropometry() {
     this.previousAnthropometryDataSubscription = this.doctorService
       .getPreviousVisitAnthropometry({
-        benRegID: localStorage.getItem('beneficiaryRegID')
+        benRegID: localStorage.getItem('beneficiaryRegID'),
       })
-      .subscribe((anthropometryData:any) => {
-        if (anthropometryData && anthropometryData.data && anthropometryData.data.response 
-          && (anthropometryData.data.response !== "Visit code is not found" && anthropometryData.data.response !== "No data found")
+      .subscribe((anthropometryData: any) => {
+        if (
+          anthropometryData &&
+          anthropometryData.data &&
+          anthropometryData.data.response &&
+          anthropometryData.data.response !== 'Visit code is not found' &&
+          anthropometryData.data.response !== 'No data found'
         ) {
-          
-          let heightStr = anthropometryData.data.response.toString();
-         this.patientVitalsForm.controls["height_cm"].patchValue(heightStr.endsWith('.0') ? Math.round(anthropometryData.data.response) : anthropometryData.data.response);
-
-         
-        } 
+          const heightStr = anthropometryData.data.response.toString();
+          this.patientVitalsForm.controls['height_cm'].patchValue(
+            heightStr.endsWith('.0')
+              ? Math.round(anthropometryData.data.response)
+              : anthropometryData.data.response,
+          );
+        }
       });
   }
 

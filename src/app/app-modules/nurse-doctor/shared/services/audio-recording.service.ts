@@ -20,6 +20,7 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
+import { HttpHeaders } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
@@ -137,6 +138,12 @@ export class AudioRecordingService {
   }
 
   getResultStatus(formData: FormData) {
-    return this.http.post(environment.getResultStatusURL, formData);
+    const boundary = '----WebKitFormBoundary9nAHnlBBDdv4NIqp';
+    const headers = new HttpHeaders({
+      'Content-Type': `multipart/form-data; boundary=${boundary}`,
+    });
+    return this.http.post(environment.getResultStatusURL, formData, {
+      headers,
+    });
   }
 }

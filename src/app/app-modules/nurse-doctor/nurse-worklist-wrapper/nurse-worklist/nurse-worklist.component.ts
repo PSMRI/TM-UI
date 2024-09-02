@@ -417,19 +417,16 @@ export class NurseWorklistComponent implements OnInit, DoCheck, OnDestroy {
     }
   }
   filterBeneficiaryList(searchTerm: string) {
-    console.log("searchTerm",searchTerm);
+    console.log('searchTerm', searchTerm);
     if (!searchTerm) {
-      console.log("searchTerm",searchTerm);
+      console.log('searchTerm', searchTerm);
       this.filteredBeneficiaryList = this.beneficiaryList;
       this.dataSource.data = this.filteredBeneficiaryList;
       this.dataSource.paginator = this.paginator;
-      this.dataSource.data.forEach(
-        (sectionCount: any, index: number) => {
-          sectionCount.sno = index + 1;
-        },
-      );
-    }
-    else {
+      this.dataSource.data.forEach((sectionCount: any, index: number) => {
+        sectionCount.sno = index + 1;
+      });
+    } else {
       this.filteredBeneficiaryList = [];
       this.dataSource.data = [];
       this.dataSource.paginator = this.paginator;

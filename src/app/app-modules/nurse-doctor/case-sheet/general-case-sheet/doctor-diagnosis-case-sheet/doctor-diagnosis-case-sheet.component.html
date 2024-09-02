@@ -1350,10 +1350,13 @@
       </table>
     </div>
 
-  <!-- End of Prescription -->
+    <!-- End of Prescription -->
 
-     <!-- Revisit & Refer for QC-->
-     <div class="row col-xs-12 m-t-50" *ngIf="visitCategory === 'General OPD (QC)'">
+    <!-- Revisit & Refer for QC-->
+    <div
+      class="row col-xs-12 m-t-50"
+      *ngIf="visitCategory === 'General OPD (QC)'"
+    >
       <h2 class="text-center">{{ current_language_set?.revisitRefer }}</h2>
       <hr />
       <div class="col-xs-12">
@@ -1364,7 +1367,9 @@
           <tbody>
             <tr>
               <th id="referredToInstituteName">
-                {{ current_language_set?.Referdetails?.higherhealthcarecenter }}:
+                {{
+                  current_language_set?.Referdetails?.higherhealthcarecenter
+                }}:
               </th>
               <td>{{ referDetails?.referredToInstituteName }}</td>
             </tr>
