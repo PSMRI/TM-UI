@@ -118,7 +118,6 @@ export const environment = {
   nurseMasterDataUrl: `${TM_API}master/nurse/masterData/`,
   doctorMasterDataUrl: `${TM_API}master/doctor/masterData/`,
   snomedCTRecordURL: `${TM_API}snomed/getSnomedCTRecord`,
-  getCalibrationStrips: `${ADMIN_API}/fetchCalibrationStrips`,
   getDistrictTalukUrl: `${MMU_API}location/get/DistrictTalukMaster/`,
 
   /**
