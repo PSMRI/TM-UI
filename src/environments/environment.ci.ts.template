@@ -457,4 +457,13 @@ export const environment = {
 
     /** Previous Anthropometry  Urls */
  getPreviousAnthropometryUrl: `${TM_API}anthropometryVitals/getBenHeightDetailsFrmNurse`,
+
+  /*Family Tagging Urls */
+  relationShipUrl: `${TM_API}registrar/registrarMasterData`,
+  saveFamilyTaggingUrl: `${IDENTITY_API}family/addTag`,
+  editFamilyTaggingUrl: `${IDENTITY_API}family/editFamilyTagging`,
+  untagFamilyUrl: `${IDENTITY_API}family/untag`,
+  familySearchUrl: `${IDENTITY_API}family/searchFamily`,
+  createFamilyUrl: `${IDENTITY_API}family/createFamily`,
+  getFamilyMemberUrl: `${IDENTITY_API}family/getFamilyDetails`,
 };
