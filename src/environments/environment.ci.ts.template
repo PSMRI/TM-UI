@@ -41,7 +41,7 @@ const FHIR_API = '<%= FHIR_API_BASE %>';
 const mmuUICasesheet = '<%= TM_API_BASE %>';
 const SCHEDULER_UI =  '<%= SCHEDULER_UI_BASE %>';
 const INVENTORY_UI =  '<%= INVENTORY_UI_BASE %>';
-const IDENTITY_API = `${identityIP}/identity-0.0.1/`;
+const IDENTITY_API = `<%= IDENTITY_API_BASE %>`;
 export const environment = {
   production: true,
   isTMOffline: true,
