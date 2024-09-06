@@ -41,7 +41,7 @@ const FHIR_API = '<%= FHIR_API_BASE %>';
 const mmuUICasesheet = '<%= TM_API_BASE %>';
 const SCHEDULER_UI =  '<%= SCHEDULER_UI_BASE %>';
 const INVENTORY_UI =  '<%= INVENTORY_UI_BASE %>';
-
+const IDENTITY_API = `<%= IDENTITY_API_BASE %>`;
 export const environment = {
   production: true,
   isTMOffline: true,
@@ -118,6 +118,8 @@ export const environment = {
   nurseMasterDataUrl: `${TM_API}master/nurse/masterData/`,
   doctorMasterDataUrl: `${TM_API}master/doctor/masterData/`,
   snomedCTRecordURL: `${TM_API}snomed/getSnomedCTRecord`,
+  getDistrictTalukUrl: `${MMU_API}location/get/DistrictTalukMaster/`,
+
   /**
    * Lab Data Urls
    */
@@ -457,4 +459,15 @@ export const environment = {
 
     /** Previous Anthropometry  Urls */
  getPreviousAnthropometryUrl: `${TM_API}anthropometryVitals/getBenHeightDetailsFrmNurse`,
+   /* Customization APIs*/
+  getAllRegistrationData: `${COMMON_API}customization/fetchAllData`,
+
+  /*Family Tagging Urls */
+  relationShipUrl: `${TM_API}registrar/registrarMasterData`,
+  saveFamilyTaggingUrl: `${IDENTITY_API}family/addTag`,
+  editFamilyTaggingUrl: `${IDENTITY_API}family/editFamilyTagging`,
+  untagFamilyUrl: `${IDENTITY_API}family/untag`,
+  familySearchUrl: `${IDENTITY_API}family/searchFamily`,
+  createFamilyUrl: `${IDENTITY_API}family/createFamily`,
+  getFamilyMemberUrl: `${IDENTITY_API}family/getFamilyDetails`,
 };
