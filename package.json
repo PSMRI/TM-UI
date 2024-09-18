@@ -1,5 +1,5 @@
 {
-  "name": "tm-ui-next",
+  "name": "tm-ui",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -34,7 +34,6 @@
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
     "@types/file-saver": "^2.0.7",
-    "@types/jquery": "^3.5.30",
     "@types/recordrtc": "^5.6.14",
     "ack-angular-webcam": "^1.10.0",
     "bootstrap": "^5.3.3",
@@ -65,6 +64,7 @@
     "@angular/compiler-cli": "^16.2.0",
     "@types/crypto-js": "^4.2.1",
     "@types/jasmine": "~5.1.4",
+    "@types/jquery": "^3.5.30",
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
     "eslint": "^8.51.0",

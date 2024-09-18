@@ -73,10 +73,10 @@ export const environment = {
 
   parentAPI: `${TM_API}`,
 
-  INVENTORY_URL: inventoryUI_IP + '/inventory-ui-next/#/redirin?',
+  INVENTORY_URL: inventoryUI_IP + '/inventory/#/redirin?',
   fallbackUrl: '/pharmacist/redirfallback',
   redirInUrl: '/pharmacist/redirin',
-  TELEMEDICINE_URL: schedulerIP + '/scheduler-ui-next/#/?',
+  TELEMEDICINE_URL: schedulerIP + '/scheduler/#/?',
   fallbackMMUUrl: `/logout-tm`,
   redirInMMUUrl: `/nurse-doctor/tcspecialist-worklist`,
 
