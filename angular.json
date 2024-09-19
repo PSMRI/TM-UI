@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "TM-UI-NEXT": {
+    "TM-UI": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -22,7 +22,12 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "WEB-INF",
+                "output": "WEB-INF"
+              }
             ],
             "styles": [
               "@angular/material/prebuilt-themes/indigo-pink.css",
@@ -92,10 +97,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "TM-UI-NEXT:build:production"
+              "browserTarget": "TM-UI:build:production"
             },
             "development": {
-              "browserTarget": "TM-UI-NEXT:build:development"
+              "browserTarget": "TM-UI:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -103,7 +108,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "TM-UI-NEXT:build"
+            "browserTarget": "TM-UI:build"
           }
         },
         "test": {
