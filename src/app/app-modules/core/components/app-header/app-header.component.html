@@ -41,6 +41,7 @@
         <li
           *ngIf="isAuthenticated"
           class="nav-item cursorPointer"
+          style="padding: 0px 5px 0px 5px"
           matTooltip="{{ currentLanguageSet?.common?.connectBluetooth }}"
           [ngClass]="{ connected: isConnected }"
         >
@@ -76,14 +77,16 @@
             <span style="color: #d9d9d9">
               {{ currentLanguageSet?.coreComponents?.user }}
               <span style="color: #d9d9d9">:</span>
-              <span style="color: #ffffff">{{ userName | titlecase }}</span>
+              <span style="color: #ffffff; margin-left: 5px">{{
+                userName | titlecase
+              }}</span>
             </span>
           </a>
         </li>
         <li
           class="nav-item cursorPointer"
           *ngIf="isAuthenticated"
-          style="margin-top: 6px"
+          style="margin-top: 6px; padding: 0px 5px 0px 5px"
         >
           <mat-icon
             alt="Help"
@@ -101,7 +104,14 @@
           <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -->
           <a tabindex="{0}" (click)="getSwymedLogout()">
             <mat-icon color="warn">power_settings_new</mat-icon>
-            <span style="color: #ffffff; vertical-align: top">Logout</span>
+            <span
+              style="
+                color: #ffffff;
+                vertical-align: top;
+                padding: 0px 5px 0px 5px;
+              "
+              >Logout</span
+            >
           </a>
         </li>
       </ul>
@@ -116,7 +126,7 @@
         class="nav navbar-nav ml-auto"
         *ngFor="let item of filteredNavigation; let isLast = last"
       >
-        <li class="nav-item" *ngIf="item.role === 'Registrar'">
+        <!-- <li class="nav-item" *ngIf="item.role === 'Registrar'">
           <button class="nav-btn" mat-button [matMenuTriggerFor]="items">
             {{ item.label }}
             <span class="caret"></span>
@@ -126,17 +136,25 @@
             #items="matMenu"
             yPosition="below"
             xPosition="after"
-            [overlapTrigger]="false"
-          >
+            [overlapTrigger]="false">
             <button
               mat-menu-item
               *ngFor="let value of item.work"
               [routerLink]="[value.link]"
-              routerLinkActive="active"
-            >
+              routerLinkActive="active">
               {{ value.label }}
             </button>
           </mat-menu>
+        </li> -->
+        <li class="nav-item" *ngIf="item.role === 'Registrar'">
+          <button
+            class="nav-btn"
+            mat-button
+            [routerLink]="[item.link]"
+            routerLinkActive="active"
+          >
+            {{ item.label }}
+          </button>
         </li>
         <li
           class="nav-item"

@@ -76,6 +76,7 @@ import { MyHealthIdDirective } from './directives/myHealthId/myHealthId.directiv
 import { NgChartsModule } from 'ng2-charts';
 import { MasterdataService } from '../nurse-doctor/shared/services';
 import { RegistrarService } from '../registrar/shared/services/registrar.service';
+import { SharedModule } from './components/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -88,14 +89,13 @@ import { RegistrarService } from '../registrar/shared/services/registrar.service
     NgChartsModule,
     WebcamModule,
     MatTableModule,
+    SharedModule,
   ],
   declarations: [
     CommonDialogComponent,
     CameraDialogComponent,
     SpinnerComponent,
     BeneficiaryDetailsComponent,
-    AppFooterComponent,
-    AppHeaderComponent,
     PreviousDetailsComponent,
     ShowCommitAndVersionDetailsComponent,
     CalibrationComponent,
@@ -123,8 +123,6 @@ import { RegistrarService } from '../registrar/shared/services/registrar.service
   exports: [
     MaterialModule,
     CommonDialogComponent,
-    AppFooterComponent,
-    AppHeaderComponent,
     IotBluetoothComponent,
     ShowCommitAndVersionDetailsComponent,
     CameraDialogComponent,
@@ -163,7 +161,6 @@ export class CoreModule {
         ConfirmationService,
         CameraService,
         AuthGuard,
-        AppHeaderComponent,
         AuthService,
         SpinnerService,
         BeneficiaryDetailsService,

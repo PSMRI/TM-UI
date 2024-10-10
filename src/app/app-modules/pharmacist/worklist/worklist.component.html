@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row m-t-10">
-    <div class="col-xs-8 col-sm-6 col-md-4">
+    <div class="col-xs-8 col-sm-6 col-md-4 fit_to_content">
       <div class="sw">
         <input
           type="search"
@@ -17,7 +17,7 @@
         </button>
       </div>
     </div>
-    <div class="col-xs-4 col-sm-6 col-md-8">
+    <div class="col-xs-4 col-sm-6 col-md-8 fit_to_content">
       <button
         mat-raised-button
         id="caseSheetButton"
@@ -42,11 +42,12 @@
   <div class="row m-t-10 m-b-40">
     <div class="col-sm-12">
       <mat-card>
-        <section class="table-responsive">
+        <section class="">
           <table
             mat-table
             [dataSource]="dataSource"
             aria-describedby="pharmacistWorklist"
+            class="table table-striped"
           >
             <ng-container matColumnDef="sno">
               <th
@@ -234,7 +235,7 @@
           </table>
           <div
             class="pull-center"
-            style="margin-top: 30px; text-align: center"
+            style="margin-bottom: 15px; text-align: center"
             [hidden]="dataSource.data.length > 0"
           >
             <strong>{{ currentLanguageSet?.common?.noRecordsFound }}</strong>

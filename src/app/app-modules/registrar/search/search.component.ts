@@ -824,9 +824,9 @@ export class SearchComponent implements OnInit, DoCheck {
       benObject.amritID !== undefined &&
       benObject.amritID !== ''
     ) {
-      const vanID = JSON.parse(
-        localStorage.getItem('serviceLineDetails') ?? '{}',
-      )?.vanID;
+      const serviceLineDetails: any =
+        localStorage.getItem('serviceLineDetails');
+      const vanID = JSON.parse(serviceLineDetails).vanID;
       benObject['providerServiceMapId'] =
         localStorage.getItem('providerServiceID');
       benObject['vanID'] = vanID;

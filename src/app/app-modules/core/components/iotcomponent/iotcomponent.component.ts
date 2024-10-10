@@ -75,7 +75,12 @@ export class IotcomponentComponent implements OnInit, DoCheck {
     this.procedure = this.input['procedure'];
     const providerServiceMapID = localStorage.getItem('providerServiceID');
     //SH20094090,calibration integration,09-06-2021
-    if (this.procedure?.value?.calibrationStartAPI !== null) {
+    if (
+      this.procedure !== undefined &&
+      this.procedure.value !== undefined &&
+      this.procedure.value.calibrationStartAPI !== undefined &&
+      this.procedure.value.calibrationStartAPI !== null
+    ) {
       const dialogRef = this.dialog.open(CalibrationComponent, {
         width: '800px',
         disableClose: true,

@@ -42,7 +42,6 @@ import { MatTableDataSource } from '@angular/material/table';
   providers: [DatePipe],
 })
 export class HealthIdDisplayModalComponent implements OnInit, DoCheck {
-  // healthIDArray: any = [];
   chooseHealthID: any;
   currentLanguageSet: any;
   healthIDMapped: any;
@@ -53,23 +52,23 @@ export class HealthIdDisplayModalComponent implements OnInit, DoCheck {
   selectedHealthID: any;
   healthIdOTPForm!: FormGroup;
   showProgressBar = false;
-  // searchDetails: any = [];
   searchPopup = false;
+
   displayedColumns: any = [
     'sno',
-    'healthIDNo',
-    'healthID',
-    'createdDate',
-    'healthIDMode',
+    'abhaNumber',
+    'abha',
+    'dateOfCreation',
+    'abhaMode',
   ];
   searchDetails = new MatTableDataSource<any>();
 
   displayedColumns1: any = [
     'sno',
-    'healthIDNo',
-    'healthID',
-    'createdDate',
-    'healthIDMode',
+    'abhaNumber',
+    'abha',
+    'dateOfCreation',
+    'abhaMode',
     'action',
   ];
   displayedColumns2: any = [
@@ -96,7 +95,7 @@ export class HealthIdDisplayModalComponent implements OnInit, DoCheck {
   }
 
   ngOnInit() {
-    console.log('datalist', this.input);
+    console.log('this.input', this.input);
     this.searchDetails.data = [];
     this.selectedHealthID = null;
     this.searchPopup = false;
@@ -104,18 +103,39 @@ export class HealthIdDisplayModalComponent implements OnInit, DoCheck {
     this.searchPopup =
       this.input.search !== undefined ? this.input.search : false;
     this.healthIDMapping = this.input.healthIDMapping;
+    console.log('this.healthIDMapping', this.healthIDMapping);
+    if (this.input.dataList !== undefined && this.input.search === true) {
+      const tempVal: any = this.input.dataList.otherFields;
+      this.benDetails = this.input.dataList.otherFields;
+      const tempCreatDate: any = this.input.dataList.createdDate;
+      console.log('tempVal', tempVal);
+      let tempDataList: any;
+      if (typeof tempVal === 'string') {
+        tempDataList = JSON.parse(tempVal);
+        console.log('tempDataList', tempDataList);
+        // if (tempDataList) {
+        //   tempDataList.tempCreatDate = this.datePipe.transform(
+        //     tempDataList.tempCreatDate,
+        //     'yyyy-MM-dd hh:mm:ss a'
+        //   );
+        // }
+        this.searchDetails.data.push(tempDataList);
+        console.log('this.searchDetails.data%%', this.searchDetails.data);
+      }
+    }
+    // this.searchDetails = this.input.dataList;
+    // if (
+    //   this.input.dataList !== undefined &&
+    //   this.input.dataList.data !== undefined &&
+    //   this.input.dataList.data.BenHealthDetails !== undefined
+    // )
     if (
       this.input.dataList !== undefined &&
-      this.input.dataList.length > 0 &&
-      this.input.search === true
-    )
-      this.searchDetails.data = this.input.dataList;
-    if (
-      this.input.dataList !== undefined &&
-      this.input.dataList.data !== undefined &&
       this.input.dataList.data.BenHealthDetails !== undefined
-    )
+    ) {
       this.benDetails = this.input.dataList.data.BenHealthDetails;
+      console.log('this.benDetails1', this.benDetails);
+    }
     this.healthIdOTPForm = this.createOtpGenerationForm();
     this.createList();
   }
@@ -143,6 +163,7 @@ export class HealthIdDisplayModalComponent implements OnInit, DoCheck {
       });
     }
   }
+
   onRadioChange(data: any) {
     this.selectedHealthID = data;
   }
@@ -278,10 +299,10 @@ export class HealthIdDisplayModalComponent implements OnInit, DoCheck {
         healthIDDetailsTxnID: txnId,
       },
     });
-    dialogRefValue.afterClosed().subscribe((result: any) => {
+
+    dialogRefValue.afterClosed().subscribe((result) => {
       console.log('result', result);
     });
-    this.closeDialog();
   }
 
   printHealthIDCard(data: any) {

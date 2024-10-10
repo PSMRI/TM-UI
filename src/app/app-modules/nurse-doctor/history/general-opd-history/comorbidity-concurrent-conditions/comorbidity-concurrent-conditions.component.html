@@ -29,8 +29,8 @@
       [ngClass]="{ odd: !isOdd }"
     >
       <ng-container [formGroupName]="i">
-        <div class="col-3 box">
-          <mat-form-field>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 box box">
+          <mat-form-field class="input-full-width">
             <mat-label class="mat-label-text">{{
               currentLanguageSet?.historyData?.ancHistory
                 ?.combordityANC_OPD_NCD_PNC?.comorbidConditions
@@ -39,9 +39,9 @@
               class="select-full-width"
               formControlName="comorbidConditions"
               name="comorbidConditions"
-              (change)="
+              (selectionChange)="
                 filterComorbidityConcurrentConditionsType(
-                  $event,
+                  $event.value,
                   i,
                   comorbidityConcurrentConditions
                 )
@@ -81,19 +81,7 @@
           </mat-form-field>
         </div>
 
-        <div
-          class="col-3 box"
-          *ngIf="
-            (comorbidityConcurrentConditions?.value?.comorbidConditions !==
-              null &&
-              comorbidityConcurrentConditions?.value?.comorbidConditions !==
-                '') ||
-            comorbidityConcurrentConditions.value.comorbidConditions
-              ?.comorbidCondition === 'None' ||
-            comorbidityConcurrentConditions.value.comorbidConditions
-              ?.comorbidCondition === 'Nil'
-          "
-        >
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 box">
           <mat-form-field class="input-full-width">
             <mat-label class="mat-label-text">{{
               currentLanguageSet?.DurationData?.duration
@@ -111,18 +99,8 @@
           </mat-form-field>
         </div>
 
-        <div
-          class="col-3 box"
-          *ngIf="
-            (comorbidityConcurrentConditions?.value?.timePeriodAgo !== null &&
-              comorbidityConcurrentConditions?.value?.timePeriodAgo !== '') ||
-            comorbidityConcurrentConditions.value.comorbidConditions
-              ?.comorbidCondition === 'None' ||
-            comorbidityConcurrentConditions.value.comorbidConditions
-              ?.comorbidCondition === 'Nil'
-          "
-        >
-          <mat-form-field>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 box">
+          <mat-form-field class="input-full-width">
             <mat-label class="mat-label-text">{{
               currentLanguageSet?.DurationData?.durationUnit
             }}</mat-label>
@@ -140,7 +118,9 @@
           </mat-form-field>
         </div>
 
-        <div class="col-3 box action-btn-container" style="text-align: end">
+        <div
+          class="col-xs-12 col-sm-6 col-md-2 col-lg-3 box action-btn-container"
+        >
           <button
             mat-mini-fab
             color="warn"

@@ -19,7 +19,7 @@ mat-input-container {
 }
 
 mat-card {
-  min-height: 400px;
+  /* min-height: 400px; */
   /* padding: 15px; */
 }
 
@@ -29,5 +29,14 @@ mat-card {
   }
   #caseSheetButton {
     width: 100%;
+  }
+}
+@media screen  and (min-width:360px) and (max-width:430px) {
+  .fit_to_content{
+    width: fit-content !important;
+
+  }
+  .mat_blue{
+    margin-top: 2px;
   }
 }

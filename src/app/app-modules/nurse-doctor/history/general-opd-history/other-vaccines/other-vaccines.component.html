@@ -116,9 +116,9 @@
         <div
           class="col-3 box"
           *ngIf="
-            vaccine?.value?.actualReceivingAge !== null &&
-            vaccine?.value?.actualReceivingAge !== '' &&
-            vaccine.value.actualReceivingAge > 0
+            vaccine.value.actualReceivingAge > 0 &&
+            vaccine.value.ageUnit !== null &&
+            vaccine.value.ageUnit !== undefined
           "
         >
           <mat-form-field>

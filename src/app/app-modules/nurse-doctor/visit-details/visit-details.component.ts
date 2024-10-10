@@ -47,6 +47,7 @@ export class VisitDetailsComponent implements OnInit, DoCheck {
   enableFileSelection = false;
   current_language_set: any;
   showCOVID = false;
+  isCovidVaccinationStatusVisible = false;
   patientVisitDetailsForm!: FormGroup;
   covidVaccineStatusForm!: FormGroup;
   patientChiefComplaintsForm!: FormGroup;

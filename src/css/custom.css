@@ -123,6 +123,8 @@ input {
 .control-label {
   font-family: SF-UI-Display-Regular !important;
   color: #999 !important;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .md2-datepicker-arrow {
@@ -2256,8 +2258,10 @@ input:-webkit-autofill, input:-webkit-autofill:focus, input:-webkit-autofill:hov
 
 .font-history-label {
   color: #ff9900 !important;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: initial;
 }
-
 /* New css added by neeraj to make textbot and dropdown font similar on 02-04-2018 */
 
 .md2-datepicker-value, .mat-select-placeholder, .mat-select-value-text, .mat-input-element, .mat-input-placeholder-wrapper, .md2-autocomplete-placeholder {

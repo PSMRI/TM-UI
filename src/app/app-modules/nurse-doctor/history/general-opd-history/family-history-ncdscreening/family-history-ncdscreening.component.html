@@ -54,7 +54,7 @@
                 name="diseaseType"
                 formControlName="diseaseType"
                 (selectionChange)="
-                  filterFamilyDiseaseList($event, i, familyDisease)
+                  filterFamilyDiseaseList($event.value, i, familyDisease)
                 "
               >
                 <mat-option
@@ -104,15 +104,7 @@
             </mat-form-field>
           </div>
 
-          <div
-            class="col-3 box"
-            *ngIf="
-              (familyDisease?.value?.diseaseType !== null &&
-                familyDisease?.value?.diseaseType !== '') ||
-              familyDisease.value.diseaseType?.diseaseType === 'None' ||
-              familyDisease.value.diseaseType?.diseaseType === 'Nil'
-            "
-          >
+          <div class="col-3 box">
             <mat-form-field>
               <mat-label class="mat-label-text">{{
                 currentLanguageSet?.historyData?.ancHistory
@@ -142,7 +134,10 @@
               id="removeFamilyDisease"
               class="mat_warn_circle"
               style="margin-right: 5px"
-              *ngIf="i !== 0 || (i === 0 && familyDisease.touched)"
+              *ngIf="
+                i !== 0 ||
+                (i === 0 && (familyDisease.touched || familyDisease.dirty))
+              "
               (click)="removeFamilyDisease(i, familyDisease)"
             >
               <mat-icon class="md-18">close</mat-icon>
@@ -176,7 +171,7 @@
           <mat-radio-group
             name="isGeneticDisorder"
             formControlName="isGeneticDisorder"
-            (selectionChange)="resetOtherGeneticOrder()"
+            (change)="resetOtherGeneticOrder()"
           >
             <mat-radio-button color="primary" [value]="true">{{
               currentLanguageSet?.common?.yes

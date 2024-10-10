@@ -53,6 +53,7 @@ export class CancerDoctorDiagnosisCaseSheetComponent
   benDetails: any;
   covidVaccineDetails: any;
   ageValidationForVaccination = '< 12 years';
+  isCovidVaccinationStatusVisible = false;
 
   constructor(
     private doctorService: DoctorService,

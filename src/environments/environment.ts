@@ -25,18 +25,19 @@
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
-const commonIP = 'http://183.82.107.186:8080';
-const tmIP = 'http://183.82.107.186:8080';
-const IP104 = 'http://183.82.107.186:8080';
-const mmuIP = 'http://183.82.107.186:8080';
-const schedulerIP = 'http://183.82.107.186:8080';
-const adminIP = 'http://183.82.107.186:8080';
-const FHIRIP = 'http://183.82.107.186:8080';
-const inventoryUI_IP = 'http://183.82.107.186:8080';
+const commonIP = 'https://amritwprdev.piramalswasthya.org';
+const tmIP = 'https://amritwprdev.piramalswasthya.org';
+const IP104 = 'https://amritwprdev.piramalswasthya.org';
+const mmuIP = 'https://amritwprdev.piramalswasthya.org';
+const schedulerIP = 'https://amritwprdev.piramalswasthya.org';
+const adminIP = 'https://amritwprdev.piramalswasthya.org';
+const FHIRIP = 'https://amritwprdev.piramalswasthya.org';
+const inventoryUI_IP = 'https://amritwprdev.piramalswasthya.org';
 
 const SERVER_IP = '10.208.122.39';
 
 const SWYMED_IP = 'swymed://14.143.13.109';
+const identityIP = 'https://amritwprdev.piramalswasthya.org/';
 
 // With API MAN Configuration
 // const COMMON_API_OPEN = `http://${IP}:8080/apiman-gateway/IEMR/Common/open/`;
@@ -46,6 +47,7 @@ const SWYMED_IP = 'swymed://14.143.13.109';
 // const SCHEDULER_API = `http://${IP}:8080/apiman-gateway/IEMR/Scheduling/1.0/`;
 
 // Without API MAN Configuration
+const IDENTITY_API = `${identityIP}/identity-0.0.1/`;
 const COMMON_API_OPEN = `${commonIP}/commonapi-v1.0/`;
 const COMMON_API = `${commonIP}/commonapi-v1.0/`;
 const TM_API = `${tmIP}/tmapi-v1.0/`;
@@ -71,10 +73,10 @@ export const environment = {
 
   parentAPI: `${TM_API}`,
 
-  INVENTORY_URL: inventoryUI_IP + '/inventory-ui-next/#/redirin?',
+  INVENTORY_URL: inventoryUI_IP + '/inventory/#/redirin?',
   fallbackUrl: '/pharmacist/redirfallback',
   redirInUrl: '/pharmacist/redirin',
-  TELEMEDICINE_URL: schedulerIP + '/scheduler-ui-next/#/?',
+  TELEMEDICINE_URL: schedulerIP + '/scheduler/#/?',
   fallbackMMUUrl: `/logout-tm`,
   redirInMMUUrl: `/nurse-doctor/tcspecialist-worklist`,
 
@@ -135,6 +137,8 @@ export const environment = {
   nurseMasterDataUrl: `${TM_API}master/nurse/masterData/`,
   doctorMasterDataUrl: `${TM_API}master/doctor/masterData/`,
   snomedCTRecordURL: `${TM_API}snomed/getSnomedCTRecord`,
+  getDistrictTalukUrl: `${MMU_API}location/get/DistrictTalukMaster/`,
+
   /**
    * Lab Data Urls
    */
@@ -470,4 +474,18 @@ export const environment = {
 
   generateABHAForBio: `${FHIR_API}healthIDWithBio/verifyBio`,
   generateABHAForBioMobileOTP: `${FHIR_API}healthIDWithBio/generateMobileOTP`,
+
+  /** Previous Anthropometry  Urls */
+  getPreviousAnthropometryUrl: `${TM_API}anthropometryVitals/getBenHeightDetailsFrmNurse`,
+  /* Customization APIs*/
+  getAllRegistrationData: `${COMMON_API}customization/fetchAllData`,
+
+  /*Family Tagging Urls */
+  relationShipUrl: `${TM_API}registrar/registrarMasterData`,
+  saveFamilyTaggingUrl: `${IDENTITY_API}family/addTag`,
+  editFamilyTaggingUrl: `${IDENTITY_API}family/editFamilyTagging`,
+  untagFamilyUrl: `${IDENTITY_API}family/untag`,
+  familySearchUrl: `${IDENTITY_API}family/searchFamily`,
+  createFamilyUrl: `${IDENTITY_API}family/createFamily`,
+  getFamilyMemberUrl: `${IDENTITY_API}family/getFamilyDetails`,
 };

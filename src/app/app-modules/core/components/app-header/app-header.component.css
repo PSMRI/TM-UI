@@ -39,6 +39,9 @@
 .menu-font{
     font-size: 14px !important;
 }
+.nav-menu-center{
+    text-align: center !important;
+}
 .navbar-iemr {
     background-color: #253746;
     color: white;

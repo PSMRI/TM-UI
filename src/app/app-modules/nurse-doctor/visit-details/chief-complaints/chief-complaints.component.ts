@@ -85,8 +85,6 @@ export class ChiefComplaintsComponent implements OnInit, DoCheck, OnDestroy {
     'unitOfDuration',
     'description',
   ];
-  chiefComplaint: any;
-  duration: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
   dataSource = new MatTableDataSource<any>();
@@ -539,7 +537,7 @@ export class ChiefComplaintsComponent implements OnInit, DoCheck, OnDestroy {
       });
   }
   onInputDuration(complaintForm: AbstractControl) {
-    if (this.duration) {
+    if (complaintForm.value.duration) {
       complaintForm.get('unitOfDuration')?.enable();
     } else {
       complaintForm.get('unitOfDuration')?.disable();
@@ -590,7 +588,7 @@ export class ChiefComplaintsComponent implements OnInit, DoCheck, OnDestroy {
             .toLowerCase()
             .indexOf(complaint.toLowerCase().trim()) >= 0,
       );
-      if (this.chiefComplaint) {
+      if (complaint) {
         complaintForm.get('duration')?.enable();
         complaintForm.get('description')?.enable();
       }
@@ -610,7 +608,7 @@ export class ChiefComplaintsComponent implements OnInit, DoCheck, OnDestroy {
             .toLowerCase()
             .indexOf(complaint.chiefComplaint.toLowerCase().trim()) >= 0,
       );
-      if (this.chiefComplaint) {
+      if (complaint) {
         complaintForm.get('duration')?.enable();
         complaintForm.get('description')?.enable();
       }
@@ -626,7 +624,7 @@ export class ChiefComplaintsComponent implements OnInit, DoCheck, OnDestroy {
     if (this.suggestedChiefComplaintList[i].length === 0) complaintForm.reset();
   }
   reEnterChiefComplaint(complaintForm: AbstractControl) {
-    if (this.chiefComplaint) {
+    if (complaintForm.value.chiefComplaint) {
       complaintForm.get('duration')?.enable();
       complaintForm.get('description')?.enable();
     } else {

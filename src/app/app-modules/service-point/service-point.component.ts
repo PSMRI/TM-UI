@@ -82,9 +82,13 @@ export class ServicePointComponent implements OnInit, DoCheck {
   servicePointForm = this.fb.group({
     vanID: ['', Validators.required],
     stateID: ['', Validators.required],
+    stateName: ['', Validators.required],
     districtID: ['', Validators.required],
+    districtName: ['', Validators.required],
     blockID: ['', Validators.required],
+    blockName: ['', Validators.required],
     districtBranchID: ['', Validators.required],
+    villageName: ['', Validators.required],
   });
 
   ngOnInit() {
@@ -242,6 +246,14 @@ export class ServicePointComponent implements OnInit, DoCheck {
 
   fetchDistrictsOnStateSelection(stateID: any) {
     console.log('stateID', stateID);
+    if (stateID) {
+      this.statesList.forEach((item: any) => {
+        if (item.stateID === stateID)
+          return this.servicePointForm.controls.stateName.setValue(
+            item.stateName,
+          );
+      });
+    }
     this.registrarService.getDistrictList(stateID).subscribe((res: any) => {
       if (res && res.statusCode === 200) {
         this.districtList = res.data;
@@ -257,6 +269,14 @@ export class ServicePointComponent implements OnInit, DoCheck {
   }
 
   fetchSubDistrictsOnDistrictSelection(districtID: any) {
+    if (districtID) {
+      this.districtList.forEach((item: any) => {
+        if (item.districtID === districtID)
+          return this.servicePointForm.controls.districtName.setValue(
+            item.districtName,
+          );
+      });
+    }
     this.registrarService
       .getSubDistrictList(districtID)
       .subscribe((res: any) => {
@@ -273,6 +293,14 @@ export class ServicePointComponent implements OnInit, DoCheck {
   }
 
   onSubDistrictChange(blockID: any) {
+    if (blockID) {
+      this.subDistrictList.forEach((item: any) => {
+        if (item.blockID === blockID)
+          return this.servicePointForm.controls.blockName.setValue(
+            item.blockName,
+          );
+      });
+    }
     this.registrarService.getVillageList(blockID).subscribe((res: any) => {
       if (res && res.statusCode === 200) {
         this.villageList = res.data;
@@ -286,12 +314,27 @@ export class ServicePointComponent implements OnInit, DoCheck {
     });
   }
 
+  onDistrictBranchSelection(districtBranchID: any) {
+    if (districtBranchID) {
+      this.villageList.forEach((item: any) => {
+        if (item.districtBranchID === districtBranchID)
+          return this.servicePointForm.controls.villageName.setValue(
+            item.villageName,
+          );
+      });
+    }
+  }
+
   saveLocationDataToStorage() {
     const locationData = {
       stateID: this.servicePointForm.controls.stateID.value,
+      stateName: this.servicePointForm.controls.stateName.value,
       districtID: this.servicePointForm.controls.districtID.value,
+      districtName: this.servicePointForm.controls.districtName.value,
+      blockName: this.servicePointForm.controls.blockName.value,
       blockID: this.servicePointForm.controls.blockID.value,
       subDistrictID: this.servicePointForm.controls.districtBranchID.value,
+      villageName: this.servicePointForm.controls.villageName.value,
     };
 
     // Convert the object into a JSON string

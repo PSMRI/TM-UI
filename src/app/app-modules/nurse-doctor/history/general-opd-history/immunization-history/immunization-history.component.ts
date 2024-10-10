@@ -211,12 +211,11 @@ export class ImmunizationHistoryComponent
   }
 
   addVaccine(i: any) {
+    let vaccineList: any = [];
     const immunizationList = <FormArray>(
       this.immunizationHistoryForm.controls['immunizationList']
     );
-    const vaccineList = (<FormArray>immunizationList.controls[i]).get(
-      'vaccines',
-    ) as FormArray;
+    vaccineList = (<FormArray>immunizationList.controls[i]).get('vaccines');
     vaccineList.push(this.initVaccineList());
   }
 

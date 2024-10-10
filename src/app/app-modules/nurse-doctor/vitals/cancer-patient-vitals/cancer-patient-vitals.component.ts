@@ -29,6 +29,7 @@ import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 import { IotcomponentComponent } from 'src/app/app-modules/core/components/iotcomponent/iotcomponent.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-nurse-cancer-patient-vitals',
@@ -49,7 +50,7 @@ export class CancerPatientVitalsComponent
 
   female = false;
   benAge = 0;
-  BMI: any;
+  BMI: any = null;
 
   startWeightTest = environment.startWeighturl;
   startTempTest = environment.startTempurl;
@@ -66,6 +67,7 @@ export class CancerPatientVitalsComponent
   startRBSTest = environment.startRBSurl;
   male = false;
   rbsPopup = false;
+  attendant: any;
   constructor(
     private dialog: MatDialog,
     private confirmationService: ConfirmationService,
@@ -73,6 +75,7 @@ export class CancerPatientVitalsComponent
     private doctorService: DoctorService,
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     public httpServiceService: HttpServiceService,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
@@ -111,6 +114,35 @@ export class CancerPatientVitalsComponent
     if (String(this.mode) === 'update') {
       this.updateCancerVitals();
     }
+
+    this.attendant = this.route.snapshot.params['attendant'];
+    if (this.attendant === 'nurse') {
+      this.getPreviousVisitAnthropometry();
+    }
+  }
+
+  previousAnthropometryDataSubscription: any;
+  getPreviousVisitAnthropometry() {
+    this.previousAnthropometryDataSubscription = this.doctorService
+      .getPreviousVisitAnthropometry({
+        benRegID: localStorage.getItem('beneficiaryRegID'),
+      })
+      .subscribe((anthropometryData: any) => {
+        if (
+          anthropometryData &&
+          anthropometryData.data &&
+          anthropometryData.data.response &&
+          anthropometryData.data.response !== 'Visit code is not found' &&
+          anthropometryData.data.response !== 'No data found'
+        ) {
+          const heightStr = anthropometryData.data.response.toString();
+          this.patientVitalsForm.controls['height_cm'].patchValue(
+            heightStr.endsWith('.0')
+              ? Math.round(anthropometryData.data.response)
+              : anthropometryData.data.response,
+          );
+        }
+      });
   }
 
   checkDiasableRBS() {
@@ -193,6 +225,9 @@ export class CancerPatientVitalsComponent
     if (this.rbsSelectedInInvestigationSubscription)
       this.rbsSelectedInInvestigationSubscription.unsubscribe();
     this.nurseService.rbsTestResultFromDoctorFetch = null;
+
+    if (this.previousAnthropometryDataSubscription)
+      this.previousAnthropometryDataSubscription.unsubscribe();
   }
 
   beneficiaryDetailSubscription: any;

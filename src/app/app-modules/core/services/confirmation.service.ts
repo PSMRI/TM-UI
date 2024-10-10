@@ -44,7 +44,6 @@ export class ConfirmationService {
     message: string,
     btnOkText = 'OK',
   ): Observable<boolean> {
-    const config = new MatDialogConfig();
     const dialogRef = this.dialog.open(CommonDialogComponent, {
       width: '420px',
       disableClose: false,

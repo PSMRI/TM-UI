@@ -10,24 +10,26 @@
     <br />
     <br />
     <span *ngIf="!contactFlag">
-      <mat-label class="mat-label-text">{{
-        currentLanguageSet?.covid?.historyOfContact
-      }}</mat-label>
-      <mat-select
-        class="input-full-width vox"
-        [multiple]="true"
-        name="contactStatus"
-        formControlName="contactStatus"
-        id="contactStatus"
-        (selectionChange)="contactSelected()"
-        required="{{ contactReqiured }}"
-      >
-        <mat-option
-          *ngFor="let contactStatus of contactData"
-          [value]="contactStatus"
-          >{{ contactStatus }}</mat-option
+      <mat-form-field [style.width]="'100%'">
+        <mat-label class="mat-label-text">{{
+          currentLanguageSet?.covid?.historyOfContact
+        }}</mat-label>
+        <mat-select
+          class="input-full-width vox"
+          [multiple]="true"
+          name="contactStatus"
+          formControlName="contactStatus"
+          id="contactStatus"
+          (selectionChange)="contactSelected()"
+          required="{{ contactReqiured }}"
         >
-      </mat-select>
+          <mat-option
+            *ngFor="let contactStatus of contactData"
+            [value]="contactStatus"
+            >{{ contactStatus }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
     </span>
     <br />
     <span *ngIf="contactFlag" class="box">

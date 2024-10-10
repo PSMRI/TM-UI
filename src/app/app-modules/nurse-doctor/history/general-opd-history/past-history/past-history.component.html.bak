@@ -1,0 +1,293 @@
+<div [formGroup]="pastHistoryForm">
+  <div>
+    <div class="col-12" style="float: right; text-align: end">
+      <span class="font-history-label">{{
+        currentLanguageSet?.historyData?.Previousillness
+          ?.previousillnessandsurgery
+      }}</span>
+      <button
+        type="button"
+        mat-icon-button
+        matTooltip="{{ currentLanguageSet?.DurationData?.previousDetails }}"
+        id="previousANCPastHistory"
+        class="mat_icon_blue"
+        color="primary"
+        (click)="getPreviousPastHistory()"
+      >
+        <mat-icon class="md-18">history</mat-icon>
+      </button>
+    </div>
+    <div
+      class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
+      formArrayName="pastIllness"
+      style="width: 100%"
+    >
+      <header class="description">
+        <h4 style="font-size: 18px">
+          <strong>{{
+            currentLanguageSet?.historyData?.ancHistory
+              ?.pastIllnessDataANC_OPD_NCD_PNC?.pastIllness
+          }}</strong>
+        </h4>
+      </header>
+      <div
+        class="row multi-row-select col-12"
+        style="margin: 65px 0px 15px 0px; background-color: #f0f5f5"
+        *ngFor="
+          let pastIllness of getPastIllness();
+          let i = index;
+          let isLast = last;
+          let isOdd = odd
+        "
+        [ngClass]="{ odd: !isOdd }"
+      >
+        <ng-container [formGroupName]="i">
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 box">
+            <mat-form-field [style.width]="'100%'" class="input-full-width">
+              <mat-label class="mat-label-text">{{
+                currentLanguageSet?.historyData?.ancHistory
+                  ?.pastIllnessDataANC_OPD_NCD_PNC?.illness
+              }}</mat-label>
+              <mat-select
+                class="select-full-width"
+                name="pastAcuteIllness"
+                formControlName="illnessType"
+                (selectionChange)="
+                  filterPastIllnessType($event.value, i, pastIllness)
+                "
+              >
+                <mat-option
+                  *ngFor="let illness of pastIllnessSelectList[i]"
+                  [value]="illness"
+                >
+                  {{ illness.illnessType }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div   class="col-md-4 col-xs-12 col-md-4 col-lg-2 box"
+            *ngIf="pastIllness.value.illnessType?.illnessType === 'Other'"
+          >
+            <mat-form-field [style.width]="'100%'" class="input-full-width">
+              <mat-label class="mat-label-text">{{
+                currentLanguageSet?.historyData?.opd_NCD_PNCHistory?.obstetric
+                  ?.others
+              }}</mat-label>
+              <input
+                autocomplete="off"
+                matInput
+                appDefaultNull
+                maxlength="50"
+                allowText="alphaspace"
+                name="otherIllnessType"
+                formControlName="otherIllnessType"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4 col-xs-12 col-md-4 col-lg-2 box">
+            <mat-form-field [style.width]="'100%'" class="input-full-width">
+              <mat-label class="mat-label-text">{{
+                currentLanguageSet?.nurseData?.chiefComplaintsDetails?.duration
+              }}</mat-label>
+              <input
+                autocomplete="off"
+                matInput
+                appDefaultNull
+                allowText="number"
+                maxlength="2"
+                name="timePeriodAgo"
+                formControlName="timePeriodAgo"
+                (change)="validateDuration(pastIllness)"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 box">
+            <mat-form-field [style.width]="'100%'" class="input-full-width">
+              <mat-label class="mat-label-text">{{
+                currentLanguageSet?.DurationData?.timeperiodAgo
+              }}</mat-label>
+              <mat-select
+                class="select-full-width"
+                name="timePeriodUnit"
+                formControlName="timePeriodUnit"
+                (selectionChange)="validateDuration(pastIllness)"
+              >
+                <mat-option value="Days">Day(s)</mat-option>
+                <mat-option value="Weeks">Week(s)</mat-option>
+                <mat-option value="Months">Month(s)</mat-option>
+                <mat-option value="Years">Year(s)</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div
+            class="col-md-4 col-xs-12 col-md-4 col-lg-2 box"
+            style="margin-top: 15px"
+          >
+            <button
+              style="margin-right: 5px"
+              mat-mini-fab
+              color="warn"
+              class="mat_warn_circle"
+              *ngIf="
+                i !== 0 ||
+                (i === 0 && (pastIllness.touched || pastIllness.dirty))
+              "
+              (click)="removePastIllness(i, pastIllness)"
+            >
+              <mat-icon class="md-18">close</mat-icon>
+            </button>
+            <button
+              mat-mini-fab
+              color="primary"
+              class="mat_blue_circle"
+              *ngIf="isLast"
+              [disabled]="checkIllnessValidity(pastIllness)"
+              (click)="addPastIllness()"
+            >
+              <mat-icon class="md-18">add</mat-icon>
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12" formArrayName="pastSurgery" style="width: 100%">
+    <header class="description">
+      <h4 style="font-size: 18px">
+        <strong>{{
+          currentLanguageSet?.historyData?.ancHistory
+            ?.pastHOSurgeryANC_OPD_NCD_PNC?.pastSurgery
+        }}</strong>
+      </h4>
+    </header>
+    <div
+      class="row multi-row-select col-xs-12 col-sm-6 col-md-3 col-lg-3"
+      style="width: 100%; margin: 65px 0px 15px 0px; background-color: #f0f5f5"
+      *ngFor="
+        let pastSurgery of getPastSurgery();
+        let i = index;
+        let isLast = last;
+        let isOdd = odd
+      "
+      [ngClass]="{ odd: !isOdd }"
+    >
+      <ng-container [formGroupName]="i">
+        <div class="col-md-4 col-xs-12 col-md-4 col-lg-3 box">
+          <mat-form-field [style.width]="'100%'">
+            <mat-label class="mat-label-text">{{
+              currentLanguageSet?.historyData?.ancHistory
+                ?.pastHOSurgeryANC_OPD_NCD_PNC?.hoSurgery
+            }}</mat-label>
+            <mat-select
+              class="select-full-width"
+              formControlName="surgeryType"
+              name="surgeryType"
+              (selectionChange)="
+                filterPastSurgeryType($event.value, i, pastSurgery)
+              "
+            >
+              <mat-option
+                *ngFor="let surgery of pastSurgerySelectList[i]"
+                [value]="surgery"
+                >{{ surgery.surgeryType }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div
+          class="col-md-4 col-xs-12 col-md-4 col-lg-2 box"
+          *ngIf="pastSurgery.value.surgeryType?.surgeryType === 'Other'"
+        >
+          <mat-form-field [style.width]="'100%'" class="input-full-width">
+            <mat-label class="mat-label-text">{{
+              currentLanguageSet?.historyData?.opd_NCD_PNCHistory?.obstetric
+                ?.others
+            }}</mat-label>
+            <input
+              autocomplete="off"
+              matInput
+              appDefaultNull
+              maxlength="50"
+              allowText="alphaspace"
+              name="otherSurgeryType"
+              formControlName="otherSurgeryType"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-4 col-xs-12 col-md-4 col-lg-2 box">
+          <mat-form-field [style.width]="'100%'" class="input-full-width">
+            <mat-label class="mat-label-text">{{
+              currentLanguageSet?.nurseData?.chiefComplaintsDetails?.duration
+            }}</mat-label>
+            <input
+              autocomplete="off"
+              matInput
+              appDefaultNull
+              allowText="number"
+              maxlength="2"
+              name="timePeriodAgo"
+              formControlName="timePeriodAgo"
+              (change)="validateDuration(pastSurgery)"
+            />
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-4 col-xs-12 col-md-4 col-lg-3 box">
+          <mat-form-field [style.width]="'100%'">
+            <mat-label class="mat-label-text">{{
+              currentLanguageSet?.DurationData?.timeperiodAgo
+            }}</mat-label>
+            <mat-select
+              class="select-full-width"
+              formControlName="timePeriodUnit"
+              name="timePeriodUnit"
+              (change)="validateDuration(pastSurgery)"
+            >
+              <mat-option value="Days">Day(s)</mat-option>
+              <mat-option value="Weeks">Week(s)</mat-option>
+              <mat-option value="Months">Month(s)</mat-option>
+              <mat-option value="Years">Year(s)</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div
+          class="col-md-4 col-xs-12 col-md-4 col-lg-2 box"
+          style="margin-top: 15px"
+        >
+          <button
+            mat-mini-fab
+            color="warn"
+            style="margin-right: 5px"
+            class="mat_warn_circle"
+            id="removePastSurgery"
+            *ngIf="
+              i !== 0 || (i === 0 && (pastSurgery.touched || pastSurgery.dirty))
+            "
+            (click)="removePastSurgery(i, pastSurgery)"
+          >
+            <mat-icon class="md-18">close</mat-icon>
+          </button>
+          <button
+            mat-mini-fab
+            color="primary"
+            class="mat_blue_circle"
+            *ngIf="isLast"
+            [disabled]="checkSurgeryValidity(pastSurgery)"
+            id="addPastSurgery"
+            (click)="addPastSurgery()"
+          >
+            <mat-icon class="md-18">add</mat-icon>
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

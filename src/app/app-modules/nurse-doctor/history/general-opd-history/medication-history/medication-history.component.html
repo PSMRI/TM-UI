@@ -1,5 +1,9 @@
 <div [formGroup]="medicationHistoryForm">
-  <div class="col-xs-12" formArrayName="medicationHistoryList">
+  <div
+    class="col-xs-12 col-sm-6 col-md-4 col-lg-3"
+    formArrayName="medicationHistoryList"
+    style="width: 100%"
+  >
     <div class="col-12" style="text-align: end">
       <span class="font-history-label">{{
         currentLanguageSet?.historyData?.ancHistory?.medicationANC_OPD_NCD_PNC
@@ -19,8 +23,8 @@
     </div>
 
     <div
-      class="col-12 row multi-row-select"
-      style="margin: 15px 0px 15px 0px; background-color: #f0f5f5"
+      class="col-xs-12 col-sm-6 col-md-3 col-lg-3 row multi-row-select"
+      style="margin: 15px 0px 15px 0px; background-color: #f0f5f5; width: 100%"
       *ngFor="
         let medicationHistory of getMedicationHistory();
         let i = index;
@@ -30,7 +34,7 @@
       [ngClass]="{ odd: !isOdd }"
     >
       <ng-container [formGroupName]="i">
-        <div class="col-3">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
           <mat-form-field class="input-full-width">
             <mat-label class="mat-label-text">{{
               currentLanguageSet?.historyData?.ancHistory
@@ -44,17 +48,12 @@
               maxlength="50"
               formControlName="currentMedication"
               name="currentMedication"
+              (input)="enableDuration(medicationHistory)"
             />
           </mat-form-field>
         </div>
 
-        <div
-          class="col-3"
-          *ngIf="
-            medicationHistory?.value?.currentMedication !== null &&
-            medicationHistory?.value?.currentMedication !== ''
-          "
-        >
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
           <mat-form-field class="input-full-width">
             <mat-label class="mat-label-text">{{
               currentLanguageSet?.nurseData?.chiefComplaintsDetails?.duration
@@ -67,19 +66,13 @@
               maxlength="2"
               formControlName="timePeriodAgo"
               name="timePeriodAgo"
-              (selectionChange)="validateDuration(medicationHistory)"
+              (change)="validateDuration(medicationHistory)"
             />
           </mat-form-field>
         </div>
 
-        <div
-          class="col-3"
-          *ngIf="
-            medicationHistory.value.timePeriodAgo !== null &&
-            medicationHistory.value.timePeriodAgo !== ''
-          "
-        >
-          <mat-form-field>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+          <mat-form-field class="input-full-width">
             <mat-label class="mat-label-text">{{
               currentLanguageSet?.DurationData?.durationUnit
             }}</mat-label>
@@ -97,13 +90,19 @@
           </mat-form-field>
         </div>
 
-        <div class="col-sm-3 box action-btn-container" style="text-align: end">
+        <div
+          class="col-xs-12 col-sm-6 col-md-3 col-lg-3 box action-btn-container"
+        >
           <button
             mat-mini-fab
             color="warn"
             class="mat_warn_circle"
             style="margin-right: 5px"
-            *ngIf="i !== 0 || (i === 0 && medicationHistory.touched)"
+            *ngIf="
+              i !== 0 ||
+              (i === 0 &&
+                (medicationHistory.touched || medicationHistory.dirty))
+            "
             (click)="removeMedicationHistory(i, medicationHistory)"
           >
             <mat-icon class="md-18">close</mat-icon>

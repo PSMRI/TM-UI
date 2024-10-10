@@ -1,25 +1,19 @@
 .radio-btn {
   margin-left: 8px;
 }
-
+ 
 .align-Field {
   margin-top: -10px;
 }
-
+ 
 .container {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
-.matCardService {
-  width: 500px;
-  margin-left: 10px;
-  margin-right: 10px;
-  border-radius: 5px;
-  align-items: center;
-}
-
+ 
+ 
+ 
 .mat-option {
   white-space: nowrap;
   overflow: hidden;
@@ -34,9 +28,90 @@
   cursor: pointer;
   outline: none;
 }
-
+ 
 mat-card-actions {
   display: block;
   float: right;
 }
-
+@media (min-width: 900px) {
+  /* CSS rules here */
+ 
+  .matCardService {
+    width: 300px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    align-items: center;
+}
+}
+ 
+@media (min-width: 320px) {
+  /* CSS rules here */
+  .matCardService {
+    width: 270px ;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    align-items: center;
+ 
+}
+}
+ 
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+  /* CSS rules here */
+  .matCardService {
+    width: 300px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    align-items: center;
+  }
+}
+ 
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+  /* CSS rules here */
+  .matCardService {
+    width: 300px ;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    align-items: center;
+}
+}
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  /* CSS rules here */
+  .matCardService {
+    width: 500px ;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    align-items: center;
+}
+}
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  /* CSS rules here */
+  .matCardService {
+    width: 500px ;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    align-items: center;
+}
+}
+ 
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  /* CSS rules here */
+  .matCardService {
+    width: 500px ;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+    align-items: center;
+}
+}
+ 

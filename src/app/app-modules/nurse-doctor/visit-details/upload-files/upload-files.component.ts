@@ -191,6 +191,8 @@ export class UploadFilesComponent implements OnInit, DoCheck, OnChanges {
       fileContent: fileContent !== undefined ? fileContent.split(',')[1] : '',
       vanID: JSON.parse(serviceLineDetails).vanID,
       isUploaded: false,
+      providerServiceMapID: localStorage.getItem('providerServiceID'),
+      createdBy: localStorage.getItem('userName'),
     };
     this.fileObj.push(kmFileManager);
     this.nurseService.fileData = this.fileObj;

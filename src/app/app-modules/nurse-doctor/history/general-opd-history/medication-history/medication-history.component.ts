@@ -157,7 +157,21 @@ export class MedicationHistoryComponent implements OnInit, DoCheck, OnDestroy {
       this.addMedicationHistory();
     }
     formArray.patchValue(temp);
+    for (const formGroup of formArray.controls) {
+      if (formGroup instanceof FormGroup) {
+        if (
+          formGroup?.get('timePeriodAgo')?.value !== null &&
+          formGroup?.get('timePeriodUnit')?.value !== null
+        ) {
+          formGroup?.get('timePeriodAgo')?.enable();
+          formGroup?.get('timePeriodUnit')?.enable();
+        }
+        formGroup.markAsTouched();
+        formGroup.markAsDirty();
+      }
+    }
     formArray.markAsTouched();
+    formArray.markAsDirty();
   }
 
   addMedicationHistory() {
@@ -187,6 +201,9 @@ export class MedicationHistoryComponent implements OnInit, DoCheck, OnDestroy {
               timePeriodAgo: null,
               timePeriodUnit: null,
             });
+            // to disable the fields
+            medicationHistoryForm?.get('timePeriodAgo')?.disable();
+            medicationHistoryForm?.get('timePeriodUnit')?.disable();
           } else medicationHistoryList.removeAt(i);
           this.medicationHistoryForm.updateValueAndValidity();
           console.log(this.medicationHistoryForm.dirty);
@@ -244,8 +261,8 @@ export class MedicationHistoryComponent implements OnInit, DoCheck, OnDestroy {
   initMedicationHistory() {
     return this.fb.group({
       currentMedication: null,
-      timePeriodAgo: null,
-      timePeriodUnit: null,
+      timePeriodAgo: { value: null, disabled: true },
+      timePeriodUnit: { value: null, disabled: true },
     });
   }
 
@@ -272,11 +289,21 @@ export class MedicationHistoryComponent implements OnInit, DoCheck, OnDestroy {
       );
       formGroup.patchValue({ timePeriodAgo: null, timePeriodUnit: null });
     }
+    if (duration && !durationUnit) {
+      formGroup?.get('timePeriodUnit')?.enable();
+      formGroup?.get('timePeriodUnit')?.reset();
+    } else if (!duration) {
+      formGroup?.get('timePeriodUnit')?.disable();
+      formGroup?.get('timePeriodUnit')?.reset();
+    }
   }
 
-  checkValidity(medicationForm: any) {
-    const temp = medicationForm.value;
-    if (temp.currentMedication && temp.timePeriodAgo && temp.timePeriodUnit) {
+  checkValidity(medicationForm: AbstractControl<any, any>) {
+    if (
+      medicationForm?.get('currentMedication')?.value &&
+      medicationForm?.get('timePeriodAgo')?.value &&
+      medicationForm?.get('timePeriodUnit')?.value
+    ) {
       return false;
     } else {
       return true;
@@ -289,5 +316,16 @@ export class MedicationHistoryComponent implements OnInit, DoCheck, OnDestroy {
     const getLanguageJson = new SetLanguageComponent(this.httpServiceService);
     getLanguageJson.setLanguage();
     this.currentLanguageSet = getLanguageJson.currentLanguageObject;
+  }
+  enableDuration(medicationHistory?: AbstractControl<any, any>) {
+    if (medicationHistory?.value?.currentMedication) {
+      medicationHistory?.get('timePeriodAgo')?.enable();
+      medicationHistory?.get('timePeriodAgo')?.reset();
+    } else {
+      medicationHistory?.get('timePeriodAgo')?.disable();
+      medicationHistory?.get('timePeriodAgo')?.reset();
+      medicationHistory?.get('timePeriodUnit')?.disable();
+      medicationHistory?.get('timePeriodUnit')?.reset();
+    }
   }
 }

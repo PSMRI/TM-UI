@@ -1,13 +1,15 @@
 .circle {
   position: relative;
   padding: 0;
-  width: 300px;
+  width: 320px;
   height: 100px;
   z-index: 1;
   background: #3175c0;
   cursor: pointer;
   color: white;
   border-radius: 15px;
+  margin-top: 30px;
+  margin-left: 100px;
 }
 .line-height-65 {
   line-height: 65px !important;
@@ -46,7 +48,7 @@ label {
   50% { opacity: 1; }
 }
 .note {
-  font-size: 12px;
+  font-size: 14px;
   color: #4d4d33;
 }
 
@@ -81,4 +83,57 @@ mat-label {
   font-weight: 600;
   font-size: 22px;
   color: #4d4d33;
+}
+
+
+@media screen  and (min-width:768px) and (max-width:1024px) {
+  .mat-mdc-card {
+    overflow: unset !important;
+}  
+.matCardService {
+  width: 589px;
+  margin-right: 10px;
+  border-radius: 5px;
+  align-items: center;
+  min-height: 240px;
+}
+.circle {
+  position: relative;
+  padding: 0;
+  width: 390px;
+  height: 100px;
+  z-index: 1;
+  background: #3175c0;
+  cursor: pointer;
+  color: white;
+  border-radius: 15px;
+  margin-top: 30px;
+  margin-left: 110px;
+}
+}
+@media screen  and (min-width:360px) and (max-width:430px) {
+  .mat-mdc-card {
+    overflow: unset !important;
+}
+  .circle {
+    position: relative;
+    padding: 0;
+    width: 270px;
+    height: 100px;
+    z-index: 1;
+    background: #3175c0;
+    cursor: pointer;
+    color: white;
+    border-radius: 15px;
+    margin-top: 30px;
+    margin-left: 50px;
+}
+.matCardService {
+  width: 345px;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  align-items: center;
+  min-height: 240px;
+} 
 }

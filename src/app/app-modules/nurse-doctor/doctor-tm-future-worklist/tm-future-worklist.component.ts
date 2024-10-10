@@ -65,6 +65,7 @@ export class TmFutureWorklistComponent implements OnInit, DoCheck, OnDestroy {
     'district',
     'tcDate',
     'image',
+    'action',
   ];
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
   dataSource = new MatTableDataSource<any>();
