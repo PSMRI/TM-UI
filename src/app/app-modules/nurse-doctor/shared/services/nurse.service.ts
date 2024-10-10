@@ -690,6 +690,13 @@ export class NurseService {
     const obstetricFormula = JSON.parse(
       JSON.stringify(patientANCForm.controls.obstetricFormulaForm.value),
     );
+    if (detailedANC.lmpDate) {
+      const lmpDate = new Date(detailedANC.lmpDate);
+      const adjustedDate = new Date(
+        lmpDate.getTime() - lmpDate.getTimezoneOffset() * 60000,
+      );
+      detailedANC.lmpDate = adjustedDate.toISOString();
+    }
 
     const combinedANCForm = Object.assign({}, detailedANC, {
       beneficiaryRegID: localStorage.getItem('beneficiaryRegID'),
@@ -1223,7 +1230,7 @@ export class NurseService {
 
   postGeneralMenstrualHistory(menstrualHistoryForm: any, otherDetails: any) {
     const menstrualHistoryFormValue = JSON.parse(
-      JSON.stringify(menstrualHistoryForm.value),
+      JSON.stringify(menstrualHistoryForm.getRawValue()),
     );
     const temp = menstrualHistoryFormValue;
     if (temp.menstrualCycleStatus) {
@@ -1245,6 +1252,12 @@ export class NurseService {
 
     if (!temp.lMPDate) {
       temp.lMPDate = undefined;
+    } else {
+      const lmpDate = new Date(temp.lMPDate);
+      const adjustedDate = new Date(
+        lmpDate.getTime() - lmpDate.getTimezoneOffset() * 60000,
+      );
+      temp.lMPDate = adjustedDate.toISOString();
     }
 
     const menstrualHistoryData = Object.assign({}, temp, otherDetails);
