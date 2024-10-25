@@ -965,16 +965,14 @@ export class WorkareaComponent
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        this.labService.viewFileContent(result).subscribe((res: any) => {
-          const blob = new Blob([res], { type: res.type });
-          console.log(blob, 'blob');
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = result.fileName;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
+        const fileID = {
+          fileID: result,
+        };
+        this.labService.viewFileContent(fileID).subscribe((res: any) => {
+          if (res && res.data && res.data.statusCode === 200) {
+            const fileContent = res.data.data?.response;
+            location.href = fileContent;
+          }
         });
       }
     });
