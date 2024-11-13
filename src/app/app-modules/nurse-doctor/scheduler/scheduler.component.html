@@ -119,7 +119,7 @@
           <mat-datepicker #schedulerDatePicker></mat-datepicker>
         </mat-form-field>
       </div>
-      <div class="col-xs-12 box" style="margin-top: 15px">
+      <div class="col-xs-12 box">
         <mat-form-field style="width: 60%">
           <mat-label>{{
             currentLanguageSet?.common?.specialization
@@ -187,12 +187,13 @@
     </div>
   </div>
 
-  <div class="row" style="padding-bottom: 30px">
+  <div class="row m-b-20">
     <div class="col-xs-12" *ngIf="selectedSlot && selectedSlot !== null">
       <button
         mat-raised-button
         class="mat_blue"
         style="float: right"
+        color="primary"
         id="slot"
         (click)="saveScheduledSlot()"
       >
