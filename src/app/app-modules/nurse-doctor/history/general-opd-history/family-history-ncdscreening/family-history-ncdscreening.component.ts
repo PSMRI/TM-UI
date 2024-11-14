@@ -71,6 +71,7 @@ export class FamilyHistoryNcdscreeningComponent
   beneficiaryDetailSubscription: any;
   age: any;
   currentLanguageSet: any;
+  diabetesPresent = false;
 
   constructor(
     private fb: FormBuilder,
@@ -291,13 +292,16 @@ export class FamilyHistoryNcdscreeningComponent
     }
 
     console.log('diseaseForm', familyDiseaseForm);
-    let diabetesPresent = false;
+    this.diabetesPresent = false;
     tempArray.forEach((element: any) => {
-      if (element.diseaseType.diseaseType === 'Diabetes Mellitus') {
-        diabetesPresent = true;
+      if (
+        element?.diseaseType?.diseaseType === 'Diabetes Mellitus' &&
+        element?.deleted === false
+      ) {
+        this.diabetesPresent = true;
       }
     });
-    if (!diabetesPresent) {
+    if (!this.diabetesPresent) {
       this.idrsscore.setIDRSFamilyScore(0);
     }
 
@@ -380,6 +384,7 @@ export class FamilyHistoryNcdscreeningComponent
                 removedValue !== null &&
                 removedValue.diseaseType === 'Diabetes Mellitus'
               ) {
+                this.diabetesPresent = false;
                 this.idrsscore.setIDRSFamilyScore(0);
               }
               familyDiseaseList.push(this.initFamilyDiseaseList());
@@ -392,6 +397,7 @@ export class FamilyHistoryNcdscreeningComponent
                 removedValue !== null &&
                 removedValue.diseaseType === 'Diabetes Mellitus'
               ) {
+                this.diabetesPresent = false;
                 this.idrsscore.setIDRSFamilyScore(0);
               }
             }
@@ -411,6 +417,7 @@ export class FamilyHistoryNcdscreeningComponent
               removedValue !== null &&
               removedValue.diseaseType === 'Diabetes Mellitus'
             ) {
+              this.diabetesPresent = false;
               this.idrsscore.setIDRSFamilyScore(0);
             }
             if (familyDiseaseList.value[i].ID !== null) {
