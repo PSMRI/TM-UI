@@ -384,8 +384,7 @@ export class FamilyHistoryNcdscreeningComponent
                 removedValue !== null &&
                 removedValue.diseaseType === 'Diabetes Mellitus'
               ) {
-                this.diabetesPresent = false;
-                this.idrsscore.setIDRSFamilyScore(0);
+                this.resetDiabeticState();
               }
               familyDiseaseList.push(this.initFamilyDiseaseList());
               this.diseaseSelectList.push(this.diseaseMasterData);
@@ -397,8 +396,7 @@ export class FamilyHistoryNcdscreeningComponent
                 removedValue !== null &&
                 removedValue.diseaseType === 'Diabetes Mellitus'
               ) {
-                this.diabetesPresent = false;
-                this.idrsscore.setIDRSFamilyScore(0);
+                this.resetDiabeticState();
               }
             }
           } else {
@@ -417,8 +415,7 @@ export class FamilyHistoryNcdscreeningComponent
               removedValue !== null &&
               removedValue.diseaseType === 'Diabetes Mellitus'
             ) {
-              this.diabetesPresent = false;
-              this.idrsscore.setIDRSFamilyScore(0);
+              this.resetDiabeticState();
             }
             if (familyDiseaseList.value[i].ID !== null) {
               familyDiseaseList.value[i].deleted = true;
@@ -446,6 +443,11 @@ export class FamilyHistoryNcdscreeningComponent
           }
         }
       });
+  }
+
+  resetDiabeticState() {
+    this.diabetesPresent = false;
+    this.idrsscore.setIDRSFamilyScore(0);
   }
 
   getPreviousFamilyHistory() {
