@@ -71,6 +71,7 @@ export class FamilyHistoryNcdscreeningComponent
   beneficiaryDetailSubscription: any;
   age: any;
   currentLanguageSet: any;
+  diabetesPresent = false;
 
   constructor(
     private fb: FormBuilder,
@@ -291,13 +292,16 @@ export class FamilyHistoryNcdscreeningComponent
     }
 
     console.log('diseaseForm', familyDiseaseForm);
-    let diabetesPresent = false;
+    this.diabetesPresent = false;
     tempArray.forEach((element: any) => {
-      if (element.diseaseType.diseaseType === 'Diabetes Mellitus') {
-        diabetesPresent = true;
+      if (
+        element?.diseaseType?.diseaseType === 'Diabetes Mellitus' &&
+        element?.deleted === false
+      ) {
+        this.diabetesPresent = true;
       }
     });
-    if (!diabetesPresent) {
+    if (!this.diabetesPresent) {
       this.idrsscore.setIDRSFamilyScore(0);
     }
 
@@ -380,7 +384,7 @@ export class FamilyHistoryNcdscreeningComponent
                 removedValue !== null &&
                 removedValue.diseaseType === 'Diabetes Mellitus'
               ) {
-                this.idrsscore.setIDRSFamilyScore(0);
+                this.resetDiabeticState();
               }
               familyDiseaseList.push(this.initFamilyDiseaseList());
               this.diseaseSelectList.push(this.diseaseMasterData);
@@ -392,7 +396,7 @@ export class FamilyHistoryNcdscreeningComponent
                 removedValue !== null &&
                 removedValue.diseaseType === 'Diabetes Mellitus'
               ) {
-                this.idrsscore.setIDRSFamilyScore(0);
+                this.resetDiabeticState();
               }
             }
           } else {
@@ -411,7 +415,7 @@ export class FamilyHistoryNcdscreeningComponent
               removedValue !== null &&
               removedValue.diseaseType === 'Diabetes Mellitus'
             ) {
-              this.idrsscore.setIDRSFamilyScore(0);
+              this.resetDiabeticState();
             }
             if (familyDiseaseList.value[i].ID !== null) {
               familyDiseaseList.value[i].deleted = true;
@@ -439,6 +443,11 @@ export class FamilyHistoryNcdscreeningComponent
           }
         }
       });
+  }
+
+  resetDiabeticState() {
+    this.diabetesPresent = false;
+    this.idrsscore.setIDRSFamilyScore(0);
   }
 
   getPreviousFamilyHistory() {
