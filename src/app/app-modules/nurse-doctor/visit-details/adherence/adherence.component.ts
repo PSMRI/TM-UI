@@ -25,6 +25,7 @@ import { FormGroup } from '@angular/forms';
 import { DoctorService } from '../../shared/services';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-patient-adherence',
@@ -44,6 +45,7 @@ export class AdherenceComponent implements OnInit, OnChanges, DoCheck {
   constructor(
     public httpServiceService: HttpServiceService,
     private doctorService: DoctorService,
+    private sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -59,17 +61,17 @@ export class AdherenceComponent implements OnInit, OnChanges, DoCheck {
   }
   ngOnChanges() {
     if (String(this.mode) === 'view') {
-      const visitID = localStorage.getItem('visitID');
-      const benRegID = localStorage.getItem('beneficiaryRegID');
+      const visitID = this.sessionstorage.getItem('visitID');
+      const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
       this.getAdherenceDetails(benRegID, visitID);
     }
-    const specialistFlagString = localStorage.getItem('specialistFlag');
+    const specialistFlagString = this.sessionstorage.getItem('specialistFlag');
     if (
       specialistFlagString !== null &&
       parseInt(specialistFlagString) === 100
     ) {
-      const visitID = localStorage.getItem('visitID');
-      const benRegID = localStorage.getItem('beneficiaryRegID');
+      const visitID = this.sessionstorage.getItem('visitID');
+      const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
       this.getAdherenceDetails(benRegID, visitID);
     }
   }

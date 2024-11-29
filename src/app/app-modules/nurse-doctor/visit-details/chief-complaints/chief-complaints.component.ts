@@ -49,6 +49,7 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { environment } from 'src/environments/environment';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-patient-chief-complaints',
@@ -96,16 +97,17 @@ export class ChiefComplaintsComponent implements OnInit, DoCheck, OnDestroy {
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     public httpServiceService: HttpServiceService,
     private nurseService: NurseService,
+    private sessionstorage: SessionStorageService,
     private confirmationService: ConfirmationService,
   ) {
-    this.formUtility = new VisitDetailUtils(this.fb);
+    this.formUtility = new VisitDetailUtils(this.fb, this.sessionstorage);
   }
 
   ngOnInit() {
     this.assignSelectedLanguage();
     this.enableLungAssessment = false;
     this.enableProvisionalDiag = false;
-    const specialistFlagString = localStorage.getItem('specialistFlag');
+    const specialistFlagString = this.sessionstorage.getItem('specialistFlag');
     if (
       specialistFlagString !== null &&
       parseInt(specialistFlagString) === 100
@@ -143,8 +145,8 @@ export class ChiefComplaintsComponent implements OnInit, DoCheck, OnDestroy {
             this.chiefComplaintMaster.slice();
 
           if (String(this.mode) === 'view') {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             this.getChiefComplaints(benRegID, visitID);
           }
         }
@@ -162,17 +164,18 @@ export class ChiefComplaintsComponent implements OnInit, DoCheck, OnDestroy {
             this.chiefComplaintMaster.slice();
 
           if (String(this.mode) === 'view') {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             this.getChiefComplaints(benRegID, visitID);
           }
-          const specialistFlagString = localStorage.getItem('specialistFlag');
+          const specialistFlagString =
+            this.sessionstorage.getItem('specialistFlag');
           if (
             specialistFlagString !== null &&
             parseInt(specialistFlagString) === 100
           ) {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             this.getMMUChiefComplaints(benRegID, visitID);
           }
         }

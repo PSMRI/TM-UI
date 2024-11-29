@@ -21,15 +21,20 @@
  */
 
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 export class GeneralUtils {
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private sessionstorage: SessionStorageService,
+  ) {}
 
   /**
    *  Vitals Form Below
    **/
   createGeneralVitalDetailsForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       beneficiaryRegID: null,
       benVisitID: null,
@@ -81,7 +86,8 @@ export class GeneralUtils {
    *  General Examination Form Below ** Part of Examination Form
    **/
   createGeneralExaminationForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       consciousness: null,
       coherence: null,
@@ -112,7 +118,8 @@ export class GeneralUtils {
    * Head to Toe Examination Form ** Part of Examination Form
    **/
   createHeadToToeExaminationForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       headtoToeExam: null,
       head: null,
@@ -151,7 +158,8 @@ export class GeneralUtils {
    * Gastro Intestinal System Form ** Part of Systemic Examination Form ** Part of Examination Form
    **/
   createGastroIntestinalSystemForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       inspection: null,
       palpation_AbdomenTexture: null,
@@ -171,7 +179,8 @@ export class GeneralUtils {
    * Cardio Vascular System Form ** Part of Systemic Examination Form ** Part of Examination Form
    **/
   createCardioVascularSystemForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       jugularVenousPulse_JVP: null,
       apexbeatLocation: null,
@@ -190,7 +199,8 @@ export class GeneralUtils {
    * Respiratory System Form ** Part of Systemic Examination Form ** Part of Examination Form
    **/
   createRespiratorySystemForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       trachea: null,
       inspection: null,
@@ -212,7 +222,8 @@ export class GeneralUtils {
    * Central Nervous System Form ** Part of Systemic Examination Form ** Part of Examination Form
    **/
   createCentralNervousSystemForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       handedness: null,
       cranialNervesExamination: null,
@@ -231,7 +242,8 @@ export class GeneralUtils {
    * Musculo Skeletal System Form ** Part of Systemic Examination Form ** Part of Examination Form
    **/
   createMusculoSkeletalSystemForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       joint_TypeOfJoint: null,
       joint_Laterality: null,
@@ -251,7 +263,8 @@ export class GeneralUtils {
    * Genito Urinary System Form ** Part of Systemic Examination Form ** Part of Examination Form
    **/
   createGenitoUrinarySystemForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       renalAngle: null,
       suprapubicRegion: null,
@@ -266,7 +279,8 @@ export class GeneralUtils {
    * ## Control added to Systemic form in Systemic Component if Visit Categor is ANC
    **/
   createObstetricExaminationForANCForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       fundalHeight: null,
       fHAndPOA_Status: null,
@@ -287,7 +301,8 @@ export class GeneralUtils {
    * ANC Forms
    */
   createPatientANCDetailsForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       beneficiaryRegID: null,
       benVisitID: null,
@@ -306,7 +321,8 @@ export class GeneralUtils {
   }
 
   createPatientANCImmunizationForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       tT_1Status: null,
       dateReceivedForTT_1: null,
@@ -327,7 +343,8 @@ export class GeneralUtils {
   }
 
   createObstetricFormulaForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       gravida_G: null,
       termDeliveries_T: null,
@@ -374,7 +391,8 @@ export class GeneralUtils {
   }
 
   createComorbidityConcurrentConditionsForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       vanID: JSON.parse(serviceLineDetails).vanID,
       parkingPlaceID: JSON.parse(serviceLineDetails).parkingPlaceID,
@@ -383,7 +401,8 @@ export class GeneralUtils {
   }
 
   createDevelopmentHistoryForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       grossMotorMilestones: null,
       fineMotorMilestones: null,
@@ -396,7 +415,8 @@ export class GeneralUtils {
   }
 
   createFamilyHistoryForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       familyDiseaseList: new FormArray([]),
       isGeneticDisorder: null,
@@ -408,7 +428,8 @@ export class GeneralUtils {
   }
 
   createFeedingHistoryForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       typeOfFeed: null,
       compFeedStartAge: null,
@@ -421,7 +442,8 @@ export class GeneralUtils {
   }
 
   createMedicationHistoryForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       vanID: JSON.parse(serviceLineDetails).vanID,
       parkingPlaceID: JSON.parse(serviceLineDetails).parkingPlaceID,
@@ -430,7 +452,8 @@ export class GeneralUtils {
   }
 
   createImmunizationHistoryForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       vanID: JSON.parse(serviceLineDetails).vanID,
       parkingPlaceID: JSON.parse(serviceLineDetails).parkingPlaceID,
@@ -439,7 +462,8 @@ export class GeneralUtils {
   }
 
   createMenstrualHistoryForm(disableFlag = true) {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       menstrualCycleStatus: null,
       menstrualCycleStatusID: null,
@@ -456,7 +480,8 @@ export class GeneralUtils {
   }
 
   createOtherVaccinesForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       vanID: JSON.parse(serviceLineDetails).vanID,
       parkingPlaceID: JSON.parse(serviceLineDetails).parkingPlaceID,
@@ -465,7 +490,8 @@ export class GeneralUtils {
   }
 
   createPastHistoryForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       vanID: JSON.parse(serviceLineDetails).vanID,
       parkingPlaceID: JSON.parse(serviceLineDetails).parkingPlaceID,
@@ -475,7 +501,8 @@ export class GeneralUtils {
   }
 
   createPastObstericHistoryForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       totalNoOfPreg: null,
       vanID: JSON.parse(serviceLineDetails).vanID,
@@ -521,7 +548,8 @@ export class GeneralUtils {
   }
 
   createPerinatalHistoryForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       deliveryPlaceID: null,
       placeOfDelivery: null,
@@ -539,7 +567,8 @@ export class GeneralUtils {
   }
 
   createGeneralPersonalHistoryForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       dietaryType: null,
       physicalActivityType: null,
@@ -560,7 +589,8 @@ export class GeneralUtils {
    */
 
   createGeneralFindingsForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       beneficiaryRegID: null,
       benVisitID: null,
@@ -577,7 +607,8 @@ export class GeneralUtils {
   }
 
   initChiefComplaints(): FormGroup {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       chiefComplaint: null,
       chiefComplaintID: null,
@@ -591,7 +622,8 @@ export class GeneralUtils {
   }
 
   createGeneralDiagnosisForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       instruction: null,
       prescriptionID: null,
@@ -619,7 +651,8 @@ export class GeneralUtils {
   }
 
   createANCDiagnosisForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       gravida_G: null,
       duration: null,
@@ -639,7 +672,8 @@ export class GeneralUtils {
   }
 
   createNCDCareDiagnosisForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       // ncdScreeningConditionID: null,
       ncdScreeningConditionArray: [null, Validators.required],
@@ -658,7 +692,8 @@ export class GeneralUtils {
   }
 
   createCovidDiagnosisForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       prescriptionID: null,
       specialistDiagnosis: null,
@@ -669,7 +704,8 @@ export class GeneralUtils {
   }
 
   createPNCDiagnosisForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       provisionalDiagnosisList: this.fb.array([
         this.initProvisionalDiagnosisList(),
@@ -689,7 +725,8 @@ export class GeneralUtils {
   }
 
   createGeneraldoctorinvestigationForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       labTest: null,
       radiologyTest: null,
@@ -700,7 +737,8 @@ export class GeneralUtils {
   }
 
   createDrugPrescriptionForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       vanID: JSON.parse(serviceLineDetails).vanID,
       parkingPlaceID: JSON.parse(serviceLineDetails).parkingPlaceID,
@@ -715,7 +753,8 @@ export class GeneralUtils {
     } else {
       unit = prescription.drugStrength;
     }
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       id: id,
       drugID: prescription.drugID,
@@ -758,7 +797,8 @@ export class GeneralUtils {
     });
   }
   createNCDScreeningDiagnosisForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       instruction: null,
       prescriptionID: null,
@@ -812,7 +852,8 @@ export class GeneralUtils {
   }
 
   createPatientPNCForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       deliveryPlace: null,
       otherDeliveryPlace: null,
@@ -842,7 +883,8 @@ export class GeneralUtils {
   }
 
   createPhysicalActivityHistoryForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       ID: null,
       physicalActivityType: null,
@@ -855,7 +897,8 @@ export class GeneralUtils {
   }
 
   createNCDScreeningFamilyHistoryForm() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     return this.fb.group({
       familyDiseaseList: new FormArray([]),
       isGeneticDisorder: null,
