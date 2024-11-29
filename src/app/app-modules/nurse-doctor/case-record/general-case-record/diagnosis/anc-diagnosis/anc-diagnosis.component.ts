@@ -35,6 +35,7 @@ import {
   MomentDateAdapter,
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
 } from '@angular/material-moment-adapter';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-anc-diagnosis',
@@ -94,6 +95,7 @@ export class AncDiagnosisComponent implements OnInit, DoCheck, OnDestroy {
     public httpServiceService: HttpServiceService,
     private doctorService: DoctorService,
     private masterdataService: MasterdataService,
+    private sessionstorage: SessionStorageService,
     public beneficiaryDetailsService: BeneficiaryDetailsService,
   ) {}
 
@@ -105,7 +107,7 @@ export class AncDiagnosisComponent implements OnInit, DoCheck, OnDestroy {
     this.minimumDeathDate = new Date(
       this.today.getTime() - 365 * 24 * 60 * 60 * 1000,
     );
-    this.designation = localStorage.getItem('designation');
+    this.designation = this.sessionstorage.getItem('designation');
     if (this.designation === 'TC Specialist') {
       this.generalDiagnosisForm.controls['specialistDiagnosis'].enable();
       this.specialist = true;
@@ -143,8 +145,8 @@ export class AncDiagnosisComponent implements OnInit, DoCheck, OnDestroy {
 
   HRPSubscription: any;
   fetchHRPPositive() {
-    const beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
-    const visitCode = localStorage.getItem('visitCode');
+    const beneficiaryRegID = this.sessionstorage.getItem('beneficiaryRegID');
+    const visitCode = this.sessionstorage.getItem('visitCode');
     this.HRPSubscription = this.doctorService
       .getHRPDetails(beneficiaryRegID, visitCode)
       .subscribe((res: any) => {
@@ -165,9 +167,10 @@ export class AncDiagnosisComponent implements OnInit, DoCheck, OnDestroy {
         if (masterData) this.masterData = masterData;
 
         if (this.caseRecordMode === 'view') {
-          this.beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
-          this.visitID = localStorage.getItem('visitID');
-          this.visitCategory = localStorage.getItem('visitCategory');
+          this.beneficiaryRegID =
+            this.sessionstorage.getItem('beneficiaryRegID');
+          this.visitID = this.sessionstorage.getItem('visitID');
+          this.visitCategory = this.sessionstorage.getItem('visitCategory');
           this.getDiagnosisDetails(
             this.beneficiaryRegID,
             this.visitID,

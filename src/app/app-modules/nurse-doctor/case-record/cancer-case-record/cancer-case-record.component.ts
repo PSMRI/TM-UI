@@ -35,6 +35,7 @@ import { DoctorService } from '../../shared/services';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 import { CameraService } from 'src/app/app-modules/core/services';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-cancer-case-record',
@@ -159,6 +160,7 @@ export class CancerCaseRecordComponent
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     private cameraService: CameraService,
     private doctorService: DoctorService,
+    private sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -200,10 +202,12 @@ export class CancerCaseRecordComponent
           if (beneficiary !== null && beneficiary.genderName !== null) {
             this.getGraphData(beneficiary);
             if (this.caseRecordMode === 'view') {
-              const beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
-              const visitID = localStorage.getItem('visitID');
-              const visitCategory = localStorage.getItem('visitCategory');
-              if (localStorage.getItem('doctorFlag') === '9') {
+              const beneficiaryRegID =
+                this.sessionstorage.getItem('beneficiaryRegID');
+              const visitID = this.sessionstorage.getItem('visitID');
+              const visitCategory =
+                this.sessionstorage.getItem('visitCategory');
+              if (this.sessionstorage.getItem('doctorFlag') === '9') {
                 this.getDiagnosisDetails(
                   beneficiaryRegID,
                   visitID,
@@ -423,13 +427,16 @@ export class CancerCaseRecordComponent
     const visitDateAndTime: any = visitDetail.createdDate;
     this.visitDateTime = new Date(visitDateAndTime).toISOString();
 
-    localStorage.setItem('caseSheetBenFlowID', 'null');
-    localStorage.setItem('caseSheetVisitCategory', visitDetail.VisitCategory);
-    localStorage.setItem(
+    this.sessionstorage.setItem('caseSheetBenFlowID', 'null');
+    this.sessionstorage.setItem(
+      'caseSheetVisitCategory',
+      visitDetail.VisitCategory,
+    );
+    this.sessionstorage.setItem(
       'caseSheetBeneficiaryRegID',
       visitDetail.beneficiaryRegID,
     );
-    localStorage.setItem('caseSheetVisitID', visitDetail.benVisitID);
+    this.sessionstorage.setItem('caseSheetVisitID', visitDetail.benVisitID);
     this.router.navigate(['/nurse-doctor/print']);
   }
 
