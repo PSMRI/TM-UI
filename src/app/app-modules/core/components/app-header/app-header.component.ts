@@ -30,6 +30,7 @@ import { IotService } from '../../services/iot.service';
 import { IotBluetoothComponent } from '../iot-bluetooth/iot-bluetooth.component';
 import { ShowCommitAndVersionDetailsComponent } from '../show-commit-and-version-details/show-commit-and-version-details.component';
 import { TelemedicineService } from '../../services/telemedicine.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-header',
@@ -61,6 +62,7 @@ export class AppHeaderComponent implements OnInit {
     private telemedicineService: TelemedicineService,
     public service: IotService,
     private http_service: HttpServiceService,
+    private sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -73,14 +75,14 @@ export class AppHeaderComponent implements OnInit {
     });
 
     this.getUIVersionAndCommitDetails();
-    this.servicePoint = localStorage.getItem('servicePointName');
-    this.userName = localStorage.getItem('userName');
+    this.servicePoint = this.sessionstorage.getItem('servicePointName');
+    this.userName = this.sessionstorage.getItem('userName');
     this.isAuthenticated = sessionStorage.getItem('isAuthenticated') === 'true';
     this.license = environment.licenseUrl;
     if (this.isAuthenticated) {
       this.fetchLanguageSet();
     }
-    this.status = localStorage.getItem('providerServiceID');
+    this.status = this.sessionstorage.getItem('providerServiceID');
   }
 
   DataSync() {
@@ -162,7 +164,7 @@ export class AppHeaderComponent implements OnInit {
       this.router.navigate(['/login']).then((result) => {
         if (result) {
           this.changeLanguage('English');
-          localStorage.clear();
+          this.sessionstorage.clear();
           sessionStorage.clear();
         }
       });
@@ -227,7 +229,7 @@ export class AppHeaderComponent implements OnInit {
       },
     ];
     if (this.showRoles) {
-      const role: any = localStorage.getItem('role');
+      const role: any = this.sessionstorage.getItem('role');
       this.roles = JSON.parse(role);
       if (this.roles !== undefined && this.roles !== null) {
         this.filteredNavigation = this.navigation.filter((item: any) => {

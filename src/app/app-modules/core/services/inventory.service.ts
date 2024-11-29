@@ -24,6 +24,7 @@ import { Injectable, Inject } from '@angular/core';
 import { ConfirmationService } from '../../core/services/confirmation.service';
 import { environment } from 'src/environments/environment';
 import { DOCUMENT } from '@angular/common';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 @Injectable()
 export class InventoryService {
   inventoryUrl: any;
@@ -33,6 +34,7 @@ export class InventoryService {
   constructor(
     @Inject(DOCUMENT) private document: any,
     private confirmationService: ConfirmationService,
+    private sessionstorage: SessionStorageService,
   ) {}
 
   moveToInventory(
@@ -54,7 +56,7 @@ export class InventoryService {
 
     if (authKey && protocol && host && facility) {
       this.inventoryUrl = `${environment.INVENTORY_URL}protocol=${protocol}&host=${host}&user=${authKey}&app=${environment.app}&fallback=${environment.fallbackUrl}&back=${environment.redirInUrl}&facility=${facility}&ben=${benID}&visit=${visit}&flow=${flowID}&reg=${regID}&vanID=${vanID}&ppID=${ppID}&serviceName=${serviceName}&parentAPI=${parentAPI}&currentLanguage=${language}&healthID=${healthID}`;
-      console.log(this.inventoryUrl);
+      console.error('helthID', this.inventoryUrl);
       window.location.href = this.inventoryUrl;
     } else {
       this.confirmationService.alert(
@@ -74,7 +76,7 @@ export class InventoryService {
 
   getFacilityID() {
     if (sessionStorage.getItem('facilityID')) {
-      return sessionStorage.getItem('facilityID');
+      return this.sessionstorage.getItem('facilityID');
     } else {
       return undefined;
     }
@@ -93,19 +95,19 @@ export class InventoryService {
 
   getVanID() {
     const serviceLineDetailsData: any =
-      localStorage.getItem('serviceLineDetails');
+      this.sessionstorage.getItem('serviceLineDetails');
     const serviceLineDetails = JSON.parse(serviceLineDetailsData);
     return serviceLineDetails.vanID;
   }
   getppID() {
     const serviceLineDetailsData: any =
-      localStorage.getItem('serviceLineDetails');
+      this.sessionstorage.getItem('serviceLineDetails');
     const serviceLineDetails = JSON.parse(serviceLineDetailsData);
     return serviceLineDetails.parkingPlaceID;
   }
 
   getServiceDetails() {
-    const serviceName = localStorage.getItem('serviceName');
+    const serviceName = this.sessionstorage.getItem('serviceName');
     return serviceName;
   }
 }

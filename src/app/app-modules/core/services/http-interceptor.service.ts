@@ -16,6 +16,8 @@ import { throwError } from 'rxjs/internal/observable/throwError';
 import { SpinnerService } from './spinner.service';
 import { ConfirmationService } from './confirmation.service';
 import { environment } from 'src/environments/environment';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +34,8 @@ export class HttpInterceptorService implements HttpInterceptor {
     private router: Router,
     private confirmationService: ConfirmationService,
     private http: HttpClient,
+    private sessionstorage: SessionStorageService,
+    private cookieService: CookieService,
   ) {}
 
   intercept(
@@ -39,21 +43,24 @@ export class HttpInterceptorService implements HttpInterceptor {
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
     const key: any = sessionStorage.getItem('key');
+    const tkn: any = this.cookieService.get('Jwttoken');
     let modifiedReq = req;
     if (req.body instanceof FormData) {
       modifiedReq = req.clone({
         headers: req.headers.set('Authorization', key || ''),
+        // .set('Jwttoken', tkn),
       });
     } else {
       if (key !== undefined && key !== null) {
         modifiedReq = req.clone({
           headers: req.headers
             .set('Authorization', key)
-            .set('Content-Type', 'application/json'),
+            .set('Content-Type', 'application/json')
+            .set('Jwttoken', tkn),
         });
       } else {
         modifiedReq = req.clone({
-          headers: req.headers.set('Authorization', ''),
+          headers: req.headers.set('Authorization', '').set('Jwttoken', tkn),
         });
       }
     }
@@ -84,7 +91,7 @@ export class HttpInterceptorService implements HttpInterceptor {
       url.indexOf('user/userAuthenticate') < 0
     ) {
       sessionStorage.clear();
-      localStorage.clear();
+      this.sessionstorage.clear();
       setTimeout(() => this.router.navigate(['/login']), 0);
       this.confirmationService.alert(response.errorMessage, 'error');
     } else {
@@ -116,7 +123,7 @@ export class HttpInterceptorService implements HttpInterceptor {
               } else if (result.action === 'timeout') {
                 clearTimeout(this.timerRef);
                 sessionStorage.clear();
-                localStorage.clear();
+                this.sessionstorage.clear();
                 this.confirmationService.alert(
                   this.currentLanguageSet.sessionExpired,
                   'error',
@@ -126,7 +133,7 @@ export class HttpInterceptorService implements HttpInterceptor {
                 setTimeout(() => {
                   clearTimeout(this.timerRef);
                   sessionStorage.clear();
-                  localStorage.clear();
+                  this.sessionstorage.clear();
                   this.confirmationService.alert(
                     this.currentLanguageSet.sessionExpired,
                     'error',

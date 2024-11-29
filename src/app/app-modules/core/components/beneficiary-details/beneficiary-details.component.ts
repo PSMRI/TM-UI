@@ -27,6 +27,7 @@ import { HttpServiceService } from '../../services/http-service.service';
 import { SetLanguageComponent } from '../set-language.component';
 import { ConfirmationService } from '../../services';
 import { RegistrarService } from 'src/app/app-modules/registrar/shared/services/registrar.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-beneficiary-details',
@@ -47,11 +48,12 @@ export class BeneficiaryDetailsComponent implements OnInit, DoCheck, OnDestroy {
     public httpServiceService: HttpServiceService,
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     private registrarService: RegistrarService,
+    private sessionstorage: SessionStorageService,
     private confirmationService: ConfirmationService,
   ) {}
 
   ngOnInit() {
-    const benFlowID: any = localStorage.getItem('benFlowID');
+    const benFlowID: any = this.sessionstorage.getItem('benFlowID');
     this.assignSelectedLanguage();
     this.today = new Date();
     this.route.params.subscribe((param) => {

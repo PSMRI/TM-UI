@@ -26,6 +26,7 @@ import {
   MAT_SNACK_BAR_DATA,
   MatSnackBarRef,
 } from '@angular/material/snack-bar';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 @Component({
   selector: 'app-specialist-login',
   templateUrl: './specialist-login.component.html',
@@ -37,14 +38,15 @@ export class SpecialistLoginComponent implements OnInit {
     @Inject(MAT_SNACK_BAR_DATA) public data: any,
     public snackBarRef: MatSnackBarRef<SpecialistLoginComponent>,
     public formBuilder: FormBuilder,
+    private sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
     console.log(' this.data', this.data);
     this.specialistTMLoginForm = this.createSpecialistTMLoginForm();
 
-    if (localStorage.getItem('swymedLogin')) {
-      const swymedLoginData: any = localStorage.getItem('swymedLogin');
+    if (this.sessionstorage.getItem('swymedLogin')) {
+      const swymedLoginData: any = this.sessionstorage.getItem('swymedLogin');
       const logggedInDoctor = JSON.parse(swymedLoginData).userName;
       const loginPassWord = JSON.parse(swymedLoginData).password;
       const domainValue = JSON.parse(swymedLoginData).domain;
@@ -62,7 +64,7 @@ export class SpecialistLoginComponent implements OnInit {
     if (close) {
       this.snackBarRef.dismiss();
     } else {
-      localStorage.setItem(
+      this.sessionstorage.setItem(
         'swymedLogin',
         JSON.stringify(this.specialistTMLoginForm.value),
       );
