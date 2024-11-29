@@ -59,6 +59,7 @@ import { environment } from 'src/environments/environment';
 import { HealthIdDisplayModalComponent } from '../../core/components/health-id-display-modal/health-id-display-modal.component';
 import { OpenPreviousVisitDetailsComponent } from '../../core/components/open-previous-visit-details/open-previous-visit-details.component';
 import { SchedulerComponent } from '../scheduler/scheduler.component';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-workarea',
@@ -171,6 +172,7 @@ export class WorkareaComponent
     private snackBar: MatSnackBar,
     private idrsScoreService: IdrsscoreService,
     private registrarService: RegistrarService,
+    private sessionstorage: SessionStorageService,
   ) {}
   isSpecialist = false;
   doctorSaveAndTCSave: any;
@@ -208,18 +210,18 @@ export class WorkareaComponent
       }
     });
     this.attendant = this.route.snapshot.params['attendant'];
-    this.designation = localStorage.getItem('designation');
-    this.visitCategory = localStorage.getItem('visitCategory');
-    this.serviceType = localStorage.getItem('serviceName');
+    this.designation = this.sessionstorage.getItem('designation');
+    this.visitCategory = this.sessionstorage.getItem('visitCategory');
+    this.serviceType = this.sessionstorage.getItem('serviceName');
 
     this.schedulerFormData = null;
     this.tm = true;
     const disableFlag = this.visitCategory ? true : false;
-    this.beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
-    this.visitID = localStorage.getItem('visitID');
-    this.nurseFlag = localStorage.getItem('nurseFlag');
-    this.doctorFlag = localStorage.getItem('doctorFlag');
-    this.specialistFlag = localStorage.getItem('specialist_flag');
+    this.beneficiaryRegID = this.sessionstorage.getItem('beneficiaryRegID');
+    this.visitID = this.sessionstorage.getItem('visitID');
+    this.nurseFlag = this.sessionstorage.getItem('nurseFlag');
+    this.doctorFlag = this.sessionstorage.getItem('doctorFlag');
+    this.specialistFlag = this.sessionstorage.getItem('specialist_flag');
     this.rbsPresentSubscription =
       this.idrsScoreService.rBSPresentFlag$.subscribe(
         (response) => (this.rbsPresent = response),
@@ -242,9 +244,10 @@ export class WorkareaComponent
       ); // if rbs test value > 200
     this.assignSelectedLanguage();
     this.patientMedicalForm = this.fb.group({
-      patientVisitForm: new VisitDetailUtils(this.fb).createPatientVisitForm(
-        disableFlag,
-      ),
+      patientVisitForm: new VisitDetailUtils(
+        this.fb,
+        this.sessionstorage,
+      ).createPatientVisitForm(disableFlag),
     });
     this.patientVisitForm = this.patientMedicalForm.get(
       'patientVisitForm',
@@ -385,7 +388,10 @@ export class WorkareaComponent
         if (mode) {
           this.patientMedicalForm.addControl(
             'patientQuickConsultForm',
-            new QuickConsultUtils(this.fb).createQuickConsultForm(),
+            new QuickConsultUtils(
+              this.fb,
+              this.sessionstorage,
+            ).createQuickConsultForm(),
           );
           this.patientQuickConsultForm = this.patientMedicalForm.get(
             'patientQuickConsultForm',
@@ -393,7 +399,10 @@ export class WorkareaComponent
 
           this.patientMedicalForm.addControl(
             'patientReferForm',
-            new CancerUtils(this.fb).createCancerReferForm(),
+            new CancerUtils(
+              this.fb,
+              this.sessionstorage,
+            ).createCancerReferForm(),
           );
           this.patientReferForm = this.patientMedicalForm.get(
             'patientReferForm',
@@ -407,7 +416,10 @@ export class WorkareaComponent
         } else {
           this.patientMedicalForm.addControl(
             'patientVitalsForm',
-            new GeneralUtils(this.fb).createGeneralVitalDetailsForm(),
+            new GeneralUtils(
+              this.fb,
+              this.sessionstorage,
+            ).createGeneralVitalDetailsForm(),
           );
           this.patientVitalsForm = this.patientMedicalForm.get(
             'patientVitalsForm',
@@ -417,21 +429,30 @@ export class WorkareaComponent
       } else if (categoryValue === 'Cancer Screening') {
         this.patientMedicalForm.addControl(
           'patientHistoryForm',
-          new CancerUtils(this.fb).createNurseCancerHistoryForm(),
+          new CancerUtils(
+            this.fb,
+            this.sessionstorage,
+          ).createNurseCancerHistoryForm(),
         );
         this.patientHistoryForm = this.patientMedicalForm.get(
           'patientHistoryForm',
         ) as FormGroup;
         this.patientMedicalForm.addControl(
           'patientVitalsForm',
-          new CancerUtils(this.fb).createNurseCancerPatientVitalsForm(),
+          new CancerUtils(
+            this.fb,
+            this.sessionstorage,
+          ).createNurseCancerPatientVitalsForm(),
         );
         this.patientVitalsForm = this.patientMedicalForm.get(
           'patientVitalsForm',
         ) as FormGroup;
         this.patientMedicalForm.addControl(
           'patientExaminationForm',
-          new CancerUtils(this.fb).createCancerExaminationForm(),
+          new CancerUtils(
+            this.fb,
+            this.sessionstorage,
+          ).createCancerExaminationForm(),
         );
         this.patientExaminationForm = this.patientMedicalForm.get(
           'patientExaminationForm',
@@ -446,14 +467,20 @@ export class WorkareaComponent
         if (mode) {
           this.patientMedicalForm.addControl(
             'patientCaseRecordForm',
-            new CancerUtils(this.fb).createCancerDiagnosisForm(),
+            new CancerUtils(
+              this.fb,
+              this.sessionstorage,
+            ).createCancerDiagnosisForm(),
           );
           this.patientCaseRecordForm = this.patientMedicalForm.get(
             'patientCaseRecordForm',
           ) as FormGroup;
           this.patientMedicalForm.addControl(
             'patientReferForm',
-            new CancerUtils(this.fb).createCancerReferForm(),
+            new CancerUtils(
+              this.fb,
+              this.sessionstorage,
+            ).createCancerReferForm(),
           );
           this.patientReferForm = this.patientMedicalForm.get(
             'patientReferForm',
@@ -477,21 +504,30 @@ export class WorkareaComponent
       } else if (categoryValue === 'General OPD') {
         this.patientMedicalForm.addControl(
           'patientHistoryForm',
-          new GeneralUtils(this.fb).createGeneralHistoryForm(false),
+          new GeneralUtils(
+            this.fb,
+            this.sessionstorage,
+          ).createGeneralHistoryForm(false),
         );
         this.patientHistoryForm = this.patientMedicalForm.get(
           'patientHistoryForm',
         ) as FormGroup;
         this.patientMedicalForm.addControl(
           'patientVitalsForm',
-          new GeneralUtils(this.fb).createGeneralVitalDetailsForm(),
+          new GeneralUtils(
+            this.fb,
+            this.sessionstorage,
+          ).createGeneralVitalDetailsForm(),
         );
         this.patientVitalsForm = this.patientMedicalForm.get(
           'patientVitalsForm',
         ) as FormGroup;
         this.patientMedicalForm.addControl(
           'patientExaminationForm',
-          new GeneralUtils(this.fb).createPatientExaminationForm(),
+          new GeneralUtils(
+            this.fb,
+            this.sessionstorage,
+          ).createPatientExaminationForm(),
         );
         this.patientExaminationForm = this.patientMedicalForm.get(
           'patientExaminationForm',
@@ -506,14 +542,20 @@ export class WorkareaComponent
         if (mode) {
           this.patientMedicalForm.addControl(
             'patientCaseRecordForm',
-            new GeneralUtils(this.fb).createGeneralCaseRecord(),
+            new GeneralUtils(
+              this.fb,
+              this.sessionstorage,
+            ).createGeneralCaseRecord(),
           );
           this.patientCaseRecordForm = this.patientMedicalForm.get(
             'patientCaseRecordForm',
           ) as FormGroup;
           this.patientMedicalForm.addControl(
             'patientReferForm',
-            new CancerUtils(this.fb).createCancerReferForm(),
+            new CancerUtils(
+              this.fb,
+              this.sessionstorage,
+            ).createCancerReferForm(),
           );
           this.patientReferForm = this.patientMedicalForm.get(
             'patientReferForm',
@@ -537,14 +579,20 @@ export class WorkareaComponent
       } else if (categoryValue === 'NCD screening') {
         this.patientMedicalForm.addControl(
           'patientVitalsForm',
-          new GeneralUtils(this.fb).createGeneralVitalDetailsForm(),
+          new GeneralUtils(
+            this.fb,
+            this.sessionstorage,
+          ).createGeneralVitalDetailsForm(),
         );
         this.patientVitalsForm = this.patientMedicalForm.get(
           'patientVitalsForm',
         ) as FormGroup;
         this.patientMedicalForm.addControl(
           'patientHistoryForm',
-          new GeneralUtils(this.fb).createNCDScreeningHistoryForm(),
+          new GeneralUtils(
+            this.fb,
+            this.sessionstorage,
+          ).createNCDScreeningHistoryForm(),
         );
         this.patientHistoryForm = this.patientMedicalForm.get(
           'patientHistoryForm',
@@ -557,7 +605,7 @@ export class WorkareaComponent
 
         this.patientMedicalForm.addControl(
           'idrsScreeningForm',
-          new NCDScreeningUtils(this.fb).createIDRSForm(),
+          new NCDScreeningUtils(this.fb, this.sessionstorage).createIDRSForm(),
         );
         this.idrsScreeningForm = this.patientMedicalForm.get(
           'idrsScreeningForm',
@@ -565,7 +613,10 @@ export class WorkareaComponent
         if (mode) {
           this.patientMedicalForm.addControl(
             'patientCaseRecordForm',
-            new GeneralUtils(this.fb).createNCDScreeningCaseRecord(),
+            new GeneralUtils(
+              this.fb,
+              this.sessionstorage,
+            ).createNCDScreeningCaseRecord(),
           );
           this.patientCaseRecordForm = this.patientMedicalForm.get(
             'patientCaseRecordForm',
@@ -579,7 +630,10 @@ export class WorkareaComponent
           this.ncdScreeningMode = String(mode);
           this.patientMedicalForm.addControl(
             'patientReferForm',
-            new CancerUtils(this.fb).createCancerReferForm(),
+            new CancerUtils(
+              this.fb,
+              this.sessionstorage,
+            ).createCancerReferForm(),
           );
           this.patientReferForm = this.patientMedicalForm.get(
             'patientReferForm',
@@ -595,28 +649,37 @@ export class WorkareaComponent
       } else if (categoryValue === 'PNC') {
         this.patientMedicalForm.addControl(
           'patientPNCForm',
-          new GeneralUtils(this.fb).createPatientPNCForm(),
+          new GeneralUtils(this.fb, this.sessionstorage).createPatientPNCForm(),
         );
         this.patientPNCForm = this.patientMedicalForm.get(
           'patientPNCForm',
         ) as FormGroup;
         this.patientMedicalForm.addControl(
           'patientHistoryForm',
-          new GeneralUtils(this.fb).createGeneralHistoryForm(),
+          new GeneralUtils(
+            this.fb,
+            this.sessionstorage,
+          ).createGeneralHistoryForm(),
         );
         this.patientHistoryForm = this.patientMedicalForm.get(
           'patientHistoryForm',
         ) as FormGroup;
         this.patientMedicalForm.addControl(
           'patientVitalsForm',
-          new GeneralUtils(this.fb).createGeneralVitalDetailsForm(),
+          new GeneralUtils(
+            this.fb,
+            this.sessionstorage,
+          ).createGeneralVitalDetailsForm(),
         );
         this.patientVitalsForm = this.patientMedicalForm.get(
           'patientVitalsForm',
         ) as FormGroup;
         this.patientMedicalForm.addControl(
           'patientExaminationForm',
-          new GeneralUtils(this.fb).createPatientExaminationForm(),
+          new GeneralUtils(
+            this.fb,
+            this.sessionstorage,
+          ).createPatientExaminationForm(),
         );
         this.patientExaminationForm = this.patientMedicalForm.get(
           'patientExaminationForm',
@@ -632,14 +695,20 @@ export class WorkareaComponent
         if (mode) {
           this.patientMedicalForm.addControl(
             'patientCaseRecordForm',
-            new GeneralUtils(this.fb).createPNCCaseRecord(),
+            new GeneralUtils(
+              this.fb,
+              this.sessionstorage,
+            ).createPNCCaseRecord(),
           );
           this.patientCaseRecordForm = this.patientMedicalForm.get(
             'patientCaseRecordForm',
           ) as FormGroup;
           this.patientMedicalForm.addControl(
             'patientReferForm',
-            new CancerUtils(this.fb).createCancerReferForm(),
+            new CancerUtils(
+              this.fb,
+              this.sessionstorage,
+            ).createCancerReferForm(),
           );
           this.patientReferForm = this.patientMedicalForm.get(
             'patientReferForm',
@@ -664,28 +733,37 @@ export class WorkareaComponent
       } else if (categoryValue === 'ANC') {
         this.patientMedicalForm.addControl(
           'patientANCForm',
-          new GeneralUtils(this.fb).createPatientANCForm(),
+          new GeneralUtils(this.fb, this.sessionstorage).createPatientANCForm(),
         );
         this.patientANCForm = this.patientMedicalForm.get(
           'patientANCForm',
         ) as FormGroup;
         this.patientMedicalForm.addControl(
           'patientHistoryForm',
-          new GeneralUtils(this.fb).createGeneralHistoryForm(),
+          new GeneralUtils(
+            this.fb,
+            this.sessionstorage,
+          ).createGeneralHistoryForm(),
         );
         this.patientHistoryForm = this.patientMedicalForm.get(
           'patientHistoryForm',
         ) as FormGroup;
         this.patientMedicalForm.addControl(
           'patientVitalsForm',
-          new GeneralUtils(this.fb).createGeneralVitalDetailsForm(),
+          new GeneralUtils(
+            this.fb,
+            this.sessionstorage,
+          ).createGeneralVitalDetailsForm(),
         );
         this.patientVitalsForm = this.patientMedicalForm.get(
           'patientVitalsForm',
         ) as FormGroup;
         this.patientMedicalForm.addControl(
           'patientExaminationForm',
-          new GeneralUtils(this.fb).createPatientExaminationForm(),
+          new GeneralUtils(
+            this.fb,
+            this.sessionstorage,
+          ).createPatientExaminationForm(),
         );
         this.patientExaminationForm = this.patientMedicalForm.get(
           'patientExaminationForm',
@@ -703,14 +781,20 @@ export class WorkareaComponent
         if (mode) {
           this.patientMedicalForm.addControl(
             'patientCaseRecordForm',
-            new GeneralUtils(this.fb).createANCCaseRecord(),
+            new GeneralUtils(
+              this.fb,
+              this.sessionstorage,
+            ).createANCCaseRecord(),
           );
           this.patientCaseRecordForm = this.patientMedicalForm.get(
             'patientCaseRecordForm',
           ) as FormGroup;
           this.patientMedicalForm.addControl(
             'patientReferForm',
-            new CancerUtils(this.fb).createCancerReferForm(),
+            new CancerUtils(
+              this.fb,
+              this.sessionstorage,
+            ).createCancerReferForm(),
           );
           this.patientReferForm = this.patientMedicalForm.get(
             'patientReferForm',
@@ -736,14 +820,20 @@ export class WorkareaComponent
       } else if (categoryValue === 'COVID-19 Screening') {
         this.patientMedicalForm.addControl(
           'patientHistoryForm',
-          new GeneralUtils(this.fb).createGeneralHistoryForm(false),
+          new GeneralUtils(
+            this.fb,
+            this.sessionstorage,
+          ).createGeneralHistoryForm(false),
         );
         this.patientHistoryForm = this.patientMedicalForm.get(
           'patientHistoryForm',
         ) as FormGroup;
         this.patientMedicalForm.addControl(
           'patientVitalsForm',
-          new GeneralUtils(this.fb).createGeneralVitalDetailsForm(),
+          new GeneralUtils(
+            this.fb,
+            this.sessionstorage,
+          ).createGeneralVitalDetailsForm(),
         );
         this.patientVitalsForm = this.patientMedicalForm.get(
           'patientVitalsForm',
@@ -757,14 +847,20 @@ export class WorkareaComponent
         if (mode) {
           this.patientMedicalForm.addControl(
             'patientCaseRecordForm',
-            new GeneralUtils(this.fb).createCovidCaseRecord(),
+            new GeneralUtils(
+              this.fb,
+              this.sessionstorage,
+            ).createCovidCaseRecord(),
           );
           this.patientCaseRecordForm = this.patientMedicalForm.get(
             'patientCaseRecordForm',
           ) as FormGroup;
           this.patientMedicalForm.addControl(
             'patientReferForm',
-            new CancerUtils(this.fb).createCancerReferForm(),
+            new CancerUtils(
+              this.fb,
+              this.sessionstorage,
+            ).createCancerReferForm(),
           );
           this.patientReferForm = this.patientMedicalForm.get(
             'patientReferForm',
@@ -787,14 +883,20 @@ export class WorkareaComponent
       } else if (categoryValue === 'NCD care') {
         this.patientMedicalForm.addControl(
           'patientHistoryForm',
-          new GeneralUtils(this.fb).createGeneralHistoryForm(false),
+          new GeneralUtils(
+            this.fb,
+            this.sessionstorage,
+          ).createGeneralHistoryForm(false),
         );
         this.patientHistoryForm = this.patientMedicalForm.get(
           'patientHistoryForm',
         ) as FormGroup;
         this.patientMedicalForm.addControl(
           'patientVitalsForm',
-          new GeneralUtils(this.fb).createGeneralVitalDetailsForm(),
+          new GeneralUtils(
+            this.fb,
+            this.sessionstorage,
+          ).createGeneralVitalDetailsForm(),
         );
         this.patientVitalsForm = this.patientMedicalForm.get(
           'patientVitalsForm',
@@ -808,14 +910,20 @@ export class WorkareaComponent
         if (mode) {
           this.patientMedicalForm.addControl(
             'patientCaseRecordForm',
-            new GeneralUtils(this.fb).createNCDCareCaseRecord(),
+            new GeneralUtils(
+              this.fb,
+              this.sessionstorage,
+            ).createNCDCareCaseRecord(),
           );
           this.patientCaseRecordForm = this.patientMedicalForm.get(
             'patientCaseRecordForm',
           ) as FormGroup;
           this.patientMedicalForm.addControl(
             'patientReferForm',
-            new CancerUtils(this.fb).createCancerReferForm(),
+            new CancerUtils(
+              this.fb,
+              this.sessionstorage,
+            ).createCancerReferForm(),
           );
           this.patientReferForm = this.patientMedicalForm.get(
             'patientReferForm',
@@ -893,10 +1001,10 @@ export class WorkareaComponent
   }
 
   removeBeneficiaryDataForNurseVisit() {
-    localStorage.removeItem('beneficiaryGender');
-    localStorage.removeItem('beneficiaryRegID');
-    localStorage.removeItem('beneficiaryID');
-    localStorage.removeItem('benFlowID');
+    this.sessionstorage.removeItem('beneficiaryGender');
+    this.sessionstorage.removeItem('beneficiaryRegID');
+    this.sessionstorage.removeItem('beneficiaryID');
+    this.sessionstorage.removeItem('benFlowID');
   }
   navigateToNurseWorklist() {
     this.patientMedicalForm.reset();
@@ -943,9 +1051,9 @@ export class WorkareaComponent
       const temp = {
         beneficiaryRegID: this.beneficiaryRegID,
         benVisitID: this.visitID,
-        visitCode: localStorage.getItem('visitCode'),
-        providerServiceMapID: localStorage.getItem('providerServiceID'),
-        createdBy: localStorage.getItem('userName'),
+        visitCode: this.sessionstorage.getItem('visitCode'),
+        providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
+        createdBy: this.sessionstorage.getItem('userName'),
       };
 
       this.checkForPrescribedTests(temp);
@@ -1000,37 +1108,38 @@ export class WorkareaComponent
     }
   }
   removeBeneficiaryDataForDoctorVisit() {
-    localStorage.removeItem('visitCode');
-    localStorage.removeItem('beneficiaryGender');
-    localStorage.removeItem('benFlowID');
-    localStorage.removeItem('visitCategory');
-    localStorage.removeItem('beneficiaryRegID');
-    localStorage.removeItem('visitID');
-    localStorage.removeItem('beneficiaryID');
-    localStorage.removeItem('doctorFlag');
-    localStorage.removeItem('nurseFlag');
-    localStorage.removeItem('pharmacist_flag');
+    this.sessionstorage.removeItem('visitCode');
+    this.sessionstorage.removeItem('beneficiaryGender');
+    this.sessionstorage.removeItem('benFlowID');
+    this.sessionstorage.removeItem('visitCategory');
+    this.sessionstorage.removeItem('beneficiaryRegID');
+    this.sessionstorage.removeItem('visitID');
+    this.sessionstorage.removeItem('beneficiaryID');
+    this.sessionstorage.removeItem('doctorFlag');
+    this.sessionstorage.removeItem('nurseFlag');
+    this.sessionstorage.removeItem('pharmacist_flag');
   }
 
   updateDoctorDiagnosisForm() {
     this.disableSubmitButton = true;
     this.showProgressBar = false;
-    const visitCategory = localStorage.getItem('visitCategory');
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const visitCategory = this.sessionstorage.getItem('visitCategory');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     const vanID = JSON.parse(serviceLineDetails).vanID;
     const parkingPlaceID = JSON.parse(serviceLineDetails).parkingPlaceID;
     const otherDetails = {
       beneficiaryRegID: this.beneficiaryRegID,
       benVisitID: this.visitID,
-      providerServiceMapID: localStorage.getItem('providerServiceID'),
-      createdBy: localStorage.getItem('userName'),
-      sessionID: localStorage.getItem('sessionID'),
-      beneficiaryID: localStorage.getItem('beneficiaryID'),
+      providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
+      createdBy: this.sessionstorage.getItem('userName'),
+      sessionID: this.sessionstorage.getItem('sessionID'),
+      beneficiaryID: this.sessionstorage.getItem('beneficiaryID'),
       parkingPlaceID: parkingPlaceID,
       vanID: vanID,
-      visitCode: localStorage.getItem('visitCode'),
-      serviceID: localStorage.getItem('serviceID'),
-      benFlowID: localStorage.getItem('benFlowID'),
+      visitCode: this.sessionstorage.getItem('visitCode'),
+      serviceID: this.sessionstorage.getItem('serviceID'),
+      benFlowID: this.sessionstorage.getItem('benFlowID'),
       isSpecialist: this.isSpecialist,
     };
 
@@ -1244,7 +1353,8 @@ export class WorkareaComponent
     this.showProgressBar = false;
   }
   getImageCoordinates(patientMedicalForm: any) {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     const imageCords = [];
     const image1 = (<FormGroup>(
       (<FormGroup>patientMedicalForm.controls.patientExaminationForm).controls[
@@ -2569,9 +2679,9 @@ export class WorkareaComponent
     const otherQcDetails = {
       beneficiaryRegID: this.beneficiaryRegID,
       benVisitID: this.visitID,
-      visitCode: localStorage.getItem('visitCode'),
-      providerServiceMapID: localStorage.getItem('providerServiceID'),
-      createdBy: localStorage.getItem('userName'),
+      visitCode: this.sessionstorage.getItem('visitCode'),
+      providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
+      createdBy: this.sessionstorage.getItem('userName'),
       isSpecialist: this.isSpecialist,
     };
 
@@ -2736,21 +2846,22 @@ export class WorkareaComponent
   }
 
   mapDoctorQuickConsultDetails() {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     const vanID = JSON.parse(serviceLineDetails).vanID;
     const parkingPlaceID = JSON.parse(serviceLineDetails).parkingPlaceID;
     const otherQcDetails = {
       beneficiaryRegID: this.beneficiaryRegID,
       benVisitID: this.visitID,
-      providerServiceMapID: localStorage.getItem('providerServiceID'),
-      createdBy: localStorage.getItem('userName'),
-      sessionID: localStorage.getItem('sessionID'),
-      beneficiaryID: localStorage.getItem('beneficiaryID'),
+      providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
+      createdBy: this.sessionstorage.getItem('userName'),
+      sessionID: this.sessionstorage.getItem('sessionID'),
+      beneficiaryID: this.sessionstorage.getItem('beneficiaryID'),
       parkingPlaceID: parkingPlaceID,
       vanID: vanID,
-      visitCode: localStorage.getItem('visitCode'),
-      serviceID: localStorage.getItem('serviceID'),
-      benFlowID: localStorage.getItem('benFlowID'),
+      visitCode: this.sessionstorage.getItem('visitCode'),
+      serviceID: this.sessionstorage.getItem('serviceID'),
+      benFlowID: this.sessionstorage.getItem('benFlowID'),
       isSpecialist: this.isSpecialist,
     };
 
@@ -2846,9 +2957,9 @@ export class WorkareaComponent
       const temp = {
         beneficiaryRegID: this.beneficiaryRegID,
         benVisitID: this.visitID,
-        visitCode: localStorage.getItem('visitCode'),
-        providerServiceMapID: localStorage.getItem('providerServiceID'),
-        createdBy: localStorage.getItem('userName'),
+        visitCode: this.sessionstorage.getItem('visitCode'),
+        providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
+        createdBy: this.sessionstorage.getItem('userName'),
         isSpecialist: this.isSpecialist,
       };
       this.checkForPrescribedTests(temp);
@@ -2986,9 +3097,9 @@ export class WorkareaComponent
       const temp = {
         beneficiaryRegID: this.beneficiaryRegID,
         benVisitID: this.visitID,
-        visitCode: localStorage.getItem('visitCode'),
-        providerServiceMapID: localStorage.getItem('providerServiceID'),
-        createdBy: localStorage.getItem('userName'),
+        visitCode: this.sessionstorage.getItem('visitCode'),
+        providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
+        createdBy: this.sessionstorage.getItem('userName'),
         isSpecialist: this.isSpecialist,
       };
       const investigationForm = (<FormGroup>(
@@ -3055,9 +3166,9 @@ export class WorkareaComponent
       const temp = {
         beneficiaryRegID: this.beneficiaryRegID,
         benVisitID: this.visitID,
-        visitCode: localStorage.getItem('visitCode'),
-        providerServiceMapID: localStorage.getItem('providerServiceID'),
-        createdBy: localStorage.getItem('userName'),
+        visitCode: this.sessionstorage.getItem('visitCode'),
+        providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
+        createdBy: this.sessionstorage.getItem('userName'),
         isSpecialist: this.isSpecialist,
       };
       this.checkForPrescribedTests(temp);
@@ -3249,7 +3360,7 @@ export class WorkareaComponent
             data: {
               dataList: healthIDDetails,
               healthIDMapping: true,
-              visitCode: localStorage.getItem('visitCode'),
+              visitCode: this.sessionstorage.getItem('visitCode'),
             },
           });
           dialog.afterClosed().subscribe((result) => {
@@ -3283,9 +3394,9 @@ export class WorkareaComponent
       const temp = {
         beneficiaryRegID: this.beneficiaryRegID,
         benVisitID: this.visitID,
-        visitCode: localStorage.getItem('visitCode'),
-        providerServiceMapID: localStorage.getItem('providerServiceID'),
-        createdBy: localStorage.getItem('userName'),
+        visitCode: this.sessionstorage.getItem('visitCode'),
+        providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
+        createdBy: this.sessionstorage.getItem('userName'),
         isSpecialist: this.isSpecialist,
       };
       /* Method to check whether tests has been prescribed, if not link the care context*/
@@ -3328,9 +3439,9 @@ export class WorkareaComponent
       const temp = {
         beneficiaryRegID: this.beneficiaryRegID,
         benVisitID: this.visitID,
-        visitCode: localStorage.getItem('visitCode'),
-        providerServiceMapID: localStorage.getItem('providerServiceID'),
-        createdBy: localStorage.getItem('userName'),
+        visitCode: this.sessionstorage.getItem('visitCode'),
+        providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
+        createdBy: this.sessionstorage.getItem('userName'),
         isSpecialist: this.isSpecialist,
       };
       this.checkForPrescribedTests(temp);
@@ -3477,7 +3588,7 @@ export class WorkareaComponent
 
   getNurseMasterData(visitCategory: string) {
     const visitID = this.getVisitCategoryID(visitCategory);
-    const serviceProviderID = localStorage.getItem('providerServiceID');
+    const serviceProviderID = this.sessionstorage.getItem('providerServiceID');
 
     if (visitID)
       this.masterdataService.getNurseMasterData(visitID, serviceProviderID);
@@ -3485,7 +3596,7 @@ export class WorkareaComponent
 
   getDoctorMasterData(visitCategory: string) {
     const visitID = this.getVisitCategoryID(visitCategory);
-    const serviceProviderID = localStorage.getItem('providerServiceID');
+    const serviceProviderID = this.sessionstorage.getItem('providerServiceID');
 
     if (visitID)
       this.masterdataService.getDoctorMasterData(visitID, serviceProviderID);
@@ -3833,8 +3944,8 @@ export class WorkareaComponent
   }
   updateTCStartTime() {
     const tCStartTimeObj = {
-      benRegID: localStorage.getItem('beneficiaryRegID'),
-      visitCode: localStorage.getItem('visitCode'),
+      benRegID: this.sessionstorage.getItem('beneficiaryRegID'),
+      visitCode: this.sessionstorage.getItem('visitCode'),
     };
     this.doctorService.updateTCStartTime(tCStartTimeObj).subscribe((res) => {
       console.log(res);
@@ -4040,14 +4151,14 @@ export class WorkareaComponent
   }
   getMMUInvestigationDetails() {
     const reqObj = {
-      benRegID: localStorage.getItem('beneficiaryRegID'),
-      visitCode: localStorage.getItem('referredVisitCode'),
-      benVisitID: localStorage.getItem('referredVisitID'),
+      benRegID: this.sessionstorage.getItem('beneficiaryRegID'),
+      visitCode: this.sessionstorage.getItem('referredVisitCode'),
+      benVisitID: this.sessionstorage.getItem('referredVisitID'),
       fetchMMUDataFor: 'Investigation',
     };
     if (
-      localStorage.getItem('referredVisitCode') !== 'undefined' &&
-      localStorage.getItem('referredVisitID') !== 'undefined'
+      this.sessionstorage.getItem('referredVisitCode') !== 'undefined' &&
+      this.sessionstorage.getItem('referredVisitID') !== 'undefined'
     ) {
       this.doctorService.getMMUData(reqObj).subscribe(
         (res: any) => {
