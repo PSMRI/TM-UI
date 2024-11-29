@@ -27,6 +27,7 @@ import { ConfirmationService } from 'src/app/app-modules/core/services';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 import { RegistrarService } from 'src/app/app-modules/registrar/shared/services/registrar.service';
 import { MasterdataService } from '../../../shared/services';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-cancer-doctor-diagnosis-case-sheet',
@@ -61,6 +62,7 @@ export class CancerDoctorDiagnosisCaseSheetComponent
     private registrarService: RegistrarService,
     private confirmationService: ConfirmationService,
     private masterdataService: MasterdataService,
+    private sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -199,7 +201,9 @@ export class CancerDoctorDiagnosisCaseSheetComponent
   }
   getHealthIDDetails() {
     const data = {
-      beneficiaryRegID: localStorage.getItem('caseSheetBeneficiaryRegID'),
+      beneficiaryRegID: this.sessionstorage.getItem(
+        'caseSheetBeneficiaryRegID',
+      ),
       beneficiaryID: null,
     };
     this.registrarService.getHealthIdDetails(data).subscribe(
@@ -271,7 +275,9 @@ export class CancerDoctorDiagnosisCaseSheetComponent
   }
 
   getPreviousCovidVaccinationDetails(doseTypeList: any, vaccineTypeList: any) {
-    const beneficiaryRegID = localStorage.getItem('caseSheetBeneficiaryRegID');
+    const beneficiaryRegID = this.sessionstorage.getItem(
+      'caseSheetBeneficiaryRegID',
+    );
     this.masterdataService
       .getPreviousCovidVaccinationDetails(beneficiaryRegID)
       .subscribe(

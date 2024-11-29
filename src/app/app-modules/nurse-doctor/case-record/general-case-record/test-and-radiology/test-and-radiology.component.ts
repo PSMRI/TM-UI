@@ -33,6 +33,7 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
 import { environment } from 'src/environments/environment';
 import { IdrsscoreService } from '../../../shared/services/idrsscore.service';
 import { TestInVitalsService } from '../../../shared/services/test-in-vitals.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-test-and-radiology',
@@ -59,6 +60,7 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
     private idrsScoreService: IdrsscoreService,
     public sanitizer: DomSanitizer,
     private testInVitalsService: TestInVitalsService,
+    private sessionstorage: SessionStorageService,
   ) {}
 
   currentLabRowsPerPage = 5;
@@ -70,12 +72,12 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
   visitID: any;
   visitCategory: any;
   ngOnInit() {
-    this.beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
-    this.visitID = localStorage.getItem('visitID');
+    this.beneficiaryRegID = this.sessionstorage.getItem('beneficiaryRegID');
+    this.visitID = this.sessionstorage.getItem('visitID');
     this.assignSelectedLanguage();
     this.testInVitalsService.clearVitalsRBSValueInReports();
     this.testInVitalsService.clearVitalsRBSValueInReportsInUpdate();
-    this.visitCategory = localStorage.getItem('visitCategory');
+    this.visitCategory = this.sessionstorage.getItem('visitCategory');
 
     this.testInVitalsService.vitalRBSTestResult$.subscribe((response) => {
       console.log('vital subscription response: ', response);
@@ -103,12 +105,12 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
         }
       }
 
-      this.beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
-      this.visitID = localStorage.getItem('visitID');
-      this.visitCategory = localStorage.getItem('visitCategory');
+      this.beneficiaryRegID = this.sessionstorage.getItem('beneficiaryRegID');
+      this.visitID = this.sessionstorage.getItem('visitID');
+      this.visitCategory = this.sessionstorage.getItem('visitCategory');
       if (
-        localStorage.getItem('referredVisitCode') === 'undefined' ||
-        localStorage.getItem('referredVisitCode') === null
+        this.sessionstorage.getItem('referredVisitCode') === 'undefined' ||
+        this.sessionstorage.getItem('referredVisitCode') === null
       ) {
         this.getTestResults(
           this.beneficiaryRegID,
@@ -267,7 +269,7 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
         beneficiaryRegID,
         visitID,
         visitCategory,
-        localStorage.getItem('visitCode'),
+        this.sessionstorage.getItem('visitCode'),
       )
       .subscribe((res: any) => {
         console.log('response archive', res);
@@ -282,9 +284,9 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
           this.testMMUResultsSubscription = this.doctorService
             .getMMUCaseRecordAndReferDetails(
               beneficiaryRegID,
-              localStorage.getItem('referredVisitID'),
+              this.sessionstorage.getItem('referredVisitID'),
               visitCategory,
-              localStorage.getItem('referredVisitCode'),
+              this.sessionstorage.getItem('referredVisitCode'),
             )
             .subscribe((response: any) => {
               if (response && response.statusCode === 200 && response.data) {
@@ -485,7 +487,7 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
   visitCode: any;
   showArchivedTestResult(visitCode: any) {
     const archivedReport = {
-      beneficiaryRegID: localStorage.getItem('beneficiaryRegID'),
+      beneficiaryRegID: this.sessionstorage.getItem('beneficiaryRegID'),
       visitCode: visitCode.visitCode,
     };
     this.doctorService

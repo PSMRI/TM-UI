@@ -25,6 +25,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { SetLanguageComponent } from '../../core/components/set-language.component';
 import { HttpServiceService } from '../../core/services/http-service.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-case-sheet',
@@ -47,6 +48,7 @@ export class CaseSheetComponent implements OnInit, DoCheck {
     private route: ActivatedRoute,
     private injector: Injector,
     public httpServiceService: HttpServiceService,
+    private sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -78,14 +80,14 @@ export class CaseSheetComponent implements OnInit, DoCheck {
     let type;
     if (this.previous) {
       if (dataStore === 'previous') {
-        type = localStorage.getItem('previousCaseSheetVisitCategory');
+        type = this.sessionstorage.getItem('previousCaseSheetVisitCategory');
       }
     } else {
       if (dataStore === 'current') {
-        type = localStorage.getItem('caseSheetVisitCategory');
+        type = this.sessionstorage.getItem('caseSheetVisitCategory');
       }
       if (dataStore === 'previous') {
-        type = localStorage.getItem('previousCaseSheetVisitCategory');
+        type = this.sessionstorage.getItem('previousCaseSheetVisitCategory');
       }
     }
 

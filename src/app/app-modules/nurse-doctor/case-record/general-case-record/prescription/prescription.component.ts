@@ -44,6 +44,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 import { MatDialog } from '@angular/material/dialog';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 interface prescribe {
   id: any;
@@ -72,7 +73,7 @@ interface prescribe {
   encapsulation: ViewEncapsulation.None,
 })
 export class PrescriptionComponent implements OnInit, OnDestroy, DoCheck {
-  generalUtils = new GeneralUtils(this.fb);
+  generalUtils = new GeneralUtils(this.fb, this.sessionstorage);
   @ViewChild('prescriptionForm')
   prescriptionForm!: NgForm;
 
@@ -136,13 +137,14 @@ export class PrescriptionComponent implements OnInit, OnDestroy, DoCheck {
     private masterdataService: MasterdataService,
     public httpServiceService: HttpServiceService,
     private dialog: MatDialog,
+    private sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
     this.assignSelectedLanguage();
-    this.createdBy = localStorage.getItem('userName');
-    if (localStorage.getItem('referredVisitCode')) {
-      this.referredVisitCode = localStorage.getItem('referredVisitCode');
+    this.createdBy = this.sessionstorage.getItem('userName');
+    if (this.sessionstorage.getItem('referredVisitCode')) {
+      this.referredVisitCode = this.sessionstorage.getItem('referredVisitCode');
     } else {
       this.referredVisitCode = 'undefined';
     }
@@ -459,9 +461,10 @@ export class PrescriptionComponent implements OnInit, OnDestroy, DoCheck {
           this.edlMaster = masterData.NonEdlMaster;
 
           if (this.caseRecordMode === 'view') {
-            this.beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
-            this.visitID = localStorage.getItem('visitID');
-            this.visitCategory = localStorage.getItem('visitCategory');
+            this.beneficiaryRegID =
+              this.sessionstorage.getItem('beneficiaryRegID');
+            this.visitID = this.sessionstorage.getItem('visitID');
+            this.visitCategory = this.sessionstorage.getItem('visitCategory');
             this.getPrescriptionDetails(
               this.beneficiaryRegID,
               this.visitID,
@@ -473,14 +476,14 @@ export class PrescriptionComponent implements OnInit, OnDestroy, DoCheck {
   }
   loadMMUPrescription() {
     const reqObj = {
-      benRegID: localStorage.getItem('beneficiaryRegID'),
-      visitCode: localStorage.getItem('referredVisitCode'),
-      benVisitID: localStorage.getItem('referredVisitID'),
+      benRegID: this.sessionstorage.getItem('beneficiaryRegID'),
+      visitCode: this.sessionstorage.getItem('referredVisitCode'),
+      benVisitID: this.sessionstorage.getItem('referredVisitID'),
       fetchMMUDataFor: 'Prescription',
     };
     if (
-      localStorage.getItem('referredVisitCode') !== 'undefined' &&
-      localStorage.getItem('referredVisitID') !== 'undefined'
+      this.sessionstorage.getItem('referredVisitCode') !== 'undefined' &&
+      this.sessionstorage.getItem('referredVisitID') !== 'undefined'
     ) {
       this.doctorService.getMMUData(reqObj).subscribe(
         (prescriptionDataResponse: any) => {
