@@ -28,6 +28,7 @@ import { ConfirmationService } from '../core/services';
 import { HttpServiceService } from '../core/services/http-service.service';
 import { ServicePointService } from './service-point.service';
 import { FormBuilder, Validators } from '@angular/forms';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-service-point',
@@ -77,6 +78,7 @@ export class ServicePointComponent implements OnInit, DoCheck {
     private httpServiceService: HttpServiceService,
     private registrarService: RegistrarService,
     private languageComponent: SetLanguageComponent,
+    private sessionstorage: SessionStorageService,
   ) {}
 
   servicePointForm = this.fb.group({
@@ -93,18 +95,18 @@ export class ServicePointComponent implements OnInit, DoCheck {
 
   ngOnInit() {
     this.fetchLanguageResponse();
-    this.serviceProviderId = localStorage.getItem('providerServiceID');
-    this.userId = localStorage.getItem('userID');
+    this.serviceProviderId = this.sessionstorage.getItem('providerServiceID');
+    this.userId = this.sessionstorage.getItem('userID');
     this.getServicePoint();
   }
 
   resetLocalStorage() {
-    localStorage.removeItem('sessionID');
-    localStorage.removeItem('serviceLineDetails');
-    localStorage.removeItem('vanType');
-    localStorage.removeItem('location');
-    localStorage.removeItem('servicePointID');
-    localStorage.removeItem('servicePointName');
+    this.sessionstorage.removeItem('sessionID');
+    this.sessionstorage.removeItem('serviceLineDetails');
+    this.sessionstorage.removeItem('vanType');
+    this.sessionstorage.removeItem('location');
+    this.sessionstorage.removeItem('servicePointID');
+    this.sessionstorage.removeItem('servicePointName');
     sessionStorage.removeItem('facilityID');
   }
 
@@ -165,23 +167,30 @@ export class ServicePointComponent implements OnInit, DoCheck {
     const serviceLineDetails: any = this.vansList.find(
       (van: any) => van.vanID === selectedVanID,
     );
+    console.error('serviceLineDetails', serviceLineDetails);
     if (serviceLineDetails)
-      localStorage.setItem(
+      this.sessionstorage.setItem(
         'serviceLineDetails',
         JSON.stringify(serviceLineDetails),
       );
     if (serviceLineDetails.facilityID)
-      sessionStorage.setItem('facilityID', serviceLineDetails.facilityID);
+      this.sessionstorage.setItem('facilityID', serviceLineDetails.facilityID);
     if (serviceLineDetails.servicePointID)
-      localStorage.setItem('servicePointID', serviceLineDetails.servicePointID);
+      this.sessionstorage.setItem(
+        'servicePointID',
+        serviceLineDetails.servicePointID,
+      );
     if (serviceLineDetails.servicePointName)
-      localStorage.setItem(
+      this.sessionstorage.setItem(
         'servicePointName',
         serviceLineDetails.servicePointName,
       );
     if (serviceLineDetails.vanSession)
-      localStorage.setItem('sessionID', serviceLineDetails.vanSession);
-    this.getDemographics();
+      this.sessionstorage.setItem('sessionID', serviceLineDetails.vanSession);
+
+    setTimeout(() => {
+      this.getDemographics();
+    }, 500);
   }
 
   routeToDesignation(designation: any) {
@@ -225,7 +234,7 @@ export class ServicePointComponent implements OnInit, DoCheck {
   saveDemographicsToStorage(data: any) {
     if (data) {
       if (data.stateMaster && data.stateMaster.length >= 1) {
-        localStorage.setItem('location', JSON.stringify(data));
+        this.sessionstorage.setItem('location', JSON.stringify(data));
         this.statesList = data.stateMaster;
         this.servicePointForm.controls.stateID.patchValue(
           data.otherLoc.stateID,
@@ -340,13 +349,13 @@ export class ServicePointComponent implements OnInit, DoCheck {
     // Convert the object into a JSON string
     const locationDataJSON = JSON.stringify(locationData);
 
-    // Store the JSON string in localStorage
-    localStorage.setItem('locationData', locationDataJSON);
+    // Store the JSON string in this.sessionstorage
+    this.sessionstorage.setItem('locationData', locationDataJSON);
     this.goToWorkList();
   }
 
   goToWorkList() {
-    this.designation = localStorage.getItem('designation');
+    this.designation = this.sessionstorage.getItem('designation');
     this.routeToDesignation(this.designation);
   }
 

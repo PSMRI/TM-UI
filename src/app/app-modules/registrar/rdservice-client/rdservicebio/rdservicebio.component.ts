@@ -6,6 +6,7 @@ import { GenerateMobileOtpGenerationComponent } from '../../generate-mobile-otp-
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationService } from 'src/app/app-modules/core/services';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-rdservicebio',
@@ -42,6 +43,7 @@ export class RdservicebioComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private router: Router,
     private route: ActivatedRoute,
+    private sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit(): void {
@@ -148,8 +150,8 @@ export class RdservicebioComponent implements OnInit {
   posthealthIDButtonCall() {
     const reqObj = {
       txnId: this.transactionId,
-      createdBy: localStorage.getItem('userName'),
-      providerServiceMapID: localStorage.getItem('providerServiceID'),
+      createdBy: this.sessionstorage.getItem('userName'),
+      providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
     };
     this.registrarService.generateHealthIdWithUID(reqObj).subscribe(
       (res: any) => {

@@ -43,6 +43,7 @@ import * as moment from 'moment';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { HealthIdDisplayModalComponent } from '../../core/components/health-id-display-modal/health-id-display-modal.component';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-search',
@@ -119,6 +120,7 @@ export class SearchComponent implements OnInit, DoCheck {
     public httpServiceService: HttpServiceService,
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     private commonService: CommonService,
+    private sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -444,10 +446,10 @@ export class SearchComponent implements OnInit, DoCheck {
       const action = false;
       console.log(JSON.stringify(benObject, null, 4), 'benObject');
       const vanID = JSON.parse(
-        localStorage.getItem('serviceLineDetails') ?? '{}',
+        this.sessionstorage.getItem('serviceLineDetails') ?? '{}',
       )?.vanID;
       benObject['providerServiceMapId'] =
-        localStorage.getItem('providerServiceID');
+        this.sessionstorage.getItem('providerServiceID');
       benObject['vanID'] = vanID;
       this.confirmationService
         .confirm(
@@ -746,7 +748,8 @@ export class SearchComponent implements OnInit, DoCheck {
     });
   }
   sendBenToAmrit(benDetails: any) {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     const date = new Date(
       benDetails.profile.patient.yearOfBirth +
         '-' +
@@ -765,8 +768,8 @@ export class SearchComponent implements OnInit, DoCheck {
         stateID: this.stateID,
         districtName: benDetails.profile.patient.address.district,
         districtID: this.districtID,
-        servicePointID: localStorage.getItem('servicePointID'),
-        servicePointName: localStorage.getItem('servicePointName'),
+        servicePointID: this.sessionstorage.getItem('servicePointID'),
+        servicePointName: this.sessionstorage.getItem('servicePointName'),
       },
       benPhoneMaps: [
         {
@@ -775,13 +778,13 @@ export class SearchComponent implements OnInit, DoCheck {
           phoneNo: null,
           vanID: serviceLineDetails.vanID,
           parkingPlaceID: serviceLineDetails.parkingPlaceID,
-          createdBy: localStorage.getItem('userName'),
+          createdBy: this.sessionstorage.getItem('userName'),
         },
       ],
-      providerServiceMapId: localStorage.getItem('providerServiceID'),
+      providerServiceMapId: this.sessionstorage.getItem('providerServiceID'),
       vanID: serviceLineDetails.vanID,
       parkingPlaceID: serviceLineDetails.parkingPlaceID,
-      createdBy: localStorage.getItem('userName'),
+      createdBy: this.sessionstorage.getItem('userName'),
     };
 
     this.registrarService.submitBeneficiary(req).subscribe(
@@ -825,10 +828,10 @@ export class SearchComponent implements OnInit, DoCheck {
       benObject.amritID !== ''
     ) {
       const serviceLineDetails: any =
-        localStorage.getItem('serviceLineDetails');
+        this.sessionstorage.getItem('serviceLineDetails');
       const vanID = JSON.parse(serviceLineDetails).vanID;
       benObject['providerServiceMapId'] =
-        localStorage.getItem('providerServiceID');
+        this.sessionstorage.getItem('providerServiceID');
       benObject['vanID'] = vanID;
       this.confirmationService
         .confirm(
@@ -949,10 +952,10 @@ export class SearchComponent implements OnInit, DoCheck {
 
   transferMigratedBeneficiaryToNurse(benObject: any) {
     const vanID = JSON.parse(
-      localStorage.getItem('serviceLineDetails') ?? '{}',
+      this.sessionstorage.getItem('serviceLineDetails') ?? '{}',
     )?.vanID;
     benObject['providerServiceMapId'] =
-      localStorage.getItem('providerServiceID');
+      this.sessionstorage.getItem('providerServiceID');
     benObject['vanID'] = vanID;
     this.confirmationService
       .confirm(
