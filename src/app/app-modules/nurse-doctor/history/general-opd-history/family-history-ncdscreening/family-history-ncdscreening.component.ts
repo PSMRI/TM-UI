@@ -39,6 +39,7 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { BeneficiaryDetailsService } from 'src/app/app-modules/core/services';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 import { IdrsscoreService } from '../../../shared/services/idrsscore.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-family-history-ncdscreening',
@@ -83,6 +84,7 @@ export class FamilyHistoryNcdscreeningComponent
     private idrsscore: IdrsscoreService,
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     private httpServices: HttpServiceService,
+    private sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -122,17 +124,18 @@ export class FamilyHistoryNcdscreeningComponent
           this.familyMemeberMasterData = masterData.familyMemberTypes;
           this.addFamilyDisease();
           if (String(this.mode) === 'view') {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             this.getGeneralHistory(benRegID, visitID);
           }
-          const specialistFlagString = localStorage.getItem('specialistFlag');
+          const specialistFlagString =
+            this.sessionstorage.getItem('specialistFlag');
           if (
             specialistFlagString !== null &&
             parseInt(specialistFlagString) === 100
           ) {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             this.getGeneralHistory(benRegID, visitID);
           }
         }
@@ -451,7 +454,7 @@ export class FamilyHistoryNcdscreeningComponent
   }
 
   getPreviousFamilyHistory() {
-    const benRegID = localStorage.getItem('beneficiaryRegID');
+    const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
     this.nurseService
       .getPreviousFamilyHistory(benRegID, this.visitType)
       .subscribe(
@@ -570,7 +573,7 @@ export class FamilyHistoryNcdscreeningComponent
       }
 
       console.log('score', IDRSScoreForFamilyMembes);
-      localStorage.setItem(
+      this.sessionstorage.setItem(
         'IdRSScoreFamilyHistory',
         IDRSScoreForFamilyMembes.toString(),
       );

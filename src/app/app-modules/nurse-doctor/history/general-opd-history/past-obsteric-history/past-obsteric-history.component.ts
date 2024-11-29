@@ -47,6 +47,7 @@ import { GeneralUtils } from '../../../shared/utility';
 import { MatDialog } from '@angular/material/dialog';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-general-past-obsteric-history',
@@ -80,8 +81,9 @@ export class PastObstericHistoryComponent
     public httpServiceService: HttpServiceService,
     private confirmationService: ConfirmationService,
     private masterdataService: MasterdataService,
+    private sessionstorage: SessionStorageService,
   ) {
-    this.formUtility = new GeneralUtils(this.fb);
+    this.formUtility = new GeneralUtils(this.fb, this.sessionstorage);
   }
 
   ngOnInit() {
@@ -159,9 +161,9 @@ export class PastObstericHistoryComponent
     ] as FormArray;
     this.clearFormArray(temp1);
 
-    if (localStorage.getItem('serviceLineDetails')) {
+    if (this.sessionstorage.getItem('serviceLineDetails')) {
       const serviceLineDetails: any =
-        localStorage.getItem('serviceLineDetails');
+        this.sessionstorage.getItem('serviceLineDetails');
       const vanID = JSON.parse(serviceLineDetails).vanID;
       const parkingPlaceID = JSON.parse(serviceLineDetails).parkingPlaceID;
 
@@ -188,17 +190,18 @@ export class PastObstericHistoryComponent
           this.selectDeliveryTypes = this.masterData.deliveryTypes;
 
           if (String(this.mode) === 'view') {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             this.getGeneralHistory(benRegID, visitID);
           }
-          const specialistFlagString = localStorage.getItem('specialistFlag');
+          const specialistFlagString =
+            this.sessionstorage.getItem('specialistFlag');
           if (
             specialistFlagString !== null &&
             parseInt(specialistFlagString) === 100
           ) {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             this.getGeneralHistory(benRegID, visitID);
           }
         }
@@ -430,7 +433,7 @@ export class PastObstericHistoryComponent
   }
 
   getPreviousObstetricHistory() {
-    const benRegID = localStorage.getItem('beneficiaryRegID');
+    const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
     this.nurseService
       .getPreviousObstetricHistory(benRegID, this.visitType)
       .subscribe(
