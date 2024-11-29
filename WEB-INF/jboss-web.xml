@@ -1,3 +1,3 @@
 <jboss-web>
-  <context-root>/tm</context-root>
+  <context-root>/tm-wasa</context-root>
 </jboss-web>

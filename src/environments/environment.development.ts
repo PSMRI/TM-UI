@@ -20,6 +20,8 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
+import { keys } from './enckey';
+
 // The file contents for the current environment will overwrite these during build.
 // The build system defaults to the dev environment which uses `environment.ts`, but if you do
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
@@ -47,20 +49,21 @@ const identityIP = 'https://amritwprdev.piramalswasthya.org/';
 
 // Without API MAN Configuration
 const IDENTITY_API = `${identityIP}/identity-0.0.1/`;
-const COMMON_API_OPEN = `${commonIP}commonapi-v1.0/`;
-const COMMON_API = `${commonIP}commonapi-v1.0/`;
-const TM_API = `${tmIP}tmapi-v1.0/`;
-const MMU_API = `${mmuIP}mmuapi-v1.0/`;
-const COMMON_API_OPEN_SYNC = `${SERVER_IP}commonapi-v1.0/`;
-const SCHEDULER_API = `${schedulerIP}schedulerapi-v1.0/`;
-const ADMIN_API = `${adminIP}/adminapi-v1.0`;
+const COMMON_API_OPEN = `${commonIP}commonapi-v3.0.0/`;
+const COMMON_API = `${commonIP}commonapi-v3.0.0/`;
+const TM_API = `${tmIP}tmapi-v3.0.0/`;
+const MMU_API = `${mmuIP}mmuapi-v3.0.0/`;
+const COMMON_API_OPEN_SYNC = `${SERVER_IP}commonapi-v3.0.0/`;
+const SCHEDULER_API = `${schedulerIP}schedulerapi-v3.0.0/`;
+const ADMIN_API = `${adminIP}/adminapi-v3.0.0`;
 const IOT_API = 'http://localhost:8085/ezdx-hub-connect-srv';
-const FHIR_API = `${FHIRIP}/fhirapi-v1.0/`;
-const mmuUICasesheet = `${tmUI_IP}tmui-v1.0`;
+const FHIR_API = `${FHIRIP}/fhirapi-v1.2/`;
+const mmuUICasesheet = `${tmUI_IP}tmui-v3.0.0`;
 
 export const environment = {
   production: true,
   isTMOffline: false,
+  encKey: keys.dev,
 
   app: `MMU`,
   RBSTest: `RBS Test`,
@@ -69,11 +72,11 @@ export const environment = {
   abhaExtension: `@abdm`,
   parentAPI: `${TM_API}`,
 
-  INVENTORY_URL: `${inventoryUI_IP}/inventory/#/redirin?`,
+  INVENTORY_URL: `${inventoryUI_IP}/inventory-wasa/#/redirin?`,
   fallbackUrl: `/pharmacist/redirfallback`,
   redirInUrl: `/pharmacist/redirin`,
 
-  TELEMEDICINE_URL: `${schedulerUI_IP}/scheduler/#/?`,
+  TELEMEDICINE_URL: `${schedulerUI_IP}/scheduler-wasa/#/?`,
   fallbackMMUUrl: `/logout-tm`,
   redirInMMUUrl: `/common/tcspecialist-worklist`,
 

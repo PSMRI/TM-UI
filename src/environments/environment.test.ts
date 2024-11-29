@@ -20,6 +20,8 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
+import { keys } from './enckey';
+
 // The file contents for the current environment will overwrite these during build.
 // The build system defaults to the dev environment which uses `environment.ts`, but if you do
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
@@ -61,7 +63,7 @@ const mmuUICasesheet = `${tmUI_IP}tmui-v1.0`;
 export const environment = {
   production: true,
   isTMOffline: false,
-
+  encKey: keys.test,
   app: `MMU`,
   RBSTest: `RBS Test`,
   visualAcuityTest: `Visual Acuity Test`,

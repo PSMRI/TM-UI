@@ -20,6 +20,8 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
+import { keys } from './enckey';
+
 // The file contents for the current environment will overwrite these during build.
 // The build system defaults to the dev environment which uses `environment.ts`, but if you do
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
@@ -48,15 +50,15 @@ const identityIP = 'https://amritwprdev.piramalswasthya.org/';
 
 // Without API MAN Configuration
 const IDENTITY_API = `${identityIP}/identity-0.0.1/`;
-const COMMON_API_OPEN = `${commonIP}/commonapi-v1.0/`;
-const COMMON_API = `${commonIP}/commonapi-v1.0/`;
-const TM_API = `${tmIP}/tmapi-v1.0/`;
-const API104 = `${IP104}/104api-v1.0/`;
-const MMU_API = `${mmuIP}/mmuapi-v1.0/`;
-const COMMON_API_OPEN_SYNC = `http://${SERVER_IP}:8080/commonapi-v1.0/`;
-const SCHEDULER_API = `${schedulerIP}/schedulerapi-v1.0/`;
+const COMMON_API_OPEN = `${commonIP}/commonapi-v3.0.0/`;
+const COMMON_API = `${commonIP}/commonapi-v3.0.0/`;
+const TM_API = `${tmIP}/tmapi-v3.0.0/`;
+const API104 = `${IP104}/104api-v3.0.0/`;
+const MMU_API = `${mmuIP}/mmuapi-v3.0.0/`;
+const COMMON_API_OPEN_SYNC = `http://${SERVER_IP}:8080/commonapi-v3.0.0/`;
+const SCHEDULER_API = `${schedulerIP}/schedulerapi-v3.0.0/`;
 const mmuUICasesheet = 'http://localhost:4200/';
-const ADMIN_API = `${adminIP}/adminapi-v1.0`;
+const ADMIN_API = `${adminIP}/adminapi-v3.0.0`;
 
 const IOT_API = 'http://localhost:8085/ezdx-hub-connect-srv';
 
@@ -65,6 +67,7 @@ const FHIR_API = `${FHIRIP}/fhirapi-v1.0/`;
 export const environment = {
   production: false,
   isTMOffline: true,
+  encKey: keys.dev,
   app: `MMU`,
   RBSTest: `RBS Test`,
   visualAcuityTest: `Visual Acuity Test`,
@@ -73,10 +76,10 @@ export const environment = {
 
   parentAPI: `${TM_API}`,
 
-  INVENTORY_URL: inventoryUI_IP + '/inventory/#/redirin?',
+  INVENTORY_URL: inventoryUI_IP + '/inventory-wasa/#/redirin?',
   fallbackUrl: '/pharmacist/redirfallback',
   redirInUrl: '/pharmacist/redirin',
-  TELEMEDICINE_URL: schedulerIP + '/scheduler/#/?',
+  TELEMEDICINE_URL: schedulerIP + '/scheduler-wasa/#/?',
   fallbackMMUUrl: `/logout-tm`,
   redirInMMUUrl: `/nurse-doctor/tcspecialist-worklist`,
 

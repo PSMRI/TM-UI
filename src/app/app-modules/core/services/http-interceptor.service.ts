@@ -47,8 +47,9 @@ export class HttpInterceptorService implements HttpInterceptor {
     let modifiedReq = req;
     if (req.body instanceof FormData) {
       modifiedReq = req.clone({
-        headers: req.headers.set('Authorization', key || ''),
-        // .set('Jwttoken', tkn),
+        headers: req.headers
+          .set('Authorization', key || '')
+          .set('Jwttoken', tkn),
       });
     } else {
       if (key !== undefined && key !== null) {
