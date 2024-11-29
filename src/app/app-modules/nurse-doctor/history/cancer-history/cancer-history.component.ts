@@ -34,6 +34,7 @@ import { ConfirmationService } from '../../../core/services/confirmation.service
 import { DoctorService } from '../../shared/services/doctor.service';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-nurse-cancer-history',
@@ -64,6 +65,7 @@ export class CancerHistoryComponent
     private confirmationService: ConfirmationService,
     public httpServiceService: HttpServiceService,
     private beneficiaryDetailsService: BeneficiaryDetailsService,
+    private sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -83,17 +85,17 @@ export class CancerHistoryComponent
 
   ngOnChanges(changes: any) {
     if (String(this.mode) === 'view') {
-      const visitID = localStorage.getItem('visitID');
-      const benRegID = localStorage.getItem('beneficiaryRegID');
+      const visitID = this.sessionstorage.getItem('visitID');
+      const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
       this.getCancerHistory(benRegID, visitID);
     }
-    const specialistFlagString = localStorage.getItem('specialistFlag');
+    const specialistFlagString = this.sessionstorage.getItem('specialistFlag');
     if (
       specialistFlagString !== null &&
       parseInt(specialistFlagString) === 100
     ) {
-      const visitID = localStorage.getItem('visitID');
-      const benRegID = localStorage.getItem('beneficiaryRegID');
+      const visitID = this.sessionstorage.getItem('visitID');
+      const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
       this.getCancerHistory(benRegID, visitID);
     }
 
@@ -102,20 +104,21 @@ export class CancerHistoryComponent
   }
 
   updatePateintHistory(cancerHistoryForm: any) {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     const vanID = JSON.parse(serviceLineDetails).vanID;
     const parkingPlaceID = JSON.parse(serviceLineDetails).parkingPlaceID;
     const updateDetails = {
-      beneficiaryRegID: localStorage.getItem('beneficiaryRegID'),
-      benVisitID: localStorage.getItem('visitID'),
-      providerServiceMapID: localStorage.getItem('providerServiceID'),
-      modifiedBy: localStorage.getItem('userName'),
-      beneficiaryID: localStorage.getItem('beneficiaryID'),
-      sessionID: localStorage.getItem('sessionID'),
+      beneficiaryRegID: this.sessionstorage.getItem('beneficiaryRegID'),
+      benVisitID: this.sessionstorage.getItem('visitID'),
+      providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
+      modifiedBy: this.sessionstorage.getItem('userName'),
+      beneficiaryID: this.sessionstorage.getItem('beneficiaryID'),
+      sessionID: this.sessionstorage.getItem('sessionID'),
       parkingPlaceID: parkingPlaceID,
       vanID: vanID,
-      benFlowID: localStorage.getItem('benFlowID'),
-      visitCode: localStorage.getItem('visitCode'),
+      benFlowID: this.sessionstorage.getItem('benFlowID'),
+      visitCode: this.sessionstorage.getItem('visitCode'),
     };
 
     this.doctorService

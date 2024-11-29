@@ -33,6 +33,7 @@ import {
   BeneficiaryDetailsService,
   ConfirmationService,
 } from 'src/app/app-modules/core/services';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-nurse-anc-obstetric-examination',
@@ -191,6 +192,7 @@ export class ObstetricExaminationComponent
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     private confirmationService: ConfirmationService,
     private masterdataService: MasterdataService,
+    private sessionstorage: SessionStorageService,
     private datePipe: DatePipe,
   ) {}
 
@@ -276,8 +278,9 @@ export class ObstetricExaminationComponent
       todayDate.toString();
 
       const serviceLineDetails: any =
-        localStorage.getItem('serviceLineDetails');
-      const providerServiceID: any = localStorage.getItem('providerServiceID');
+        this.sessionstorage.getItem('serviceLineDetails');
+      const providerServiceID: any =
+        this.sessionstorage.getItem('providerServiceID');
       const reqObj = {
         beneficiaryRegID: this.beneficiary.beneficiaryRegID,
         benFlowID: this.beneficiary.benFlowID,
@@ -288,7 +291,7 @@ export class ObstetricExaminationComponent
         testName: testName,
         vanID: JSON.parse(serviceLineDetails).vanID,
         ProviderServiceMapID: JSON.parse(providerServiceID),
-        createdBy: localStorage.getItem('userName'),
+        createdBy: this.sessionstorage.getItem('userName'),
       };
 
       this.nurseService.sendTestDetailsToFetosense(reqObj).subscribe(

@@ -21,6 +21,7 @@
  */
 
 import { Component, OnInit, Input, OnChanges, DoCheck } from '@angular/core';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 
@@ -58,12 +59,15 @@ export class ExaminationCaseSheetComponent
   date!: string;
   serviceList = '';
 
-  constructor(public httpServiceService: HttpServiceService) {}
+  constructor(
+    public httpServiceService: HttpServiceService,
+    private sessionstorage: SessionStorageService,
+  ) {}
 
   ngOnInit() {
-    this.visitCategory = localStorage.getItem('caseSheetVisitCategory');
-    this.beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
-    this.visitID = localStorage.getItem('visitID');
+    this.visitCategory = this.sessionstorage.getItem('caseSheetVisitCategory');
+    this.beneficiaryRegID = this.sessionstorage.getItem('beneficiaryRegID');
+    this.visitID = this.sessionstorage.getItem('visitID');
     this.assignSelectedLanguage();
   }
 
