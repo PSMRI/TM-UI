@@ -35,6 +35,7 @@ import {
   MomentDateAdapter,
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
 } from '@angular/material-moment-adapter';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-cancer-refer',
@@ -88,6 +89,7 @@ export class CancerReferComponent implements OnInit, DoCheck, OnDestroy {
     public httpServiceService: HttpServiceService,
     public datepipe: DatePipe,
     private masterdataService: MasterdataService,
+    private sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -118,10 +120,11 @@ export class CancerReferComponent implements OnInit, DoCheck, OnDestroy {
           this.revisitDate = masterData.revisitDate;
           this.referralReason = masterData.referralReason;
           if (this.referMode === 'view') {
-            const beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
-            const visitID = localStorage.getItem('visitID');
-            const visitCategory = localStorage.getItem('visitCategory');
-            if (localStorage.getItem('doctorFlag') === '9') {
+            const beneficiaryRegID =
+              this.sessionstorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const visitCategory = this.sessionstorage.getItem('visitCategory');
+            if (this.sessionstorage.getItem('doctorFlag') === '9') {
               this.getReferDetails(beneficiaryRegID, visitID, visitCategory);
             }
           }

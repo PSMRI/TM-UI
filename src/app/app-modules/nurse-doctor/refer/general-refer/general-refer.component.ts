@@ -43,6 +43,7 @@ import {
   MomentDateAdapter,
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
 } from '@angular/material-moment-adapter';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-general-refer',
@@ -117,13 +118,14 @@ export class GeneralReferComponent implements OnInit, DoCheck, OnDestroy {
     private nurseService: NurseService,
     private dialog: MatDialog,
     private confirmationService: ConfirmationService,
+    private sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
     this.assignSelectedLanguage();
-    this.visitCategory = localStorage.getItem('visitCategory');
-    if (localStorage.getItem('referredVisitCode')) {
-      this.referredVisitcode = localStorage.getItem('referredVisitCode');
+    this.visitCategory = this.sessionstorage.getItem('visitCategory');
+    if (this.sessionstorage.getItem('referredVisitCode')) {
+      this.referredVisitcode = this.sessionstorage.getItem('referredVisitCode');
     } else {
       this.referredVisitcode = 'undefined';
     }
@@ -150,7 +152,7 @@ export class GeneralReferComponent implements OnInit, DoCheck, OnDestroy {
     this.tomorrow = d;
 
     //designation to show the TMC suggestion.
-    this.designation = localStorage.getItem('designation');
+    this.designation = this.sessionstorage.getItem('designation');
   }
 
   ngOnDestroy() {
@@ -180,9 +182,10 @@ export class GeneralReferComponent implements OnInit, DoCheck, OnDestroy {
           this.revisitDate = masterData.revisitDate;
 
           if (String(this.referMode) === 'view') {
-            this.beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
-            this.visitID = localStorage.getItem('visitID');
-            this.visitCategory = localStorage.getItem('visitCategory');
+            this.beneficiaryRegID =
+              this.sessionstorage.getItem('beneficiaryRegID');
+            this.visitID = this.sessionstorage.getItem('visitID');
+            this.visitCategory = this.sessionstorage.getItem('visitCategory');
             this.getReferDetails(
               this.beneficiaryRegID,
               this.visitID,
@@ -289,7 +292,7 @@ export class GeneralReferComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   getPreviousReferralHistory() {
-    const benRegID = localStorage.getItem('beneficiaryRegID');
+    const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
     this.nurseService
       .getPreviousReferredHistory(benRegID, this.visitCategory)
       .subscribe(
@@ -331,14 +334,14 @@ export class GeneralReferComponent implements OnInit, DoCheck, OnDestroy {
 
   loadMMUReferDeatils() {
     const reqObj = {
-      benRegID: localStorage.getItem('beneficiaryRegID'),
-      visitCode: localStorage.getItem('referredVisitCode'),
-      benVisitID: localStorage.getItem('referredVisitID'),
+      benRegID: this.sessionstorage.getItem('beneficiaryRegID'),
+      visitCode: this.sessionstorage.getItem('referredVisitCode'),
+      benVisitID: this.sessionstorage.getItem('referredVisitID'),
       fetchMMUDataFor: 'Referral',
     };
     if (
-      localStorage.getItem('referredVisitCode') !== 'undefined' &&
-      localStorage.getItem('referredVisitID') !== 'undefined'
+      this.sessionstorage.getItem('referredVisitCode') !== 'undefined' &&
+      this.sessionstorage.getItem('referredVisitID') !== 'undefined'
     ) {
       this.doctorService.getMMUData(reqObj).subscribe(
         (res: any) => {
