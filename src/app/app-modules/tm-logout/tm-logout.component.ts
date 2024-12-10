@@ -32,7 +32,7 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
 export class TmLogoutComponent implements OnInit {
   constructor(
     private router: Router,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

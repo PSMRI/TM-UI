@@ -130,7 +130,7 @@ export class NcdScreeningComponent
     private nurseService: NurseService,
     private router: Router,
     public httpServiceService: HttpServiceService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   NCDScreeningForm!: FormGroup;

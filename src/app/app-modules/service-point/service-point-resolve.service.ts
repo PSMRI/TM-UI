@@ -32,7 +32,7 @@ export class ServicePointResolve implements Resolve<any> {
   constructor(
     private servicePointService: ServicePointService,
     private router: Router,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   resolve(route: ActivatedRouteSnapshot) {

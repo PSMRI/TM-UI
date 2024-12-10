@@ -29,7 +29,7 @@ import { environment } from 'src/environments/environment';
 export class ServicePointService {
   constructor(
     private http: HttpClient,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   getServicePoints(userId: string, serviceProviderId: string) {

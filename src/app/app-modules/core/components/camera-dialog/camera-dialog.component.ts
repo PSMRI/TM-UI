@@ -97,7 +97,7 @@ export class CameraDialogComponent implements OnInit, DoCheck, AfterViewInit {
     public dialogRef: MatDialogRef<CameraDialogComponent>,
     public httpServiceService: HttpServiceService,
     private confirmationService: ConfirmationService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {
     this.options = {
       audio: false,

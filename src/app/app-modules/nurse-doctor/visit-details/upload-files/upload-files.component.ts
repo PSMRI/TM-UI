@@ -76,7 +76,7 @@ export class UploadFilesComponent implements OnInit, DoCheck, OnChanges {
     private dialog: MatDialog,
     public httpServiceService: HttpServiceService,
     private doctorService: DoctorService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

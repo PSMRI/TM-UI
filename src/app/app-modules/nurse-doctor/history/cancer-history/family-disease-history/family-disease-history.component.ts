@@ -79,7 +79,7 @@ export class FamilyDiseaseHistoryComponent
     private confirmationService: ConfirmationService,
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     public httpServiceService: HttpServiceService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {
     this.formUtils = new CancerUtils(this.fb, this.sessionstorage);
   }

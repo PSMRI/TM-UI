@@ -29,7 +29,7 @@ import { environment } from 'src/environments/environment';
 export class PharmacistService {
   constructor(
     private http: HttpClient,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   getPharmacistWorklist() {

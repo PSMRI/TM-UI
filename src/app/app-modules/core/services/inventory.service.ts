@@ -34,7 +34,7 @@ export class InventoryService {
   constructor(
     @Inject(DOCUMENT) private document: any,
     private confirmationService: ConfirmationService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   moveToInventory(

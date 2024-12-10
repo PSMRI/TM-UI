@@ -20,8 +20,6 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-import { keys } from './enckey';
-
 // The file contents for the current environment will overwrite these during build.
 // The build system defaults to the dev environment which uses `environment.ts`, but if you do
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
@@ -63,11 +61,12 @@ const ADMIN_API = `${adminIP}/adminapi-v3.0.0`;
 const IOT_API = 'http://localhost:8085/ezdx-hub-connect-srv';
 
 const FHIR_API = `${FHIRIP}/fhirapi-v1.0/`;
+const sessionStorageEncKey = '<%= SESSION_STORAGE_ENC_KEY %>';
 
 export const environment = {
   production: false,
   isTMOffline: true,
-  encKey: keys.dev,
+  encKey: sessionStorageEncKey,
   app: `MMU`,
   RBSTest: `RBS Test`,
   visualAcuityTest: `Visual Acuity Test`,

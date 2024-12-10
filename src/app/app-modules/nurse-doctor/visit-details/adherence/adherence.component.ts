@@ -45,7 +45,7 @@ export class AdherenceComponent implements OnInit, OnChanges, DoCheck {
   constructor(
     public httpServiceService: HttpServiceService,
     private doctorService: DoctorService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

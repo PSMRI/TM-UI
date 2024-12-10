@@ -78,7 +78,7 @@ export class ServicePointComponent implements OnInit, DoCheck {
     private httpServiceService: HttpServiceService,
     private registrarService: RegistrarService,
     private languageComponent: SetLanguageComponent,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   servicePointForm = this.fb.group({

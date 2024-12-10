@@ -75,7 +75,7 @@ export class ComorbidityConcurrentConditionsComponent
     private confirmationService: ConfirmationService,
     public httpServiceService: HttpServiceService,
     private masterdataService: MasterdataService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {
     this.nurseService.listen().subscribe((m: any) => {
       console.log(m);

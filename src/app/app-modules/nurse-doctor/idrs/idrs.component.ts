@@ -120,7 +120,7 @@ export class IdrsComponent implements OnInit, DoCheck, OnDestroy, OnChanges {
     private nurseService: NurseService,
     private doctorService: DoctorService,
     private httpServiceService: HttpServiceService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

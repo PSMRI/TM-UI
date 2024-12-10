@@ -82,7 +82,7 @@ export class NurseTmFutureWorklistComponent
     public httpServiceService: HttpServiceService,
     private doctorService: DoctorService,
     private dialog: MatDialog,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

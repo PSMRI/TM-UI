@@ -75,7 +75,7 @@ export class NurseService {
   constructor(
     private http: HttpClient,
     private spinnerService: SpinnerService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   getNurseWorklist() {

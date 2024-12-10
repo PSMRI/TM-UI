@@ -26,7 +26,7 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
 export class NCDScreeningUtils {
   constructor(
     private fb: FormBuilder,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   createNCDScreeningForm() {

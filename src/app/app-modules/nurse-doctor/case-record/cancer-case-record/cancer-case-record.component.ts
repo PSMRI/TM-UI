@@ -160,7 +160,7 @@ export class CancerCaseRecordComponent
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     private cameraService: CameraService,
     private doctorService: DoctorService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

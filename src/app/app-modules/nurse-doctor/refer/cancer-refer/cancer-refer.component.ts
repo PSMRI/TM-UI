@@ -89,7 +89,7 @@ export class CancerReferComponent implements OnInit, DoCheck, OnDestroy {
     public httpServiceService: HttpServiceService,
     public datepipe: DatePipe,
     private masterdataService: MasterdataService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

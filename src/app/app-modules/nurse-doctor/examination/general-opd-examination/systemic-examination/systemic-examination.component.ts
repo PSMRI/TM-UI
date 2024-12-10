@@ -56,7 +56,7 @@ export class SystemicExaminationComponent
 
   constructor(
     private fb: FormBuilder,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
     public httpServiceService: HttpServiceService,
   ) {}
 

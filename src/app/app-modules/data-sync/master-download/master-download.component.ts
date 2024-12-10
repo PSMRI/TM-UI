@@ -41,7 +41,7 @@ export class MasterDownloadComponent implements OnInit, DoCheck {
     private confirmationService: ConfirmationService,
     private dataSyncService: DataSyncService,
     public httpServiceService: HttpServiceService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
     private dialog: MatDialog,
     private authService: AuthService,
     private confirmationService: ConfirmationService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
     private fb: FormBuilder,
     private cookieService: CookieService,
   ) {

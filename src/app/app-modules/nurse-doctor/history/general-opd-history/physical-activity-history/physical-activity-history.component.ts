@@ -69,7 +69,7 @@ export class PhysicalActivityHistoryComponent implements OnInit, DoCheck {
     private doctorService: DoctorService,
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     private httpServiceService: HttpServiceService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

@@ -95,7 +95,7 @@ export class AncImmunizationComponent
   current_language_set: any;
   constructor(
     private beneficiaryDetailsService: BeneficiaryDetailsService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
     public httpServiceService: HttpServiceService,
   ) {}
 

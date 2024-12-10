@@ -60,7 +60,7 @@ export class DiseaseconfirmationComponent implements OnInit {
     private doctorService: DoctorService,
     private nurseService: NurseService,
     private route: ActivatedRoute,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

@@ -36,7 +36,7 @@ export class DoctorService {
   covidVaccineAgeGroup: any;
   constructor(
     private http: HttpClient,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   getDoctorWorklist() {

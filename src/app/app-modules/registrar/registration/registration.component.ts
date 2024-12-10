@@ -112,7 +112,7 @@ export class RegistrationComponent
     private changeDetectorRef: ChangeDetectorRef,
     public httpServiceService: HttpServiceService,
     private dialog: MatDialog,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

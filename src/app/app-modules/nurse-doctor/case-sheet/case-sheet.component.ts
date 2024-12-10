@@ -48,7 +48,7 @@ export class CaseSheetComponent implements OnInit, DoCheck {
     private route: ActivatedRoute,
     private injector: Injector,
     public httpServiceService: HttpServiceService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

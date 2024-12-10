@@ -76,7 +76,7 @@ export class WorklistComponent implements OnInit, OnDestroy, DoCheck {
     private confirmationService: ConfirmationService,
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     private labService: LabService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
     private httpServiceService: HttpServiceService,
   ) {}
 

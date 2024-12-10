@@ -60,7 +60,7 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
     private idrsScoreService: IdrsscoreService,
     public sanitizer: DomSanitizer,
     private testInVitalsService: TestInVitalsService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   currentLabRowsPerPage = 5;

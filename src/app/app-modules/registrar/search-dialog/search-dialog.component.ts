@@ -83,7 +83,7 @@ export class SearchDialogComponent implements OnInit, DoCheck {
     private registrarService: RegistrarService,
     private changeDetectorRef: ChangeDetectorRef,
     private fb: FormBuilder,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

@@ -73,7 +73,7 @@ export class FamilyHistoryComponent implements OnInit, DoCheck, OnDestroy {
     private confirmationService: ConfirmationService,
     public httpServiceService: HttpServiceService,
     private masterdataService: MasterdataService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

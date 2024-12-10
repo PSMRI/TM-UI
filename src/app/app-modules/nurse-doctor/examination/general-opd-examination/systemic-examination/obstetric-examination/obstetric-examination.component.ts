@@ -192,7 +192,7 @@ export class ObstetricExaminationComponent
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     private confirmationService: ConfirmationService,
     private masterdataService: MasterdataService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
     private datePipe: DatePipe,
   ) {}
 

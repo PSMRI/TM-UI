@@ -38,7 +38,7 @@ export class SpecialistLoginComponent implements OnInit {
     @Inject(MAT_SNACK_BAR_DATA) public data: any,
     public snackBarRef: MatSnackBarRef<SpecialistLoginComponent>,
     public formBuilder: FormBuilder,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

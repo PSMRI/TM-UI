@@ -62,7 +62,7 @@ export class AppHeaderComponent implements OnInit {
     private telemedicineService: TelemedicineService,
     public service: IotService,
     private http_service: HttpServiceService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

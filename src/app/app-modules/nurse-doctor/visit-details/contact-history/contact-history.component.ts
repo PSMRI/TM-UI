@@ -67,7 +67,7 @@ export class ContactHistoryComponent
     public httpServiceService: HttpServiceService,
     private doctorService: DoctorService,
     private masterdataService: MasterdataService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {
     this.masterdataService.listen().subscribe((m: any) => {
       console.log(m);

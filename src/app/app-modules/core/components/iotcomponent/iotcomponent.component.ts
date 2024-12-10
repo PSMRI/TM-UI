@@ -60,7 +60,7 @@ export class IotcomponentComponent implements OnInit, DoCheck {
     public service: IotService,
     private confirmationService: ConfirmationService,
     private dialog: MatDialog,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

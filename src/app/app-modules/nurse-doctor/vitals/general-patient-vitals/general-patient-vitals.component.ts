@@ -131,7 +131,7 @@ export class GeneralPatientVitalsComponent
     private route: ActivatedRoute,
     private audioRecordingService: AudioRecordingService,
     private sanitizer: DomSanitizer,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {
     this.audioRecordingService
       .recordingFailed()

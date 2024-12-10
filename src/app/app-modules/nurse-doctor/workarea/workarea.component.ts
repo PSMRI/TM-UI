@@ -172,7 +172,7 @@ export class WorkareaComponent
     private snackBar: MatSnackBar,
     private idrsScoreService: IdrsscoreService,
     private registrarService: RegistrarService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
   isSpecialist = false;
   doctorSaveAndTCSave: any;

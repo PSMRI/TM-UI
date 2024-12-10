@@ -49,7 +49,7 @@ export class DataSyncLoginComponent implements OnInit, DoCheck {
     private dataSyncService: DataSyncService,
     private injector: Injector,
     private confirmationService: ConfirmationService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

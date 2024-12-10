@@ -48,7 +48,7 @@ export class ServiceComponent implements OnInit, DoCheck {
     private confirmationService: ConfirmationService,
     private servicePointService: ServicePointService,
     private telemedicineService: TelemedicineService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

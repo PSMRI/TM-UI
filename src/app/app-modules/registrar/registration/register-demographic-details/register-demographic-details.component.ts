@@ -76,7 +76,7 @@ export class RegisterDemographicDetailsComponent
     private confirmationService: ConfirmationService,
     public httpServiceService: HttpServiceService,
     private router: Router,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

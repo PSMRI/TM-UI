@@ -62,7 +62,7 @@ export class FeedingHistoryComponent implements OnInit, DoCheck, OnDestroy {
     private dialog: MatDialog,
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     private confirmationService: ConfirmationService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

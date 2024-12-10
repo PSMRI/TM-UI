@@ -58,7 +58,7 @@ export class AncComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
     private doctorService: DoctorService,
     private confirmationService: ConfirmationService,
     public httpServiceService: HttpServiceService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
     public beneficiaryDetailsService: BeneficiaryDetailsService,
   ) {}
 

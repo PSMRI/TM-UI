@@ -26,7 +26,7 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
 export class QuickConsultUtils {
   constructor(
     private fb: FormBuilder,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   initMedicine(): FormGroup {

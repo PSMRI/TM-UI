@@ -59,7 +59,7 @@ export class DevelopmentHistoryComponent implements OnInit, DoCheck, OnDestroy {
     public httpServiceService: HttpServiceService,
     private dialog: MatDialog,
     private confirmationService: ConfirmationService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

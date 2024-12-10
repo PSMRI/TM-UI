@@ -66,7 +66,7 @@ export class ConfirmatoryDiagnosisDirective implements OnInit, DoCheck {
     private el: ElementRef,
     private dialog: MatDialog,
     private httpServiceService: HttpServiceService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

@@ -81,7 +81,7 @@ export class SchedulerComponent implements OnInit, DoCheck {
     private confirmationService: ConfirmationService,
     @Inject(MAT_DIALOG_DATA) public dialogData: any,
     private fb: FormBuilder,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
     public mdDialogRef: MatDialogRef<SchedulerComponent>,
   ) {}
   today!: Date;

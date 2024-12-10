@@ -209,7 +209,7 @@ export class GeneralExaminationComponent implements OnInit, OnChanges, DoCheck {
 
   constructor(
     public httpServiceService: HttpServiceService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
   hideForANCAndQC = false;
   ngOnInit() {

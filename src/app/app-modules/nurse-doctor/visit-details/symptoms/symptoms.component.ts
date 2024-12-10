@@ -62,7 +62,7 @@ export class SymptomsComponent
     private doctorService: DoctorService,
     private masterdataService: MasterdataService,
     private httpServiceService: HttpServiceService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   disable: any = ['false', 'false', 'false', 'false'];

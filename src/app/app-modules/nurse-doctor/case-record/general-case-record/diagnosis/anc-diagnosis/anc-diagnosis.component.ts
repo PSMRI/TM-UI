@@ -95,7 +95,7 @@ export class AncDiagnosisComponent implements OnInit, DoCheck, OnDestroy {
     public httpServiceService: HttpServiceService,
     private doctorService: DoctorService,
     private masterdataService: MasterdataService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
     public beneficiaryDetailsService: BeneficiaryDetailsService,
   ) {}
 

@@ -66,7 +66,7 @@ export class HealthIdOtpGenerationComponent implements OnInit, DoCheck {
     private registrarService: RegistrarService,
     private confirmationService: ConfirmationService,
     private dialog: MatDialog,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {
     dialogRef.disableClose = true;
   }

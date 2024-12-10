@@ -132,7 +132,7 @@ export class PreviousVisitDetailsComponent implements OnInit, DoCheck {
     private doctorService: DoctorService,
     private cameraService: CameraService,
     private router: Router,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
     public httpServiceService: HttpServiceService,
   ) {}
 

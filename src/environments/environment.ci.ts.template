@@ -42,9 +42,11 @@ const mmuUICasesheet = '<%= TM_API_BASE %>';
 const SCHEDULER_UI =  '<%= SCHEDULER_UI_BASE %>';
 const INVENTORY_UI =  '<%= INVENTORY_UI_BASE %>';
 const IDENTITY_API = `<%= IDENTITY_API_BASE %>`;
+const sessionStorageEncKey = '<%= SESSION_STORAGE_ENC_KEY %>';
 export const environment = {
   production: true,
   isTMOffline: true,
+  encKey: sessionStorageEncKey,
 
   app: `MMU`,
   RBSTest: `RBS Test`,

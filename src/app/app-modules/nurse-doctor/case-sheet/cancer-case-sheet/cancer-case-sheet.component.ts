@@ -63,7 +63,7 @@ export class CancerCaseSheetComponent implements OnInit, OnDestroy, DoCheck {
     private route: ActivatedRoute,
     private confirmationService: ConfirmationService,
     public httpServiceService: HttpServiceService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

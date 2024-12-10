@@ -69,7 +69,7 @@ export class SignsAndSymptomsComponent implements OnInit, OnDestroy, DoCheck {
     private fb: FormBuilder,
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     public httpServiceService: HttpServiceService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

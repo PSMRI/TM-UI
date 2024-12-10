@@ -95,7 +95,7 @@ export class WorkareaComponent
     private router: Router,
     private masterdataService: MasterDataService,
     private labService: LabService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
     private httpServiceService: HttpServiceService,
   ) {}
 

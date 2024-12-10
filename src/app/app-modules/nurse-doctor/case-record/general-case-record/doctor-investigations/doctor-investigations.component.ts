@@ -101,7 +101,7 @@ export class DoctorInvestigationsComponent
     private confirmationService: ConfirmationService,
     private dialog: MatDialog,
     private nurseService: NurseService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

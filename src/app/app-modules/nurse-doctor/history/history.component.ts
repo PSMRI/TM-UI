@@ -54,7 +54,7 @@ export class HistoryComponent implements OnInit, OnChanges {
   constructor(
     private doctorService: DoctorService,
     private route: ActivatedRoute,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

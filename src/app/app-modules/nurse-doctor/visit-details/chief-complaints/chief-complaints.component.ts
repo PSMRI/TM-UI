@@ -97,7 +97,7 @@ export class ChiefComplaintsComponent implements OnInit, DoCheck, OnDestroy {
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     public httpServiceService: HttpServiceService,
     private nurseService: NurseService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
     private confirmationService: ConfirmationService,
   ) {
     this.formUtility = new VisitDetailUtils(this.fb, this.sessionstorage);

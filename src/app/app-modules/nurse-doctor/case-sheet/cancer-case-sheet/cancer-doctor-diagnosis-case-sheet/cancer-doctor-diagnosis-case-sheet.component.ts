@@ -62,7 +62,7 @@ export class CancerDoctorDiagnosisCaseSheetComponent
     private registrarService: RegistrarService,
     private confirmationService: ConfirmationService,
     private masterdataService: MasterdataService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

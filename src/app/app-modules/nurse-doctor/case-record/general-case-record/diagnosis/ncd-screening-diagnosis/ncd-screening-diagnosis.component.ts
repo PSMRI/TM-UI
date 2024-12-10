@@ -70,7 +70,7 @@ export class NcdScreeningDiagnosisComponent
     private confirmationService: ConfirmationService,
     private idrsScoreService: IdrsscoreService,
     private nurseService: NurseService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

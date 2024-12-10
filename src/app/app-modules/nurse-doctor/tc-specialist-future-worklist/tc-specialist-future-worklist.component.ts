@@ -79,7 +79,7 @@ export class TcSpecialistFutureWorklistComponent
     private confirmationService: ConfirmationService,
     public httpServiceService: HttpServiceService,
     private beneficiaryDetailsService: BeneficiaryDetailsService,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
     private doctorService: DoctorService,
   ) {}
 

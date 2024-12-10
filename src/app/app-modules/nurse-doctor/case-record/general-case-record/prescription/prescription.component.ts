@@ -137,7 +137,7 @@ export class PrescriptionComponent implements OnInit, OnDestroy, DoCheck {
     private masterdataService: MasterdataService,
     public httpServiceService: HttpServiceService,
     private dialog: MatDialog,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {

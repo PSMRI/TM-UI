@@ -91,7 +91,7 @@ export class HealthIdDisplayModalComponent implements OnInit, DoCheck {
     private confirmationService: ConfirmationService,
     private datePipe: DatePipe,
     private dialogMd: MatDialog,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {
     dialogRef.disableClose = true;
   }

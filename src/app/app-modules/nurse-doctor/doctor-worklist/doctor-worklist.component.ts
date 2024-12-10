@@ -84,7 +84,7 @@ export class DoctorWorklistComponent implements OnInit, OnDestroy, DoCheck {
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     private doctorService: DoctorService,
     private dialog: MatDialog,
-    private sessionstorage: SessionStorageService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
