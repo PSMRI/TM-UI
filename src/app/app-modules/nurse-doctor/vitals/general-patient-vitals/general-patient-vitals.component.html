@@ -642,7 +642,12 @@
                   diastolicBP_1stReading
                 )
               "
-              [required]="benAge > 30"
+              [required]="
+                (benAge >= 30 &&
+                  (visitCategory === 'NCD screening' ||
+                    visitCategory === 'General OPD')) ||
+                benAge > 30
+              "
             />
             <svg
               class="fontawesomesvg"
@@ -688,7 +693,12 @@
                   diastolicBP_1stReading
                 )
               "
-              [required]="benAge > 30"
+              [required]="
+                (benAge >= 30 &&
+                  (visitCategory === 'NCD screening' ||
+                    visitCategory === 'General OPD')) ||
+                benAge > 30
+              "
             />
             <svg
               class="fontawesomesvg"
