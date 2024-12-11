@@ -25,19 +25,19 @@
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
-const commonIP = 'https://amritwprdev.piramalswasthya.org';
-const tmIP = 'https://amritwprdev.piramalswasthya.org';
-const IP104 = 'https://amritwprdev.piramalswasthya.org';
-const mmuIP = 'https://amritwprdev.piramalswasthya.org';
-const schedulerIP = 'https://amritwprdev.piramalswasthya.org';
-const adminIP = 'https://amritwprdev.piramalswasthya.org';
-const FHIRIP = 'https://amritwprdev.piramalswasthya.org';
-const inventoryUI_IP = 'https://amritwprdev.piramalswasthya.org';
+const commonIP = 'https://192.168.45.74';
+const tmIP = 'https://192.168.45.74';
+const IP104 = 'https://192.168.45.74';
+const mmuIP = 'https://192.168.45.74';
+const schedulerIP = 'https://192.168.45.74';
+const adminIP = 'https://192.168.45.74';
+const FHIRIP = 'https://192.168.45.74';
+const inventoryUI_IP = 'https://192.168.45.74';
 
 const SERVER_IP = '10.208.122.39';
 
 const SWYMED_IP = 'swymed://14.143.13.109';
-const identityIP = 'https://amritwprdev.piramalswasthya.org/';
+const identityIP = 'https://192.168.45.74/';
 
 // With API MAN Configuration
 // const COMMON_API_OPEN = `http://${IP}:8080/apiman-gateway/IEMR/Common/open/`;
@@ -488,4 +488,16 @@ export const environment = {
   familySearchUrl: `${IDENTITY_API}family/searchFamily`,
   createFamilyUrl: `${IDENTITY_API}family/createFamily`,
   getFamilyMemberUrl: `${IDENTITY_API}family/getFamilyDetails`,
+
+  /* ABDM Mapped Facility */
+  getAbdmMappedFacility: `${COMMON_API}facility/getWorklocationMappedAbdmFacility/`,
+  saveAbdmFacilityIdForVisit: `${FHIR_API}facility/saveAbdmFacilityId`,
+
+  /* Abha V3 APIs */
+  requestOtpForAbhaEnroll: `${FHIR_API}abhaCreation/requestOtpForAbhaEnrollment`,
+  abhaEnrollmentByAadhaar: `${FHIR_API}abhaCreation/abhaEnrollmentByAadhaar`,
+  verifyMobileForAbhaAuth: `${FHIR_API}abhaCreation/verifyAuthByMobile`,
+  requestOtpForLogin: `${FHIR_API}abhaLogin/abhaLoginRequestOtp`,
+  verifyOtpForLogin: `${FHIR_API}abhaLogin/verifyAbhaLogin`,
+  printPngCard: `${FHIR_API}abhaCreation/printAbhaCard`,
 };
