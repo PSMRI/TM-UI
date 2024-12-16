@@ -3255,7 +3255,7 @@ export class WorkareaComponent
     console.log('workLocationId', workLocationId);
     this.registrarService.getMappedFacility(workLocationId).subscribe(
       (res: any) => {
-        if (res.statusCode === 200 && res.data != null) {
+        if (res.statusCode === 200 && res.data !== null) {
           const data = res.data;
           if (data.abdmFacilityID && data.abdmFacilityName) {
             this.abdmFacilityId = data.abdmFacilityID;
