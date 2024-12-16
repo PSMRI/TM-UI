@@ -1715,7 +1715,21 @@
         "beneficaryConsent":"Beneficiary Consent",
         "consentFormText": "To provide you with better service, we would,request your personal information. The information that you will providewill be kept confidential and will only be used for research and analysis.",
         "mobile":"Mobile",
-        "noRecordsFound":"No Records Found"
-
+        "noRecordsFound":"No Records Found",
+        "enterMobileNumberToBeLinkedWithAbha": "Enter Phone number to be linked with ABHA",
+        "doYouWantToVerifyMobileOtpForAbha": "Your provided mobile number is not linked with Aadhaar, Do you want to verify it?",
+        "abhaCardAlreadyExists": "ABHA already exists for the Aadhaar Number",
+        "enterABHANumberOrAadhar": "Enter Aadhaar Number Or ABHA Number Or ABHA Address",
+        "enterABHANumberOrMobile": "Enter Mobile Number Or ABHA Number Or ABHA Address",
+        "enterCorrectAuthIdForAuthMode": "Please Enter correct Authentication ID for choosen AuthMode",
+        "abhaAddressFound" : "ABHA Address Found:",
+        "searchAndDownloadAbha": "Search and Download ABHA",
+        "abhaSearchMode": "ABHA Search Mode*",
+        "verifyAbha": "Verify ABHA",
+        "issueInAbhaCard": "Issue in printing ABHA Card",
+        "fileUploadedSuccessfully": "File Uploaded successfully",
+        "verifyMobileOtp": "Verify Mobile OTP",
+        "enterMobileOtp": "Enter Mobile OTP",
+        "verify": "Verify"
   }
 }

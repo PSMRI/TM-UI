@@ -69,7 +69,7 @@ export const environment = {
   RBSTest: `RBS Test`,
   visualAcuityTest: `Visual Acuity Test`,
   haemoglobinTest: `Hemoglobin Test`,
-  abhaExtension: `@abdm`,
+  abhaExtension: `@sbx`,
 
   parentAPI: `${TM_API}`,
 

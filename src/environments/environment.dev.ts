@@ -66,7 +66,7 @@ export const environment = {
   RBSTest: `RBS Test`,
   visualAcuityTest: `Visual Acuity Test`,
   haemoglobinTest: `Haemoglobin Test`,
-  abhaExtension: `@abdm`,
+  abhaExtension: `@sbx`,
   parentAPI: `${TM_API}`,
 
   INVENTORY_URL: `${inventoryUI_IP}/inventory/#/redirin?`,

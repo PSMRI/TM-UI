@@ -31,6 +31,8 @@ import { RegistrarModule } from './app-modules/registrar/registrar.module';
 import { NgFor } from '@angular/common';
 import { AudioRecordingService } from './app-modules/nurse-doctor/shared/services/audio-recording.service';
 import { SharedModule } from './app-modules/core/components/shared/shared.module';
+import { RegistrarService } from 'Common-UI/src/registrar/services/registrar.service';
+import { RegistrationModule } from 'Common-UI/src/registrar/registration.module';
 
 @NgModule({
   declarations: [
@@ -58,10 +60,10 @@ import { SharedModule } from './app-modules/core/components/shared/shared.module
     MatTooltipModule,
     MatFormFieldModule,
     NgFor,
-    RegistrarModule,
     CoreModule.forRoot(),
     BrowserAnimationsModule,
     SharedModule,
+    RegistrationModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
@@ -74,6 +76,7 @@ import { SharedModule } from './app-modules/core/components/shared/shared.module
       useClass: HttpInterceptorService,
       multi: true,
     },
+    RegistrarService,
   ],
   bootstrap: [AppComponent],
 })
