@@ -3247,9 +3247,9 @@ export class WorkareaComponent
     let workLocationId: any;
     if (jsonLoccationData?.previlegeObj[0]?.roles) {
       const roles = jsonLoccationData?.previlegeObj[0]?.roles;
-      roles.find((item: any) => {
-        item.RoleName.toLowerCase() === 'doctor';
-        workLocationId = item.workingLocationID;
+      roles.forEach((item: any) => {
+        if (item.RoleName.toLowerCase() === 'doctor')
+          workLocationId = item.workingLocationID;
       });
     }
     console.log('workLocationId', workLocationId);
