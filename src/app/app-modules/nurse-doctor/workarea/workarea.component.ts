@@ -3247,10 +3247,12 @@ export class WorkareaComponent
     let workLocationId: any;
     if (jsonLoccationData?.previlegeObj[0]?.roles) {
       const roles = jsonLoccationData?.previlegeObj[0]?.roles;
-      roles.find((item: any) => {
-        item.RoleName.toLowerCase() === 'doctor';
-        workLocationId = item.workingLocationID;
-      });
+      const doctorRole = roles.find(
+        (item: any) => item.RoleName.toLowerCase() === 'doctor',
+      );
+      if (doctorRole) {
+        workLocationId = doctorRole.workingLocationID;
+      }
     }
     console.log('workLocationId', workLocationId);
     this.registrarService.getMappedFacility(workLocationId).subscribe(
