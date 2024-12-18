@@ -237,7 +237,6 @@ export class WorklistComponent implements OnInit, OnDestroy, DoCheck {
     this.registrarService.getHealthIdDetails(data).subscribe(
       (healthIDDetails: any) => {
         if (healthIDDetails.statusCode === 200) {
-          console.error('healthID', healthIDDetails);
           if (
             healthIDDetails.data.BenHealthDetails !== undefined &&
             healthIDDetails.data.BenHealthDetails !== null

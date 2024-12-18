@@ -56,7 +56,6 @@ export class InventoryService {
 
     if (authKey && protocol && host && facility) {
       this.inventoryUrl = `${environment.INVENTORY_URL}protocol=${protocol}&host=${host}&user=${authKey}&app=${environment.app}&fallback=${environment.fallbackUrl}&back=${environment.redirInUrl}&facility=${facility}&ben=${benID}&visit=${visit}&flow=${flowID}&reg=${regID}&vanID=${vanID}&ppID=${ppID}&serviceName=${serviceName}&parentAPI=${parentAPI}&currentLanguage=${language}&healthID=${healthID}`;
-      console.error('helthID', this.inventoryUrl);
       window.location.href = this.inventoryUrl;
     } else {
       this.confirmationService.alert(

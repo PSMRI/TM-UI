@@ -167,7 +167,6 @@ export class ServicePointComponent implements OnInit, DoCheck {
     const serviceLineDetails: any = this.vansList.find(
       (van: any) => van.vanID === selectedVanID,
     );
-    console.error('serviceLineDetails', serviceLineDetails);
     if (serviceLineDetails)
       this.sessionstorage.setItem(
         'serviceLineDetails',
