@@ -1097,8 +1097,10 @@ export class DoctorService {
   getVisitComplaintDetails(beneficiaryID: string, visitID: string) {
     const visitCategory = this.sessionstorage.getItem('visitCategory');
     const otherDetails = Object.assign({
-      benRegID: beneficiaryID,
-      benVisitID: visitID,
+      // benRegID: beneficiaryID,
+      // benVisitID: visitID,
+      benRegID: this.sessionstorage.getItem('beneficiaryID'),
+      benVisitID: this.sessionstorage.getItem('visitID'),
       visitCode: this.sessionstorage.getItem('visitCode'),
     });
 
