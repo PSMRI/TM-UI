@@ -1097,10 +1097,8 @@ export class DoctorService {
   getVisitComplaintDetails(beneficiaryID: string, visitID: string) {
     const visitCategory = this.sessionstorage.getItem('visitCategory');
     const otherDetails = Object.assign({
-      // benRegID: beneficiaryID,
-      // benVisitID: visitID,
-      benRegID: this.sessionstorage.getItem('beneficiaryID'),
-      benVisitID: this.sessionstorage.getItem('visitID'),
+      benRegID: beneficiaryID,
+      benVisitID: visitID,
       visitCode: this.sessionstorage.getItem('visitCode'),
     });
 
@@ -2462,9 +2460,12 @@ export class DoctorService {
     visitCategory: any,
   ) {
     const otherDetails = Object.assign({
-      benRegID: beneficiaryRegID,
-      benVisitID: visitID,
+      benRegID: this.sessionstorage.getItem('beneficiaryID'),
+      benVisitID: this.sessionstorage.getItem('visitID'),
       visitCode: this.sessionstorage.getItem('visitCode'),
+      // benRegID: beneficiaryRegID,
+      // benVisitID: visitID,
+      // visitCode: this.sessionstorage.getItem('visitCode'),
     });
 
     if (!this.caseRecordAndReferDetails) {
@@ -2527,9 +2528,13 @@ export class DoctorService {
     visitcode: any,
   ) {
     const otherDetails = Object.assign({
-      benRegID: beneficiaryRegID,
-      benVisitID: visitID,
-      visitCode: visitcode,
+      // benRegID: beneficiaryRegID,
+      // benVisitID: visitID,
+      // visitCode: visitcode,
+
+      benRegID: this.sessionstorage.getItem('beneficiaryID'),
+      benVisitID: this.sessionstorage.getItem('visitID'),
+      visitCode: this.sessionstorage.getItem('visitCode'),
     });
 
     if (visitCategory === 'Cancer Screening') {
