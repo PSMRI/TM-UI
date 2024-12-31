@@ -2460,7 +2460,7 @@ export class DoctorService {
     visitCategory: any,
   ) {
     const otherDetails = Object.assign({
-      benRegID: this.sessionstorage.getItem('beneficiaryID'),
+      benRegID: this.sessionstorage.getItem('beneficiaryRegID'),
       benVisitID: this.sessionstorage.getItem('visitID'),
       visitCode: this.sessionstorage.getItem('visitCode'),
       // benRegID: beneficiaryRegID,
@@ -2532,7 +2532,7 @@ export class DoctorService {
       // benVisitID: visitID,
       // visitCode: visitcode,
 
-      benRegID: this.sessionstorage.getItem('beneficiaryID'),
+      benRegID: this.sessionstorage.getItem('beneficiaryRegID'),
       benVisitID: this.sessionstorage.getItem('visitID'),
       visitCode: this.sessionstorage.getItem('visitCode'),
     });
