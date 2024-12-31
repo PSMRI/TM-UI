@@ -418,6 +418,7 @@ export class DoctorWorklistComponent implements OnInit, OnDestroy, DoCheck {
     this.sessionstorage.setItem('beneficiaryGender', beneficiary.genderName);
     this.sessionstorage.setItem('benFlowID', beneficiary.benFlowID);
     this.sessionstorage.setItem('visitCategory', beneficiary.VisitCategory);
+    this.sessionstorage.setItem('specialist_flag', beneficiary.specialist_flag);
     this.sessionstorage.setItem(
       'beneficiaryRegID',
       beneficiary.beneficiaryRegID,

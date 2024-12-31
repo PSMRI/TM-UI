@@ -290,14 +290,14 @@ export class WorkareaComponent
     }
     if (this.attendant === 'tcspecialist') {
       this.isSpecialist = true;
-      if (this.doctorFlag === '1') {
-        if (this.specialistFlag === '1') {
+      if (this.doctorFlag === 1) {
+        if (this.specialistFlag === 1) {
           this.doctorSaveAndTCSave = this.current_language_set.common.submit;
           this.isDoctorSave = true;
           console.log(
             'here for submit' + this.current_language_set.common.submit,
           );
-        } else if (this.specialistFlag === '3') {
+        } else if (this.specialistFlag === 3) {
           this.doctorUpdateAndTCSubmit =
             this.current_language_set.common.update;
           this.isDoctorUpdate = true;
@@ -307,7 +307,7 @@ export class WorkareaComponent
         }
       } else {
         this.isDoctorUpdate = true;
-        if (this.specialistFlag === '1') {
+        if (this.specialistFlag === 1) {
           this.doctorUpdateAndTCSubmit =
             this.current_language_set.common.submit;
         } else {
@@ -320,7 +320,7 @@ export class WorkareaComponent
       }
     } else {
       this.isSpecialist = false;
-      if (this.doctorFlag === '1') {
+      if (this.doctorFlag === 1) {
         this.isDoctorSave = true;
         this.doctorSaveAndTCSave = this.current_language_set.common.submit;
       } else {
@@ -361,7 +361,7 @@ export class WorkareaComponent
       );
       (<FormGroup>fG.controls['patientVisitDetailsForm']).controls[
         'visitCategory'
-      ].valueChanges.subscribe((categoryValue) => {
+      ].valueChanges.subscribe((categoryValue: any) => {
         if (categoryValue) {
           console.log(categoryValue, 'categoryValue');
           this.schedulerData = null;
@@ -3718,7 +3718,7 @@ export class WorkareaComponent
       this.patientMedicalForm.controls['patientVisitForm']
     )).controls['patientChiefComplaintsForm'];
 
-    patientChiefComplaintsForm.valueChanges.subscribe((value) => {
+    patientChiefComplaintsForm.valueChanges.subscribe((value: any) => {
       this.findings = value;
     });
   }
