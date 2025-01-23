@@ -48,19 +48,19 @@ const identityIP = 'https://amritwprdev.piramalswasthya.org/';
 
 // Without API MAN Configuration
 const IDENTITY_API = `${identityIP}/identity-0.0.1/`;
-const COMMON_API_OPEN = `${commonIP}/commonapi-v3.0.0/`;
-const COMMON_API = `${commonIP}/commonapi-v3.0.0/`;
-const TM_API = `${tmIP}/tmapi-v3.0.0/`;
-const API104 = `${IP104}/104api-v3.0.0/`;
-const MMU_API = `${mmuIP}/mmuapi-v3.0.0/`;
-const COMMON_API_OPEN_SYNC = `http://${SERVER_IP}:8080/commonapi-v3.0.0/`;
-const SCHEDULER_API = `${schedulerIP}/schedulerapi-v3.0.0/`;
+const COMMON_API_OPEN = `${commonIP}/commonapi-v1.0/`;
+const COMMON_API = `${commonIP}/commonapi-v1.0/`;
+const TM_API = `${tmIP}/tmapi-v1.0/`;
+const API104 = `${IP104}/104api-v1.0/`;
+const MMU_API = `${mmuIP}/mmuapi-v1.0/`;
+const COMMON_API_OPEN_SYNC = `http://${SERVER_IP}:8080/commonapi-v1.0/`;
+const SCHEDULER_API = `${schedulerIP}/schedulerapi-v1.0/`;
 const mmuUICasesheet = 'http://localhost:4200/';
-const ADMIN_API = `${adminIP}/adminapi-v3.0.0`;
+const ADMIN_API = `${adminIP}/adminapi-v1.0`;
 
 const IOT_API = 'http://localhost:8085/ezdx-hub-connect-srv';
 
-const FHIR_API = `${FHIRIP}/fhirapi-v3.0.0/`;
+const FHIR_API = `${FHIRIP}/fhirapi-v1.0/`;
 const sessionStorageEncKey = '';
 
 export const environment = {
