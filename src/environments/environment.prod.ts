@@ -482,4 +482,16 @@ export const environment = {
   familySearchUrl: `${IDENTITY_API}family/searchFamily`,
   createFamilyUrl: `${IDENTITY_API}family/createFamily`,
   getFamilyMemberUrl: `${IDENTITY_API}family/getFamilyDetails`,
+
+  /* ABDM Mapped Facility */
+  getAbdmMappedFacility: `${COMMON_API}facility/getWorklocationMappedAbdmFacility/`,
+  saveAbdmFacilityIdForVisit: `${FHIR_API}facility/saveAbdmFacilityId`,
+
+  /* Abha V3 APIs */
+  requestOtpForAbhaEnroll: `${FHIR_API}abhaCreation/requestOtpForAbhaEnrollment`,
+  abhaEnrollmentByAadhaar: `${FHIR_API}abhaCreation/abhaEnrollmentByAadhaar`,
+  verifyMobileForAbhaAuth: `${FHIR_API}abhaCreation/verifyAuthByMobile`,
+  requestOtpForLogin: `${FHIR_API}abhaLogin/abhaLoginRequestOtp`,
+  verifyOtpForLogin: `${FHIR_API}abhaLogin/verifyAbhaLogin`,
+  printPngCard: `${FHIR_API}abhaCreation/printAbhaCard`,
 };
