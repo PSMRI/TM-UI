@@ -25,19 +25,19 @@
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
-const commonIP = 'https://192.168.45.74';
-const tmIP = 'https://192.168.45.74';
-const IP104 = 'https://192.168.45.74';
-const mmuIP = 'https://192.168.45.74';
-const schedulerIP = 'https://192.168.45.74';
-const adminIP = 'https://192.168.45.74';
-const FHIRIP = 'https://192.168.45.74';
+const commonIP = 'http://localhost:8083';
+const tmIP = 'http://localhost:8089';
+const IP104 = 'http://localhost:8091';
+const mmuIP = 'http://localhost:8087';
+const schedulerIP = 'http://localhost:8088';
+const adminIP = 'http://localhost:8082';
+const FHIRIP = 'http://localhost:8093';
 const inventoryUI_IP = 'https://192.168.45.74';
 
-const SERVER_IP = '10.208.122.39';
+const SERVER_IP = 'localhost';
 
 const SWYMED_IP = 'swymed://14.143.13.109';
-const identityIP = 'https://192.168.45.74/';
+const identityIP = 'http://localhost:8094/';
 
 // With API MAN Configuration
 // const COMMON_API_OPEN = `http://${IP}:8080/apiman-gateway/IEMR/Common/open/`;
@@ -47,20 +47,20 @@ const identityIP = 'https://192.168.45.74/';
 // const SCHEDULER_API = `http://${IP}:8080/apiman-gateway/IEMR/Scheduling/1.0/`;
 
 // Without API MAN Configuration
-const IDENTITY_API = `${identityIP}/identity-0.0.1/`;
-const COMMON_API_OPEN = `${commonIP}/commonapi-v1.0/`;
-const COMMON_API = `${commonIP}/commonapi-v1.0/`;
-const TM_API = `${tmIP}/tmapi-v1.0/`;
-const API104 = `${IP104}/104api-v1.0/`;
-const MMU_API = `${mmuIP}/mmuapi-v1.0/`;
-const COMMON_API_OPEN_SYNC = `http://${SERVER_IP}:8080/commonapi-v1.0/`;
-const SCHEDULER_API = `${schedulerIP}/schedulerapi-v1.0/`;
+const IDENTITY_API = `${identityIP}/`;
+const COMMON_API_OPEN = `${commonIP}/`;
+const COMMON_API = `${commonIP}/`;
+const TM_API = `${tmIP}/`;
+const API104 = `${IP104}/`;
+const MMU_API = `${mmuIP}/`;
+const COMMON_API_OPEN_SYNC = `http://${SERVER_IP}:8083/`;
+const SCHEDULER_API = `${schedulerIP}/`;
 const mmuUICasesheet = 'http://localhost:4200/';
-const ADMIN_API = `${adminIP}/adminapi-v1.0`;
+const ADMIN_API = `${adminIP}/`;
 
 const IOT_API = 'http://localhost:8085/ezdx-hub-connect-srv';
 
-const FHIR_API = `${FHIRIP}/fhirapi-v1.0/`;
+const FHIR_API = `${FHIRIP}/`;
 
 export const environment = {
   production: false,
@@ -73,10 +73,10 @@ export const environment = {
 
   parentAPI: `${TM_API}`,
 
-  INVENTORY_URL: inventoryUI_IP + '/inventory/#/redirin?',
+  INVENTORY_URL: inventoryUI_IP + '/#/redirin?',
   fallbackUrl: '/pharmacist/redirfallback',
   redirInUrl: '/pharmacist/redirin',
-  TELEMEDICINE_URL: schedulerIP + '/scheduler/#/?',
+  TELEMEDICINE_URL: schedulerIP + '/#/?',
   fallbackMMUUrl: `/logout-tm`,
   redirInMMUUrl: `/nurse-doctor/tcspecialist-worklist`,
 
