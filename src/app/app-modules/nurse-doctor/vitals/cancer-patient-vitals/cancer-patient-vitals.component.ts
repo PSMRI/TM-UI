@@ -30,6 +30,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 import { IotcomponentComponent } from 'src/app/app-modules/core/components/iotcomponent/iotcomponent.component';
 import { ActivatedRoute } from '@angular/router';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-nurse-cancer-patient-vitals',
@@ -76,6 +77,7 @@ export class CancerPatientVitalsComponent
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     public httpServiceService: HttpServiceService,
     private route: ActivatedRoute,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -97,17 +99,17 @@ export class CancerPatientVitalsComponent
   ngOnChanges(changes: any) {
     this.nurseService.rbsTestResultFromDoctorFetch = null;
     if (String(this.mode) === 'view') {
-      const visitID = localStorage.getItem('visitID');
-      const benRegID = localStorage.getItem('beneficiaryRegID');
+      const visitID = this.sessionstorage.getItem('visitID');
+      const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
       this.getCancerVitals(benRegID, visitID);
     }
-    const specialistFlagString = localStorage.getItem('specialistFlag');
+    const specialistFlagString = this.sessionstorage.getItem('specialistFlag');
     if (
       specialistFlagString !== null &&
       parseInt(specialistFlagString) === 100
     ) {
-      const visitID = localStorage.getItem('visitID');
-      const benRegID = localStorage.getItem('beneficiaryRegID');
+      const visitID = this.sessionstorage.getItem('visitID');
+      const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
       this.getCancerVitals(benRegID, visitID);
     }
 
@@ -125,7 +127,7 @@ export class CancerPatientVitalsComponent
   getPreviousVisitAnthropometry() {
     this.previousAnthropometryDataSubscription = this.doctorService
       .getPreviousVisitAnthropometry({
-        benRegID: localStorage.getItem('beneficiaryRegID'),
+        benRegID: this.sessionstorage.getItem('beneficiaryRegID'),
       })
       .subscribe((anthropometryData: any) => {
         if (

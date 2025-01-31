@@ -31,6 +31,7 @@ import { HttpServiceService } from '../../services/http-service.service';
 import { IotService } from '../../services/iot.service';
 import { SetLanguageComponent } from '../set-language.component';
 import { CalibrationComponent } from '../calibration/calibration.component';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-iotcomponent',
@@ -59,6 +60,7 @@ export class IotcomponentComponent implements OnInit, DoCheck {
     public service: IotService,
     private confirmationService: ConfirmationService,
     private dialog: MatDialog,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -73,7 +75,8 @@ export class IotcomponentComponent implements OnInit, DoCheck {
     this.startAPI = this.input['startAPI'];
     this.output = this.input['output'];
     this.procedure = this.input['procedure'];
-    const providerServiceMapID = localStorage.getItem('providerServiceID');
+    const providerServiceMapID =
+      this.sessionstorage.getItem('providerServiceID');
     //SH20094090,calibration integration,09-06-2021
     if (
       this.procedure !== undefined &&

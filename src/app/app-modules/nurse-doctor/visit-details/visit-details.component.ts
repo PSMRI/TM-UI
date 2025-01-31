@@ -24,6 +24,7 @@ import { Component, OnInit, Input, DoCheck } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { HttpServiceService } from '../../core/services/http-service.service';
 import { SetLanguageComponent } from '../../core/components/set-language.component';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-visit-details',
@@ -57,7 +58,10 @@ export class VisitDetailsComponent implements OnInit, DoCheck {
   patientFileUploadDetailsForm!: FormGroup;
   patientDiseaseForm!: FormGroup;
 
-  constructor(public httpServiceService: HttpServiceService) {}
+  constructor(
+    public httpServiceService: HttpServiceService,
+    readonly sessionstorage: SessionStorageService,
+  ) {}
 
   ngOnInit() {
     this.getVisitCategory();
@@ -86,13 +90,13 @@ export class VisitDetailsComponent implements OnInit, DoCheck {
     this.patientDiseaseForm = this.patientVisitDataForm.get(
       'patientDiseaseForm',
     ) as FormGroup;
-    const specialistFlagString = localStorage.getItem('specialistFlag');
+    const specialistFlagString = this.sessionstorage.getItem('specialistFlag');
     if (
       specialistFlagString !== null &&
       parseInt(specialistFlagString) === 100
     ) {
-      const visitCategory: any = localStorage.getItem('visitCat');
-      localStorage.setItem('visitCategory', visitCategory);
+      const visitCategory: any = this.sessionstorage.getItem('visitCat');
+      this.sessionstorage.setItem('visitCategory', visitCategory);
     }
   }
 
@@ -118,7 +122,7 @@ export class VisitDetailsComponent implements OnInit, DoCheck {
 
   conditionCheck() {
     if (!this.mode) this.hideAllTab();
-    localStorage.setItem('visiCategoryANC', this.visitCategory);
+    this.sessionstorage.setItem('visiCategoryANC', this.visitCategory);
     if (this.visitCategory === 'NCD screening') {
       this.enableFileSelection = true;
       this.showNcdScreeningVisit = true;

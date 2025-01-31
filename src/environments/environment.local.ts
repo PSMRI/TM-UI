@@ -61,6 +61,7 @@ const ADMIN_API = `${adminIP}:8082`;
 const IOT_API = 'http://localhost:8080/ezdx-hub-connect-srv';
 
 const FHIR_API = `${FHIRIP}:8093/`;
+const sessionStorageEncKey = '';
 
 export const environment = {
   production: false,
@@ -70,6 +71,7 @@ export const environment = {
   visualAcuityTest: `Visual Acuity Test`,
   haemoglobinTest: `Hemoglobin Test`,
   abhaExtension: `@sbx`,
+  encKey: sessionStorageEncKey,
 
   parentAPI: `${TM_API}`,
 

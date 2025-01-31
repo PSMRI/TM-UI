@@ -30,6 +30,7 @@ import {
 } from '../../shared/services';
 import { IdrsscoreService } from '../../shared/services/idrsscore.service';
 import { VisitDetailUtils } from '../../shared/utility/visit-detail-utility';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-diseaseconfirmation',
@@ -59,6 +60,7 @@ export class DiseaseconfirmationComponent implements OnInit {
     private doctorService: DoctorService,
     private nurseService: NurseService,
     private route: ActivatedRoute,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -67,8 +69,8 @@ export class DiseaseconfirmationComponent implements OnInit {
       this.diseaseFormsArray.removeAt(0);
     }
     if (String(this.mode) === 'view') {
-      const visitID = localStorage.getItem('visitID');
-      const benRegID = localStorage.getItem('beneficiaryRegID');
+      const visitID = this.sessionstorage.getItem('visitID');
+      const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
       if (visitID !== null && benRegID !== null) {
         this.getIDRSDetailsFrmNurse(visitID, benRegID);
       }
@@ -93,7 +95,10 @@ export class DiseaseconfirmationComponent implements OnInit {
 
   addMoreDiseases(data: any) {
     this.getData().push(
-      new VisitDetailUtils(this.fb).createPatientDiseaseArrayForm(data),
+      new VisitDetailUtils(
+        this.fb,
+        this.sessionstorage,
+      ).createPatientDiseaseArrayForm(data),
     );
   }
 
@@ -169,7 +174,7 @@ export class DiseaseconfirmationComponent implements OnInit {
             this.diseaseArray = this.diseases;
           }
           const obj = {
-            benRegID: localStorage.getItem('beneficiaryRegID'),
+            benRegID: this.sessionstorage.getItem('beneficiaryRegID'),
           };
           this.nurseService.getPreviousVisitData(obj).subscribe((res: any) => {
             if (res.statusCode === 200 && res.data !== null) {
@@ -377,7 +382,7 @@ export class DiseaseconfirmationComponent implements OnInit {
             }
             this.diseaseArray = this.diseases;
             const obj = {
-              benRegID: localStorage.getItem('beneficiaryRegID'),
+              benRegID: this.sessionstorage.getItem('beneficiaryRegID'),
             };
             this.nurseService
               .getPreviousVisitData(obj)

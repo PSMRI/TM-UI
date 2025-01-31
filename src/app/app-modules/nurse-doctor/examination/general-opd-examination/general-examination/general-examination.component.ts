@@ -22,6 +22,7 @@
 
 import { Component, OnInit, Input, OnChanges, DoCheck } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 
@@ -206,7 +207,10 @@ export class GeneralExaminationComponent implements OnInit, OnChanges, DoCheck {
   ];
   current_language_set: any;
 
-  constructor(public httpServiceService: HttpServiceService) {}
+  constructor(
+    public httpServiceService: HttpServiceService,
+    readonly sessionstorage: SessionStorageService,
+  ) {}
   hideForANCAndQC = false;
   ngOnInit() {
     this.assignSelectedLanguage();
@@ -222,8 +226,8 @@ export class GeneralExaminationComponent implements OnInit, OnChanges, DoCheck {
   }
 
   ngOnChanges() {
-    this.visitCategory = localStorage.getItem('visiCategoryANC');
-    const visitCategory2 = localStorage.getItem('visitCategory');
+    this.visitCategory = this.sessionstorage.getItem('visiCategoryANC');
+    const visitCategory2 = this.sessionstorage.getItem('visitCategory');
     if (this.visitCategory === 'ANC' || visitCategory2 === 'ANC') {
       this.hideForANCAndQC = true;
     } else {

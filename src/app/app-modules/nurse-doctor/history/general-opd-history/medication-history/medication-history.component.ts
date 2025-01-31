@@ -39,6 +39,7 @@ import { BeneficiaryDetailsService } from '../../../../core/services/beneficiary
 import { MatDialog } from '@angular/material/dialog';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-general-medication-history',
@@ -67,6 +68,7 @@ export class MedicationHistoryComponent implements OnInit, DoCheck, OnDestroy {
     private masterdataService: MasterdataService,
     public httpServiceService: HttpServiceService,
     private beneficiaryDetailsService: BeneficiaryDetailsService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -103,17 +105,18 @@ export class MedicationHistoryComponent implements OnInit, DoCheck, OnDestroy {
           this.masterData = masterData;
 
           if (String(this.mode) === 'view') {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             this.getGeneralHistory(benRegID, visitID);
           }
-          const specialistFlagString = localStorage.getItem('specialistFlag');
+          const specialistFlagString =
+            this.sessionstorage.getItem('specialistFlag');
           if (
             specialistFlagString !== null &&
             parseInt(specialistFlagString) === 100
           ) {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             this.getGeneralHistory(benRegID, visitID);
           }
         }
@@ -218,7 +221,7 @@ export class MedicationHistoryComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   getPreviousMedicationHistory() {
-    const benRegID = localStorage.getItem('beneficiaryRegID');
+    const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
     this.nurseService
       .getPreviousMedicationHistory(benRegID, this.visitType)
       .subscribe(

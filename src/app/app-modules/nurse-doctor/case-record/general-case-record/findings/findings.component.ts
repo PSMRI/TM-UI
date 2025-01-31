@@ -48,6 +48,7 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
 import { environment } from 'src/environments/environment';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-findings',
@@ -95,8 +96,9 @@ export class FindingsComponent implements OnInit, OnDestroy, DoCheck {
     private confirmationService: ConfirmationService,
     public httpServiceService: HttpServiceService,
     private nurseService: NurseService,
+    readonly sessionstorage: SessionStorageService,
   ) {
-    this.formUtils = new GeneralUtils(this.fb);
+    this.formUtils = new GeneralUtils(this.fb, this.sessionstorage);
   }
 
   ngOnInit() {
@@ -211,15 +213,17 @@ export class FindingsComponent implements OnInit, OnDestroy, DoCheck {
             this.chiefComplaintMaster.slice();
 
           if (this.caseRecordMode === 'view') {
-            this.beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
-            this.visitID = localStorage.getItem('visitID');
-            this.visitCategory = localStorage.getItem('visitCategory');
+            this.beneficiaryRegID =
+              this.sessionstorage.getItem('beneficiaryRegID');
+            this.visitID = this.sessionstorage.getItem('visitID');
+            this.visitCategory = this.sessionstorage.getItem('visitCategory');
 
             const specialistFlagString =
-              localStorage.getItem('specialist_flag');
+              this.sessionstorage.getItem('specialist_flag');
             if (
-              localStorage.getItem('referredVisitCode') === 'undefined' ||
-              localStorage.getItem('referredVisitCode') === null
+              this.sessionstorage.getItem('referredVisitCode') ===
+                'undefined' ||
+              this.sessionstorage.getItem('referredVisitCode') === null
             ) {
               this.getFindingDetails(
                 this.beneficiaryRegID,
@@ -234,14 +238,14 @@ export class FindingsComponent implements OnInit, OnDestroy, DoCheck {
                 this.beneficiaryRegID,
                 this.visitID,
                 this.visitCategory,
-                localStorage.getItem('visitCode'),
+                this.sessionstorage.getItem('visitCode'),
               );
             } else {
               this.getMMUFindingDetails(
                 this.beneficiaryRegID,
-                localStorage.getItem('referredVisitID'),
+                this.sessionstorage.getItem('referredVisitID'),
                 this.visitCategory,
-                localStorage.getItem('referredVisitCode'),
+                this.sessionstorage.getItem('referredVisitCode'),
               );
             }
           }
