@@ -33,6 +33,7 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { ConfirmationService } from 'src/app/app-modules/core/services';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 import { GeneralUtils } from 'src/app/app-modules/nurse-doctor/shared/utility';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-ncd-care-diagnosis',
@@ -40,7 +41,7 @@ import { GeneralUtils } from 'src/app/app-modules/nurse-doctor/shared/utility';
   styleUrls: ['./ncd-care-diagnosis.component.css'],
 })
 export class NcdCareDiagnosisComponent implements OnInit, DoCheck {
-  utils = new GeneralUtils(this.fb);
+  utils = new GeneralUtils(this.fb, this.sessionstorage);
 
   @Input()
   generalDiagnosisForm!: FormGroup;
@@ -65,12 +66,13 @@ export class NcdCareDiagnosisComponent implements OnInit, DoCheck {
     private doctorService: DoctorService,
     private route: ActivatedRoute,
     private confirmationService: ConfirmationService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
     this.getDoctorMasterData();
     this.assignSelectedLanguage();
-    this.designation = localStorage.getItem('designation');
+    this.designation = this.sessionstorage.getItem('designation');
     if (this.designation === 'TC Specialist') {
       this.generalDiagnosisForm.controls['specialistDiagnosis'].enable();
       this.specialist = true;
@@ -78,7 +80,7 @@ export class NcdCareDiagnosisComponent implements OnInit, DoCheck {
       this.generalDiagnosisForm.controls['specialistDiagnosis'].disable();
       this.specialist = false;
     }
-    this.visitCategory = localStorage.getItem('visitCategory');
+    this.visitCategory = this.sessionstorage.getItem('visitCategory');
     this.attendantType = this.route.snapshot.params['attendant'];
     if (this.attendantType === 'doctor') {
       this.enableNCDCondition = true;
@@ -106,9 +108,10 @@ export class NcdCareDiagnosisComponent implements OnInit, DoCheck {
           this.ncdCareTypes = masterData.ncdCareTypes.slice();
 
         if (this.caseRecordMode === 'view') {
-          const beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
-          const visitID = localStorage.getItem('visitID');
-          const visitCategory = localStorage.getItem('visitCategory');
+          const beneficiaryRegID =
+            this.sessionstorage.getItem('beneficiaryRegID');
+          const visitID = this.sessionstorage.getItem('visitID');
+          const visitCategory = this.sessionstorage.getItem('visitCategory');
           this.getDiagnosisDetails(beneficiaryRegID, visitID, visitCategory);
         }
       }

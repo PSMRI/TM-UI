@@ -26,6 +26,7 @@ import { DataSyncService } from './../shared/service/data-sync.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { HttpServiceService } from '../../core/services/http-service.service';
 import { SetLanguageComponent } from '../../core/components/set-language.component';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-master-download',
@@ -40,6 +41,7 @@ export class MasterDownloadComponent implements OnInit, DoCheck {
     private confirmationService: ConfirmationService,
     private dataSyncService: DataSyncService,
     public httpServiceService: HttpServiceService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -95,7 +97,7 @@ export class MasterDownloadComponent implements OnInit, DoCheck {
         if (result) {
           const reqObj = {
             vanID: this.vanID,
-            providerServiceMapID: localStorage.getItem(
+            providerServiceMapID: this.sessionstorage.getItem(
               'dataSyncProviderServiceMapID',
             ),
           };

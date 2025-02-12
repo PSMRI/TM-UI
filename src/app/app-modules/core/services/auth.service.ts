@@ -36,6 +36,7 @@ export class AuthService {
       userName: userName,
       password: password,
       doLogout: doLogout,
+      withCredentials: true,
     });
   }
   userlogoutPreviousSession(userName: any) {

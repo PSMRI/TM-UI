@@ -38,6 +38,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
 import { RegistrarService } from '../../registrar/shared/services/registrar.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-worklist',
@@ -81,31 +82,32 @@ export class WorklistComponent implements OnInit, OnDestroy, DoCheck {
     private cameraService: CameraService,
     private inventoryService: InventoryService,
     private registrarService: RegistrarService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
     this.fetchLanguageResponse();
-    localStorage.setItem('currentRole', 'Pharmacist');
+    this.sessionstorage.setItem('currentRole', 'Pharmacist');
     this.removeBeneficiaryDataForVisit();
     this.loadPharmaWorklist();
     this.beneficiaryDetailsService.reset();
   }
 
   removeBeneficiaryDataForVisit() {
-    localStorage.removeItem('visitCode');
-    localStorage.removeItem('beneficiaryGender');
-    localStorage.removeItem('benFlowID');
-    localStorage.removeItem('visitCategory');
-    localStorage.removeItem('beneficiaryRegID');
-    localStorage.removeItem('visitID');
-    localStorage.removeItem('beneficiaryID');
-    localStorage.removeItem('doctorFlag');
-    localStorage.removeItem('nurseFlag');
-    localStorage.removeItem('pharmacist_flag');
+    this.sessionstorage.removeItem('visitCode');
+    this.sessionstorage.removeItem('beneficiaryGender');
+    this.sessionstorage.removeItem('benFlowID');
+    this.sessionstorage.removeItem('visitCategory');
+    this.sessionstorage.removeItem('beneficiaryRegID');
+    this.sessionstorage.removeItem('visitID');
+    this.sessionstorage.removeItem('beneficiaryID');
+    this.sessionstorage.removeItem('doctorFlag');
+    this.sessionstorage.removeItem('nurseFlag');
+    this.sessionstorage.removeItem('pharmacist_flag');
   }
 
   ngOnDestroy() {
-    localStorage.removeItem('currentRole');
+    this.sessionstorage.removeItem('currentRole');
   }
 
   loadPharmaWorklist() {
@@ -235,7 +237,6 @@ export class WorklistComponent implements OnInit, OnDestroy, DoCheck {
     this.registrarService.getHealthIdDetails(data).subscribe(
       (healthIDDetails: any) => {
         if (healthIDDetails.statusCode === 200) {
-          console.log('healthID', healthIDDetails);
           if (
             healthIDDetails.data.BenHealthDetails !== undefined &&
             healthIDDetails.data.BenHealthDetails !== null

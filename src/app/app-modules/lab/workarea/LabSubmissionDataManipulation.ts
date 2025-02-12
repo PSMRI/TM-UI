@@ -36,7 +36,7 @@ export class DataManipulation {
   laboratoryDataRestruct(labForm: any) {
     const labTestResults: any = [];
     labForm.forEach((element: any, i: any) => {
-      if (element.prescriptionID && element.procedureID) {
+      if (element.prescriptionID || element.procedureID) {
         labTestResults.push({
           prescriptionID: element.prescriptionID,
           procedureID: element.procedureID,

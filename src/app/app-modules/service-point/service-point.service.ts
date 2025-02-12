@@ -22,11 +22,15 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class ServicePointService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    readonly sessionstorage: SessionStorageService,
+  ) {}
 
   getServicePoints(userId: string, serviceProviderId: string) {
     return this.http.post(environment.servicePointUrl, {
@@ -36,13 +40,14 @@ export class ServicePointService {
   }
 
   getMMUDemographics() {
-    const serviceLineDetails = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails =
+      this.sessionstorage.getItem('serviceLineDetails');
     console.log('service line details:', serviceLineDetails);
     const vanID =
       serviceLineDetails !== null && serviceLineDetails !== undefined
         ? JSON.parse(serviceLineDetails).vanID
         : null;
-    const spPSMID = localStorage.getItem('providerServiceID');
+    const spPSMID = this.sessionstorage.getItem('providerServiceID');
 
     return this.http.post(environment.demographicsCurrentMasterUrl, {
       vanID: vanID,
@@ -51,7 +56,7 @@ export class ServicePointService {
   }
 
   getSwymedMailLogin() {
-    const userID = localStorage.getItem('userID');
+    const userID = this.sessionstorage.getItem('userID');
     return this.http.get(environment.getSwymedMailLoginUrl + userID);
   }
 }

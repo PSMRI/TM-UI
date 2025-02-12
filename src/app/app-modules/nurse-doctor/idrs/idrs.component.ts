@@ -48,6 +48,7 @@ import {
   ConfirmationService,
 } from '../../core/services';
 import { HttpServiceService } from '../../core/services/http-service.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-idrs',
@@ -67,7 +68,7 @@ export class IdrsComponent implements OnInit, DoCheck, OnDestroy, OnChanges {
   @Input()
   visitType: any;
 
-  utils = new NCDScreeningUtils(this.fb);
+  utils = new NCDScreeningUtils(this.fb, this.sessionstorage);
   diseases: any = [];
   questions: any = [];
   beneficiaryDetailSubscription: any;
@@ -119,6 +120,7 @@ export class IdrsComponent implements OnInit, DoCheck, OnDestroy, OnChanges {
     private nurseService: NurseService,
     private doctorService: DoctorService,
     private httpServiceService: HttpServiceService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -512,7 +514,7 @@ export class IdrsComponent implements OnInit, DoCheck, OnDestroy, OnChanges {
   }
   getPreviousVisit() {
     const obj = {
-      benRegID: localStorage.getItem('beneficiaryRegID'),
+      benRegID: this.sessionstorage.getItem('beneficiaryRegID'),
     };
     this.nurseService.getPreviousVisitData(obj).subscribe(
       (res: any) => {
@@ -680,29 +682,29 @@ export class IdrsComponent implements OnInit, DoCheck, OnDestroy, OnChanges {
   ngOnChanges() {
     if (String(this.mode) === 'view') {
       this.doctorScreen = true;
-      const visitID = localStorage.getItem('visitID');
-      const benRegID = localStorage.getItem('beneficiaryRegID');
+      const visitID = this.sessionstorage.getItem('visitID');
+      const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
       this.getBeneficiaryDetails();
       if (visitID !== null && benRegID !== null) {
         this.getIDRSDetailsFrmNurse(visitID, benRegID);
       }
     }
 
-    const specialistFlagString = localStorage.getItem('specialistFlag');
+    const specialistFlagString = this.sessionstorage.getItem('specialistFlag');
     if (
       specialistFlagString !== null &&
       parseInt(specialistFlagString) === 100
     ) {
       this.doctorScreen = true;
-      const visitID = localStorage.getItem('visitID');
-      const benRegID = localStorage.getItem('beneficiaryRegID');
+      const visitID = this.sessionstorage.getItem('visitID');
+      const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
       this.getBeneficiaryDetails();
       if (visitID !== null && benRegID !== null) {
         this.getIDRSDetailsFrmNurse(visitID, benRegID);
       }
     }
     if (String(this.mode) === 'update') {
-      const visitCategory = localStorage.getItem('visitCategory');
+      const visitCategory = this.sessionstorage.getItem('visitCategory');
       this.doctorScreen = true;
       this.updateIDRSDetails(this.idrsScreeningForm, visitCategory);
     }
@@ -953,19 +955,20 @@ export class IdrsComponent implements OnInit, DoCheck, OnDestroy, OnChanges {
               this.getPreviousVisit();
           }
           if (String(this.mode) === 'view') {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             if (visitID !== null && benRegID !== null) {
               this.getIDRSDetailsFrmNurse(visitID, benRegID);
             }
           }
-          const specialistFlagString = localStorage.getItem('specialistFlag');
+          const specialistFlagString =
+            this.sessionstorage.getItem('specialistFlag');
           if (
             specialistFlagString !== null &&
             parseInt(specialistFlagString) === 100
           ) {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             if (visitID !== null && benRegID !== null) {
               this.getIDRSDetailsFrmNurse(visitID, benRegID);
             }
@@ -1226,7 +1229,7 @@ export class IdrsComponent implements OnInit, DoCheck, OnDestroy, OnChanges {
         .subscribe((res: any) => {});
   }
   getPreviousDiabetesHistory() {
-    const benRegID = localStorage.getItem('beneficiaryRegID');
+    const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
     this.nurseService
       .getPreviousDiabetesHistory(benRegID, this.visitType)
       .subscribe(

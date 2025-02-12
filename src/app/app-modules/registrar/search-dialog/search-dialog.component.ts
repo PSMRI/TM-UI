@@ -36,6 +36,7 @@ import { HttpServiceService } from '../../core/services/http-service.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SetLanguageComponent } from '../../core/components/set-language.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 interface Beneficary {
   firstName: string;
@@ -82,6 +83,7 @@ export class SearchDialogComponent implements OnInit, DoCheck {
     private registrarService: RegistrarService,
     private changeDetectorRef: ChangeDetectorRef,
     private fb: FormBuilder,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -182,7 +184,7 @@ export class SearchDialogComponent implements OnInit, DoCheck {
    * get states from localstorage and set default state
    */
   getStatesData() {
-    const location: any = localStorage.getItem('location');
+    const location: any = this.sessionstorage.getItem('location');
     this.location = JSON.parse(location);
     console.log(location, 'gotit');
     if (location) {

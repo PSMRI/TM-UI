@@ -57,10 +57,12 @@ const ADMIN_API = `${adminIP}/adminapi-v1.0`;
 const IOT_API = 'http://localhost:8085/ezdx-hub-connect-srv';
 const FHIR_API = `${FHIRIP}/fhirapi-v1.0/`;
 const mmuUICasesheet = `${tmUI_IP}tmui-v1.0`;
+const sessionStorageEncKey = '';
 
 export const environment = {
   production: true,
   isTMOffline: false,
+  encKey: sessionStorageEncKey,
 
   app: `MMU`,
   RBSTest: `RBS Test`,

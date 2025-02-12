@@ -37,6 +37,7 @@ import {
 } from '@angular/material/dialog';
 import { ConfirmationService } from '../../core/services';
 import { SetLanguageComponent } from '../../core/components/set-language.component';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-health-id-otp-generation',
@@ -65,6 +66,7 @@ export class HealthIdOtpGenerationComponent implements OnInit, DoCheck {
     private registrarService: RegistrarService,
     private confirmationService: ConfirmationService,
     private dialog: MatDialog,
+    readonly sessionstorage: SessionStorageService,
   ) {
     dialogRef.disableClose = true;
   }
@@ -270,8 +272,8 @@ export class HealthIdOtpGenerationComponent implements OnInit, DoCheck {
         txnId: this.transactionId,
         profilePhoto: this.data.profilePhoto,
         healthId: this.data.healthId,
-        createdBy: localStorage.getItem('userName'),
-        providerServiceMapID: localStorage.getItem('providerServiceID'),
+        createdBy: this.sessionstorage.getItem('userName'),
+        providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
       };
       this.registrarService.generateHealthIdWithUID(reqObj).subscribe(
         (res: any) => {
