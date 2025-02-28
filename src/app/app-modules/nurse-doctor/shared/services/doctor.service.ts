@@ -893,6 +893,7 @@ export class DoctorService {
     )).controls['generalDiagnosisForm'];
     const referForm = patientMedicalForm.controls['patientReferForm'];
 
+    const sessionId = this.sessionstorage.getItem('sessionID');
     const generalVisitDetails = {
       findings: this.postGeneralCaseRecordFindings(findingForm, otherDetails),
       diagnosis: this.postGeneralOPDCaseRecordDiagnosis(
@@ -913,7 +914,7 @@ export class DoctorService {
       doctorFlag: this.sessionstorage.getItem('doctorFlag'),
       nurseFlag: this.sessionstorage.getItem('nurseFlag'),
       pharmacist_flag: this.sessionstorage.getItem('pharmacist_flag'),
-      sessionID: this.sessionstorage.getItem('sessionID'),
+      sessionID: sessionId ? sessionId : null,
       parkingPlaceID: parkingPlaceID,
       vanID: vanID,
       beneficiaryRegID: '' + this.sessionstorage.getItem('beneficiaryRegID'),
