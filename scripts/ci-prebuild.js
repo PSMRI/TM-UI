@@ -50,6 +50,8 @@ const defaultEnvValues = {
   FHIR_API_BASE: '',
   SCHEDULER_UI_BASE: '',
   INVENTORY_UI_BASE: '',
+  IDENTITY_API_BASE:'',
+  SESSION_STORAGE_ENC_KEY:'',
 };
 
 // Generate output data
