@@ -491,6 +491,9 @@ export const environment = {
   getAllRegistrationData: `${COMMON_API}customization/fetchAllData`,
   getBenIdForhealthID: `${FHIR_API}healthID/getBenIdForhealthID`,
 
+ // Customization APIs
+  getAllRegistrationData: `${COMMON_API}customization/fetchAllData`,
+  getBenIdForhealthID: `${FHIR_API}healthID/getBenIdForhealthID`,
 
   /* Abha V3 APIs */
   requestOtpForAbhaEnroll: `${FHIR_API}abhaCreation/requestOtpForAbhaEnrollment`,
