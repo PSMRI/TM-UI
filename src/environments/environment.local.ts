@@ -479,9 +479,8 @@ export const environment = {
 
   /** Previous Anthropometry  Urls */
   getPreviousAnthropometryUrl: `${TM_API}anthropometryVitals/getBenHeightDetailsFrmNurse`,
-  /* Customization APIs*/
-  getAllRegistrationData: `${COMMON_API}customization/fetchAllData`,
 
+  
   /*Family Tagging Urls */
   relationShipUrl: `${TM_API}registrar/registrarMasterData`,
   saveFamilyTaggingUrl: `${IDENTITY_API}family/addTag`,
