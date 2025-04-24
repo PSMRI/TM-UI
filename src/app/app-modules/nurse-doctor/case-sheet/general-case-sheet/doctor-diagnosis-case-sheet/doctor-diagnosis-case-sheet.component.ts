@@ -27,7 +27,7 @@ import { ConfirmationService } from 'src/app/app-modules/core/services';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 import { RegistrarService } from 'src/app/app-modules/registrar/shared/services/registrar.service';
 import { NurseService, MasterdataService } from '../../../shared/services';
-import * as moment from 'moment';
+import moment from 'moment';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({

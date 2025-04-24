@@ -32,7 +32,7 @@ import { NurseService, DoctorService } from '../../shared/services';
 import { CameraService } from '../../../core/services/camera.service';
 import { BeneficiaryDetailsService } from '../../../core/services/beneficiary-details.service';
 
-import * as moment from 'moment';
+import moment from 'moment';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';

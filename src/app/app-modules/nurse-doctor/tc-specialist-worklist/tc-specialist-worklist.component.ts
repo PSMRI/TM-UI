@@ -36,7 +36,7 @@ import { DoctorService, MasterdataService } from '../shared/services';
 import { CameraService } from '../../core/services/camera.service';
 import { TelemedicineService } from '../../core/services/telemedicine.service';
 import { HttpServiceService } from '../../core/services/http-service.service';
-import * as moment from 'moment';
+import moment from 'moment';
 import { SetLanguageComponent } from '../../core/components/set-language.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';

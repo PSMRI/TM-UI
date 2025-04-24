@@ -36,7 +36,7 @@ import { ConfirmationService } from '../../../core/services/confirmation.service
 import { CameraService } from '../../../core/services/camera.service';
 import { RegistrarService } from '../../shared/services/registrar.service';
 import { BeneficiaryDetailsService } from '../../../core/services/beneficiary-details.service';
-import * as moment from 'moment';
+import moment from 'moment';
 import { setTheme } from 'ngx-bootstrap/utils';
 import { BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
