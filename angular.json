@@ -103,10 +103,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "TM-UI:build:production"
+              "buildTarget": "TM-UI:build:production"
             },
             "development": {
-              "browserTarget": "TM-UI:build:development"
+              "buildTarget": "TM-UI:build:development"
             }
           },
           "defaultConfiguration": "development",
@@ -117,7 +117,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "TM-UI:build"
+            "buildTarget": "TM-UI:build"
           }
         },
         "test": {
