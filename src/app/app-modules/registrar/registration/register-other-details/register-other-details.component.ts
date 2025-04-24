@@ -55,9 +55,10 @@ import {
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 import { HealthIdOtpSuccessComponent } from '../../health-id-otp-generation/health-id-otp-generation.component';
 @Component({
-  selector: 'app-register-other-details',
-  templateUrl: './register-other-details.component.html',
-  styleUrls: ['./register-other-details.component.css'],
+    selector: 'app-register-other-details',
+    templateUrl: './register-other-details.component.html',
+    styleUrls: ['./register-other-details.component.css'],
+    standalone: false
 })
 export class RegisterOtherDetailsComponent
   implements OnInit, OnDestroy, DoCheck
@@ -1041,9 +1042,10 @@ export class RegisterOtherDetailsComponent
   }
 }
 @Component({
-  selector: 'app-health-id-validatepopup',
-  templateUrl: './health-id-validatepopup.html',
-  styleUrls: ['./register-other-details.component.css'],
+    selector: 'app-health-id-validatepopup',
+    templateUrl: './health-id-validatepopup.html',
+    styleUrls: ['./register-other-details.component.css'],
+    standalone: false
 })
 export class HealthIdValidateComponent implements OnInit, DoCheck {
   healthIdValidateForm!: FormGroup;

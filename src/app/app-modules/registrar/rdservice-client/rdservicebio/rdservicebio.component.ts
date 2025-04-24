@@ -9,9 +9,10 @@ import { ConfirmationService } from 'src/app/app-modules/core/services';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-rdservicebio',
-  templateUrl: './rdservicebio.component.html',
-  styleUrls: ['./rdservicebio.component.css'],
+    selector: 'app-rdservicebio',
+    templateUrl: './rdservicebio.component.html',
+    styleUrls: ['./rdservicebio.component.css'],
+    standalone: false
 })
 export class RdservicebioComponent implements OnInit {
   selectedValue: any;

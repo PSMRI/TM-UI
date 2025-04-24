@@ -42,9 +42,10 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-general-medication-history',
-  templateUrl: './medication-history.component.html',
-  styleUrls: ['./medication-history.component.css'],
+    selector: 'app-general-medication-history',
+    templateUrl: './medication-history.component.html',
+    styleUrls: ['./medication-history.component.css'],
+    standalone: false
 })
 export class MedicationHistoryComponent implements OnInit, DoCheck, OnDestroy {
   @Input()

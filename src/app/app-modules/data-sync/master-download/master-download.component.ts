@@ -29,9 +29,10 @@ import { SetLanguageComponent } from '../../core/components/set-language.compone
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-master-download',
-  templateUrl: './master-download.component.html',
-  styleUrls: ['./master-download.component.css'],
+    selector: 'app-master-download',
+    templateUrl: './master-download.component.html',
+    styleUrls: ['./master-download.component.css'],
+    standalone: false
 })
 export class MasterDownloadComponent implements OnInit, DoCheck {
   current_language_set: any;

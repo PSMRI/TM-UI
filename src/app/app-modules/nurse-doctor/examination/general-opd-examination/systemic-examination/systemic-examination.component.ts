@@ -28,9 +28,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-nurse-systemic-examination',
-  templateUrl: './systemic-examination.component.html',
-  styleUrls: ['./systemic-examination.component.css'],
+    selector: 'app-nurse-systemic-examination',
+    templateUrl: './systemic-examination.component.html',
+    styleUrls: ['./systemic-examination.component.css'],
+    standalone: false
 })
 export class SystemicExaminationComponent
   implements OnInit, OnChanges, DoCheck

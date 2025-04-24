@@ -36,9 +36,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-patient-visit-details',
-  templateUrl: './visit-details.component.html',
-  styleUrls: ['./visit-details.component.css'],
+    selector: 'app-patient-visit-details',
+    templateUrl: './visit-details.component.html',
+    styleUrls: ['./visit-details.component.css'],
+    standalone: false
 })
 export class PatientVisitDetailsComponent
   implements OnInit, OnDestroy, OnChanges, DoCheck

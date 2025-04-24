@@ -27,9 +27,10 @@ import { SetLanguageComponent } from '../../core/components/set-language.compone
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-visit-details',
-  templateUrl: './visit-details.component.html',
-  styleUrls: ['./visit-details.component.css'],
+    selector: 'app-visit-details',
+    templateUrl: './visit-details.component.html',
+    styleUrls: ['./visit-details.component.css'],
+    standalone: false
 })
 export class VisitDetailsComponent implements OnInit, DoCheck {
   @Input()

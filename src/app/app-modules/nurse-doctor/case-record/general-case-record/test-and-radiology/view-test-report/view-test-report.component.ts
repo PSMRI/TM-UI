@@ -26,9 +26,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 
 @Component({
-  selector: 'app-view-test-report',
-  templateUrl: './view-test-report.component.html',
-  styleUrls: ['./view-test-report.component.css'],
+    selector: 'app-view-test-report',
+    templateUrl: './view-test-report.component.html',
+    styleUrls: ['./view-test-report.component.css'],
+    standalone: false
 })
 export class ViewTestReportComponent implements OnInit, DoCheck {
   currentLanguageSet: any;

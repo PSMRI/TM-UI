@@ -29,9 +29,10 @@ import { ConfirmationService } from '../../core/services';
 import { SetLanguageComponent } from '../../core/components/set-language.component';
 
 @Component({
-  selector: 'app-generate-mobile-otp-generation',
-  templateUrl: './generate-mobile-otp-generation.component.html',
-  styleUrls: ['./generate-mobile-otp-generation.component.css'],
+    selector: 'app-generate-mobile-otp-generation',
+    templateUrl: './generate-mobile-otp-generation.component.html',
+    styleUrls: ['./generate-mobile-otp-generation.component.css'],
+    standalone: false
 })
 export class GenerateMobileOtpGenerationComponent implements OnInit, DoCheck {
   generateMobileOTPForm!: FormGroup;

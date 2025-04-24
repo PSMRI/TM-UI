@@ -43,9 +43,10 @@ import { SchedulerComponent } from '../scheduler/scheduler.component';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-doctor-worklist',
-  templateUrl: './doctor-worklist.component.html',
-  styleUrls: ['./doctor-worklist.component.css'],
+    selector: 'app-doctor-worklist',
+    templateUrl: './doctor-worklist.component.html',
+    styleUrls: ['./doctor-worklist.component.css'],
+    standalone: false
 })
 export class DoctorWorklistComponent implements OnInit, OnDestroy, DoCheck {
   rowsPerPage = 5;

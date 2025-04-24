@@ -34,9 +34,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-patient-upload-files',
-  templateUrl: './upload-files.component.html',
-  styleUrls: ['./upload-files.component.css'],
+    selector: 'app-patient-upload-files',
+    templateUrl: './upload-files.component.html',
+    styleUrls: ['./upload-files.component.css'],
+    standalone: false
 })
 export class UploadFilesComponent implements OnInit, DoCheck, OnChanges {
   fileList!: FileList;

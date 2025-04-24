@@ -29,9 +29,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MasterdataService } from 'src/app/app-modules/nurse-doctor/shared/services';
 
 @Component({
-  selector: 'app-allergen-search',
-  templateUrl: './allergen-search.component.html',
-  styleUrls: ['./allergen-search.component.css'],
+    selector: 'app-allergen-search',
+    templateUrl: './allergen-search.component.html',
+    styleUrls: ['./allergen-search.component.css'],
+    standalone: false
 })
 export class AllergenSearchComponent implements OnInit, DoCheck {
   searchTerm!: string;

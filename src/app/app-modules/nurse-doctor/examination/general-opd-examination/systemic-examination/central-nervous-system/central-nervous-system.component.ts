@@ -26,9 +26,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 
 @Component({
-  selector: 'app-nurse-central-nervous-system',
-  templateUrl: './central-nervous-system.component.html',
-  styleUrls: ['./central-nervous-system.component.css'],
+    selector: 'app-nurse-central-nervous-system',
+    templateUrl: './central-nervous-system.component.html',
+    styleUrls: ['./central-nervous-system.component.css'],
+    standalone: false
 })
 export class CentralNervousSystemComponent implements OnInit, DoCheck {
   @Input()

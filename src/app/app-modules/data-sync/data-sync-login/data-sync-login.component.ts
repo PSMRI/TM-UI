@@ -30,10 +30,11 @@ import { SetLanguageComponent } from '../../core/components/set-language.compone
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-data-sync-login',
-  templateUrl: './data-sync-login.component.html',
-  styleUrls: ['./data-sync-login.component.css'],
-  providers: [DataSyncService],
+    selector: 'app-data-sync-login',
+    templateUrl: './data-sync-login.component.html',
+    styleUrls: ['./data-sync-login.component.css'],
+    providers: [DataSyncService],
+    standalone: false
 })
 export class DataSyncLoginComponent implements OnInit, DoCheck {
   userName!: string;

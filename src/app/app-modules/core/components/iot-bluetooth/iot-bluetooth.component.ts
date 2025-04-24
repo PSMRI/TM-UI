@@ -27,9 +27,10 @@ import { SetLanguageComponent } from '../set-language.component';
 import { ConfirmationService } from '../../services';
 
 @Component({
-  selector: 'app-iot-bluetooth',
-  templateUrl: './iot-bluetooth.component.html',
-  styleUrls: ['./iot-bluetooth.component.css'],
+    selector: 'app-iot-bluetooth',
+    templateUrl: './iot-bluetooth.component.html',
+    styleUrls: ['./iot-bluetooth.component.css'],
+    standalone: false
 })
 export class IotBluetoothComponent implements OnInit, DoCheck {
   current_language_set: any;

@@ -27,9 +27,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 
 @Component({
-  selector: 'app-history-case-sheet',
-  templateUrl: './history-case-sheet.component.html',
-  styleUrls: ['./history-case-sheet.component.css'],
+    selector: 'app-history-case-sheet',
+    templateUrl: './history-case-sheet.component.html',
+    styleUrls: ['./history-case-sheet.component.css'],
+    standalone: false
 })
 export class HistoryCaseSheetComponent implements OnInit, OnChanges, DoCheck {
   @Input()

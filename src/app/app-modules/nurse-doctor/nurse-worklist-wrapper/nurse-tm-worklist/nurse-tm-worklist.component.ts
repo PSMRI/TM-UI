@@ -42,9 +42,10 @@ import { SchedulerComponent } from '../../scheduler/scheduler.component';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-nurse-tm-worklist',
-  templateUrl: './nurse-tm-worklist.component.html',
-  styleUrls: ['./nurse-tm-worklist.component.css'],
+    selector: 'app-nurse-tm-worklist',
+    templateUrl: './nurse-tm-worklist.component.html',
+    styleUrls: ['./nurse-tm-worklist.component.css'],
+    standalone: false
 })
 export class NurseTmWorklistComponent implements OnInit, DoCheck, OnDestroy {
   rowsPerPage = 5;

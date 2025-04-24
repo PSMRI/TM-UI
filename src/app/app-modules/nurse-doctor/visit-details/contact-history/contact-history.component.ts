@@ -37,9 +37,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-contact-history',
-  templateUrl: './contact-history.component.html',
-  styleUrls: ['./contact-history.component.css'],
+    selector: 'app-contact-history',
+    templateUrl: './contact-history.component.html',
+    styleUrls: ['./contact-history.component.css'],
+    standalone: false
 })
 export class ContactHistoryComponent
   implements OnInit, OnDestroy, OnChanges, DoCheck

@@ -28,9 +28,10 @@ import {
 } from '@angular/material/snack-bar';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 @Component({
-  selector: 'app-specialist-login',
-  templateUrl: './specialist-login.component.html',
-  styleUrls: ['./specialist-login.component.css'],
+    selector: 'app-specialist-login',
+    templateUrl: './specialist-login.component.html',
+    styleUrls: ['./specialist-login.component.css'],
+    standalone: false
 })
 export class SpecialistLoginComponent implements OnInit {
   specialistTMLoginForm!: FormGroup;

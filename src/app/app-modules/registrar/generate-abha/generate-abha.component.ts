@@ -9,9 +9,10 @@ import { HttpServiceService } from '../../core/services/http-service.service';
 import { SetLanguageComponent } from '../../core/components/set-language.component';
 
 @Component({
-  selector: 'app-generate-abha',
-  templateUrl: './generate-abha.component.html',
-  styleUrls: ['./generate-abha.component.css'],
+    selector: 'app-generate-abha',
+    templateUrl: './generate-abha.component.html',
+    styleUrls: ['./generate-abha.component.css'],
+    standalone: false
 })
 export class GenerateAbhaComponent implements OnInit {
   utils = new RegistrationUtils(this.fb);
@@ -124,9 +125,10 @@ export class GenerateAbhaComponent implements OnInit {
 }
 
 @Component({
-  selector: 'app-auth-method',
-  templateUrl: './auth-method.html',
-  styleUrls: ['./generate-abha.component.css'],
+    selector: 'app-auth-method',
+    templateUrl: './auth-method.html',
+    styleUrls: ['./generate-abha.component.css'],
+    standalone: false
 })
 export class authMethodComponent implements OnInit {
   authOption = false;

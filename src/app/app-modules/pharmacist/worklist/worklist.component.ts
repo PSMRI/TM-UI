@@ -41,9 +41,10 @@ import { RegistrarService } from '../../registrar/shared/services/registrar.serv
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-worklist',
-  templateUrl: './worklist.component.html',
-  styleUrls: ['./worklist.component.css'],
+    selector: 'app-worklist',
+    templateUrl: './worklist.component.html',
+    styleUrls: ['./worklist.component.css'],
+    standalone: false
 })
 export class WorklistComponent implements OnInit, OnDestroy, DoCheck {
   rowsPerPage = 5;

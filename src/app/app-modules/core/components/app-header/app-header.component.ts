@@ -33,9 +33,10 @@ import { TelemedicineService } from '../../services/telemedicine.service';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './app-header.component.html',
-  styleUrls: ['./app-header.component.css'],
+    selector: 'app-header',
+    templateUrl: './app-header.component.html',
+    styleUrls: ['./app-header.component.css'],
+    standalone: false
 })
 export class AppHeaderComponent implements OnInit {
   language_file_path: any = './assets/';

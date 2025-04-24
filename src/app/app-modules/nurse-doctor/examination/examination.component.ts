@@ -24,9 +24,10 @@ import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-nurse-examination',
-  templateUrl: './examination.component.html',
-  styleUrls: ['./examination.component.css'],
+    selector: 'app-nurse-examination',
+    templateUrl: './examination.component.html',
+    styleUrls: ['./examination.component.css'],
+    standalone: false
 })
 export class ExaminationComponent implements OnChanges {
   @Input()

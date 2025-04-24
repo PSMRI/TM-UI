@@ -33,9 +33,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 
 @Component({
-  selector: 'app-image-to-canvas',
-  templateUrl: './image-to-canvas.component.html',
-  styleUrls: ['./image-to-canvas.component.css'],
+    selector: 'app-image-to-canvas',
+    templateUrl: './image-to-canvas.component.html',
+    styleUrls: ['./image-to-canvas.component.css'],
+    standalone: false
 })
 export class ImageToCanvasComponent implements OnInit, OnChanges, DoCheck {
   @Input()

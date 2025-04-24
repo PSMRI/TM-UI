@@ -33,9 +33,10 @@ import { VisitDetailUtils } from '../../shared/utility/visit-detail-utility';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-diseaseconfirmation',
-  templateUrl: './diseaseconfirmation.component.html',
-  styleUrls: ['./diseaseconfirmation.component.css'],
+    selector: 'app-diseaseconfirmation',
+    templateUrl: './diseaseconfirmation.component.html',
+    styleUrls: ['./diseaseconfirmation.component.css'],
+    standalone: false
 })
 export class DiseaseconfirmationComponent implements OnInit {
   @Input()

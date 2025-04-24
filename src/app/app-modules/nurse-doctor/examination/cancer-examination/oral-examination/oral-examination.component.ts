@@ -34,9 +34,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 
 @Component({
-  selector: 'app-cancer-oral-examination',
-  templateUrl: './oral-examination.component.html',
-  styleUrls: ['./oral-examination.component.css'],
+    selector: 'app-cancer-oral-examination',
+    templateUrl: './oral-examination.component.html',
+    styleUrls: ['./oral-examination.component.css'],
+    standalone: false
 })
 export class OralExaminationComponent implements OnInit, DoCheck {
   @Input()

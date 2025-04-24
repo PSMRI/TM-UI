@@ -41,7 +41,8 @@ import { GeneralUtils } from '../../nurse-doctor/shared/utility';
 import { DiagnosisSearchComponent } from '../components/diagnosis-search/diagnosis-search.component';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 @Directive({
-  selector: '[appConfirmatoryDiagnosis]',
+    selector: '[appConfirmatoryDiagnosis]',
+    standalone: false
 })
 export class ConfirmatoryDiagnosisDirective implements OnInit, DoCheck {
   @Input()

@@ -34,9 +34,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 
 @Component({
-  selector: 'app-doctor-abdominal-examination',
-  templateUrl: './abdominal-examination.component.html',
-  styleUrls: ['./abdominal-examination.component.css'],
+    selector: 'app-doctor-abdominal-examination',
+    templateUrl: './abdominal-examination.component.html',
+    styleUrls: ['./abdominal-examination.component.css'],
+    standalone: false
 })
 export class AbdominalExaminationComponent implements OnInit, DoCheck {
   @Input()

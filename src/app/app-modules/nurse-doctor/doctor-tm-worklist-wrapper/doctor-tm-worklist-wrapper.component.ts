@@ -25,9 +25,10 @@ import { HttpServiceService } from '../../core/services/http-service.service';
 import { SetLanguageComponent } from '../../core/components/set-language.component';
 
 @Component({
-  selector: 'app-doctor-tm-worklist-wrapper',
-  templateUrl: './doctor-tm-worklist-wrapper.component.html',
-  styleUrls: ['./doctor-tm-worklist-wrapper.component.css'],
+    selector: 'app-doctor-tm-worklist-wrapper',
+    templateUrl: './doctor-tm-worklist-wrapper.component.html',
+    styleUrls: ['./doctor-tm-worklist-wrapper.component.css'],
+    standalone: false
 })
 export class DoctorTmWorklistWrapperComponent implements OnInit, DoCheck {
   app: any;

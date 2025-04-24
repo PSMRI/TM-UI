@@ -4,9 +4,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { ConfirmationService } from '../../core/services';
 
 @Component({
-  selector: 'app-biometric-authentication',
-  templateUrl: './biometric-authentication.component.html',
-  styleUrls: ['./biometric-authentication.component.css'],
+    selector: 'app-biometric-authentication',
+    templateUrl: './biometric-authentication.component.html',
+    styleUrls: ['./biometric-authentication.component.css'],
+    standalone: false
 })
 export class BiometricAuthenticationComponent {
   enableImage = false;

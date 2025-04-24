@@ -30,9 +30,10 @@ import { SetLanguageComponent } from '../../core/components/set-language.compone
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-workarea',
-  templateUrl: './workarea.component.html',
-  styleUrls: ['./workarea.component.css'],
+    selector: 'app-workarea',
+    templateUrl: './workarea.component.html',
+    styleUrls: ['./workarea.component.css'],
+    standalone: false
 })
 export class WorkareaComponent
   implements OnInit, CanComponentDeactivate, DoCheck, OnDestroy

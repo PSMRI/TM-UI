@@ -27,9 +27,10 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 
 @Component({
-  selector: 'app-nurse-musculoskeletal-system',
-  templateUrl: './musculoskeletal-system.component.html',
-  styleUrls: ['./musculoskeletal-system.component.css'],
+    selector: 'app-nurse-musculoskeletal-system',
+    templateUrl: './musculoskeletal-system.component.html',
+    styleUrls: ['./musculoskeletal-system.component.css'],
+    standalone: false
 })
 export class MusculoskeletalSystemComponent
   implements OnInit, OnDestroy, DoCheck

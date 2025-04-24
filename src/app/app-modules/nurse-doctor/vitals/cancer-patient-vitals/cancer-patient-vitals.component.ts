@@ -33,9 +33,10 @@ import { ActivatedRoute } from '@angular/router';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-nurse-cancer-patient-vitals',
-  templateUrl: './cancer-patient-vitals.component.html',
-  styleUrls: ['./cancer-patient-vitals.component.css'],
+    selector: 'app-nurse-cancer-patient-vitals',
+    templateUrl: './cancer-patient-vitals.component.html',
+    styleUrls: ['./cancer-patient-vitals.component.css'],
+    standalone: false
 })
 export class CancerPatientVitalsComponent
   implements OnInit, OnChanges, OnDestroy

@@ -26,9 +26,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 
 @Component({
-  selector: 'app-beneficiary-mcts-call-history',
-  templateUrl: './beneficiary-mcts-call-history.component.html',
-  styleUrls: ['./beneficiary-mcts-call-history.component.css'],
+    selector: 'app-beneficiary-mcts-call-history',
+    templateUrl: './beneficiary-mcts-call-history.component.html',
+    styleUrls: ['./beneficiary-mcts-call-history.component.css'],
+    standalone: false
 })
 export class BeneficiaryMctsCallHistoryComponent implements OnInit, DoCheck {
   current_language_set: any;

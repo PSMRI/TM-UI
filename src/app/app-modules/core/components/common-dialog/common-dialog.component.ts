@@ -32,9 +32,10 @@ import { HttpServiceService } from '../../services/http-service.service';
 import { SetLanguageComponent } from '../set-language.component';
 
 @Component({
-  selector: 'app-common-dialog',
-  templateUrl: './common-dialog.component.html',
-  styleUrls: ['./common-dialog.component.css'],
+    selector: 'app-common-dialog',
+    templateUrl: './common-dialog.component.html',
+    styleUrls: ['./common-dialog.component.css'],
+    standalone: false
 })
 export class CommonDialogComponent implements OnInit, DoCheck {
   @Output() cancelEvent = new EventEmitter();

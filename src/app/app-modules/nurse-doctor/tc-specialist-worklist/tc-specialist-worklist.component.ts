@@ -43,9 +43,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-tc-specialist-worklist',
-  templateUrl: './tc-specialist-worklist.component.html',
-  styleUrls: ['./tc-specialist-worklist.component.css'],
+    selector: 'app-tc-specialist-worklist',
+    templateUrl: './tc-specialist-worklist.component.html',
+    styleUrls: ['./tc-specialist-worklist.component.css'],
+    standalone: false
 })
 export class TcSpecialistWorklistComponent
   implements OnInit, OnDestroy, OnChanges, DoCheck

@@ -37,9 +37,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-symptoms',
-  templateUrl: './symptoms.component.html',
-  styleUrls: ['./symptoms.component.css'],
+    selector: 'app-symptoms',
+    templateUrl: './symptoms.component.html',
+    styleUrls: ['./symptoms.component.css'],
+    standalone: false
 })
 export class SymptomsComponent
   implements OnInit, DoCheck, OnDestroy, OnChanges

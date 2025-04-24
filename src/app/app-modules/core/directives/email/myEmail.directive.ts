@@ -24,14 +24,15 @@ import { Directive, forwardRef, HostListener } from '@angular/core';
 import { NG_VALIDATORS, Validator, AbstractControl } from '@angular/forms';
 
 @Directive({
-  selector: '[appValidateEmail]',
-  providers: [
-    {
-      provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => MyEmailDirective),
-      multi: true,
-    },
-  ],
+    selector: '[appValidateEmail]',
+    providers: [
+        {
+            provide: NG_VALIDATORS,
+            useExisting: forwardRef(() => MyEmailDirective),
+            multi: true,
+        },
+    ],
+    standalone: false
 })
 export class MyEmailDirective implements Validator {
   pattern =

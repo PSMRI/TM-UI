@@ -40,9 +40,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-nurse-worklist',
-  templateUrl: './nurse-worklist.component.html',
-  styleUrls: ['./nurse-worklist.component.css'],
+    selector: 'app-nurse-worklist',
+    templateUrl: './nurse-worklist.component.html',
+    styleUrls: ['./nurse-worklist.component.css'],
+    standalone: false
 })
 export class NurseWorklistComponent implements OnInit, DoCheck, OnDestroy {
   rowsPerPage = 5;

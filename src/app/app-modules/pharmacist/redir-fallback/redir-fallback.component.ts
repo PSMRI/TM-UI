@@ -33,9 +33,10 @@ import { SetLanguageComponent } from '../../core/components/set-language.compone
 import { HttpServiceService } from '../../core/services/http-service.service';
 
 @Component({
-  selector: 'app-redir-fallback',
-  templateUrl: './redir-fallback.component.html',
-  styleUrls: ['./redir-fallback.component.css'],
+    selector: 'app-redir-fallback',
+    templateUrl: './redir-fallback.component.html',
+    styleUrls: ['./redir-fallback.component.css'],
+    standalone: false
 })
 export class RedirFallbackComponent implements AfterViewInit, OnInit, DoCheck {
   current_language_set: any;

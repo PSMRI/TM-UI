@@ -27,9 +27,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 
 @Component({
-  selector: 'app-nurse-general-examination',
-  templateUrl: './general-examination.component.html',
-  styleUrls: ['./general-examination.component.css'],
+    selector: 'app-nurse-general-examination',
+    templateUrl: './general-examination.component.html',
+    styleUrls: ['./general-examination.component.css'],
+    standalone: false
 })
 export class GeneralExaminationComponent implements OnInit, OnChanges, DoCheck {
   @Input()

@@ -51,9 +51,10 @@ import { HttpServiceService } from '../../core/services/http-service.service';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-idrs',
-  templateUrl: './idrs.component.html',
-  styleUrls: ['./idrs.component.css'],
+    selector: 'app-idrs',
+    templateUrl: './idrs.component.html',
+    styleUrls: ['./idrs.component.css'],
+    standalone: false
 })
 export class IdrsComponent implements OnInit, DoCheck, OnDestroy, OnChanges {
   @Input()

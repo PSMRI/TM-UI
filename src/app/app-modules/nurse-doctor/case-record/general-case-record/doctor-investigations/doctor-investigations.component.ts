@@ -38,9 +38,10 @@ import { IdrsscoreService } from '../../../shared/services/idrsscore.service';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-doctor-investigations',
-  templateUrl: './doctor-investigations.component.html',
-  styleUrls: ['./doctor-investigations.component.css'],
+    selector: 'app-doctor-investigations',
+    templateUrl: './doctor-investigations.component.html',
+    styleUrls: ['./doctor-investigations.component.css'],
+    standalone: false
 })
 export class DoctorInvestigationsComponent
   implements OnInit, OnDestroy, DoCheck

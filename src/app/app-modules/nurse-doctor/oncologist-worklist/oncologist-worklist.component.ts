@@ -34,9 +34,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-oncologist-worklist',
-  templateUrl: './oncologist-worklist.component.html',
-  styleUrls: ['./oncologist-worklist.component.css'],
+    selector: 'app-oncologist-worklist',
+    templateUrl: './oncologist-worklist.component.html',
+    styleUrls: ['./oncologist-worklist.component.css'],
+    standalone: false
 })
 export class OncologistWorklistComponent implements OnInit, DoCheck {
   rowsPerPage = 5;

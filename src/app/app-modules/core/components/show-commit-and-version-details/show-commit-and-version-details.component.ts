@@ -26,9 +26,10 @@ import { HttpServiceService } from '../../services/http-service.service';
 import { SetLanguageComponent } from '../set-language.component';
 
 @Component({
-  selector: 'app-show-commit-and-version-details',
-  templateUrl: './show-commit-and-version-details.component.html',
-  styleUrls: ['./show-commit-and-version-details.component.css'],
+    selector: 'app-show-commit-and-version-details',
+    templateUrl: './show-commit-and-version-details.component.html',
+    styleUrls: ['./show-commit-and-version-details.component.css'],
+    standalone: false
 })
 export class ShowCommitAndVersionDetailsComponent implements OnInit, DoCheck {
   current_language_set: any;

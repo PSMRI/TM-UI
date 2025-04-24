@@ -27,9 +27,10 @@ import { ActivatedRoute } from '@angular/router';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-nurse-history',
-  templateUrl: './history.component.html',
-  styleUrls: ['./history.component.css'],
+    selector: 'app-nurse-history',
+    templateUrl: './history.component.html',
+    styleUrls: ['./history.component.css'],
+    standalone: false
 })
 export class HistoryComponent implements OnInit, OnChanges {
   @Input()

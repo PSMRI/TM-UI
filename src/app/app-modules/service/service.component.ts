@@ -30,9 +30,10 @@ import { TelemedicineService } from '../core/services/telemedicine.service';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-service',
-  templateUrl: './service.component.html',
-  styleUrls: ['./service.component.css'],
+    selector: 'app-service',
+    templateUrl: './service.component.html',
+    styleUrls: ['./service.component.css'],
+    standalone: false
 })
 export class ServiceComponent implements OnInit, DoCheck {
   servicesList: any;

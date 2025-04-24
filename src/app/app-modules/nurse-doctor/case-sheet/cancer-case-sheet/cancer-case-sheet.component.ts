@@ -32,9 +32,10 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-cancer-case-sheet',
-  templateUrl: './cancer-case-sheet.component.html',
-  styleUrls: ['./cancer-case-sheet.component.css'],
+    selector: 'app-cancer-case-sheet',
+    templateUrl: './cancer-case-sheet.component.html',
+    styleUrls: ['./cancer-case-sheet.component.css'],
+    standalone: false
 })
 export class CancerCaseSheetComponent implements OnInit, OnDestroy, DoCheck {
   @Input()

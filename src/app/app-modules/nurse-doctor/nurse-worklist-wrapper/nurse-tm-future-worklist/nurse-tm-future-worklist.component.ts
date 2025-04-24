@@ -41,9 +41,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SchedulerComponent } from '../../scheduler/scheduler.component';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 @Component({
-  selector: 'app-nurse-tm-future-worklist',
-  templateUrl: './nurse-tm-future-worklist.component.html',
-  styleUrls: ['./nurse-tm-future-worklist.component.css'],
+    selector: 'app-nurse-tm-future-worklist',
+    templateUrl: './nurse-tm-future-worklist.component.html',
+    styleUrls: ['./nurse-tm-future-worklist.component.css'],
+    standalone: false
 })
 export class NurseTmFutureWorklistComponent
   implements OnInit, DoCheck, OnDestroy

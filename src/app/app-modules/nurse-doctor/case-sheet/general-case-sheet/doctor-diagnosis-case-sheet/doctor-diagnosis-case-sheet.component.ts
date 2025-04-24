@@ -31,9 +31,10 @@ import * as moment from 'moment';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-doctor-diagnosis-case-sheet',
-  templateUrl: './doctor-diagnosis-case-sheet.component.html',
-  styleUrls: ['./doctor-diagnosis-case-sheet.component.css'],
+    selector: 'app-doctor-diagnosis-case-sheet',
+    templateUrl: './doctor-diagnosis-case-sheet.component.html',
+    styleUrls: ['./doctor-diagnosis-case-sheet.component.css'],
+    standalone: false
 })
 export class DoctorDiagnosisCaseSheetComponent
   implements OnInit, OnChanges, DoCheck

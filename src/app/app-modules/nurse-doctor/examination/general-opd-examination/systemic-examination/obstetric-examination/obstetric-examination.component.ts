@@ -36,10 +36,11 @@ import {
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-nurse-anc-obstetric-examination',
-  templateUrl: './obstetric-examination.component.html',
-  styleUrls: ['./obstetric-examination.component.css'],
-  providers: [DatePipe],
+    selector: 'app-nurse-anc-obstetric-examination',
+    templateUrl: './obstetric-examination.component.html',
+    styleUrls: ['./obstetric-examination.component.css'],
+    providers: [DatePipe],
+    standalone: false
 })
 export class ObstetricExaminationComponent
   implements OnInit, OnDestroy, DoCheck

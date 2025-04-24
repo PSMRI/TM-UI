@@ -35,9 +35,10 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-general-perinatal-history',
-  templateUrl: './perinatal-history.component.html',
-  styleUrls: ['./perinatal-history.component.css'],
+    selector: 'app-general-perinatal-history',
+    templateUrl: './perinatal-history.component.html',
+    styleUrls: ['./perinatal-history.component.css'],
+    standalone: false
 })
 export class PerinatalHistoryComponent implements OnInit, DoCheck, OnDestroy {
   @Input()

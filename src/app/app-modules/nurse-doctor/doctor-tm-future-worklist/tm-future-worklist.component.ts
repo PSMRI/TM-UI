@@ -41,9 +41,10 @@ import { SchedulerComponent } from '../scheduler/scheduler.component';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-tm-future-worklist',
-  templateUrl: './tm-future-worklist.component.html',
-  styleUrls: ['./tm-future-worklist.component.css'],
+    selector: 'app-tm-future-worklist',
+    templateUrl: './tm-future-worklist.component.html',
+    styleUrls: ['./tm-future-worklist.component.css'],
+    standalone: false
 })
 export class TmFutureWorklistComponent implements OnInit, DoCheck, OnDestroy {
   rowsPerPage = 5;

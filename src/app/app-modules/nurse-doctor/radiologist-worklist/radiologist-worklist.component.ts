@@ -40,9 +40,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-radiologist-worklist',
-  templateUrl: './radiologist-worklist.component.html',
-  styleUrls: ['./radiologist-worklist.component.css'],
+    selector: 'app-radiologist-worklist',
+    templateUrl: './radiologist-worklist.component.html',
+    styleUrls: ['./radiologist-worklist.component.css'],
+    standalone: false
 })
 export class RadiologistWorklistComponent
   implements OnInit, DoCheck, OnDestroy
