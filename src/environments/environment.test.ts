@@ -493,7 +493,6 @@ export const environment = {
   saveAbdmFacilityIdForVisit: `${FHIR_API}facility/saveAbdmFacilityId`,
 
   // Customization APIs
-  getAllRegistrationData: `${COMMON_API}customization/fetchAllData`,
   getBenIdForhealthID: `${FHIR_API}healthID/getBenIdForhealthID`,
 
 
