@@ -1,10 +1,6 @@
 import { AppComponent } from './app.component';
 import { CoreModule } from './app-modules/core/core.module';
-import {
-  HttpClient,
-  HttpClientModule,
-  HTTP_INTERCEPTORS,
-} from '@angular/common/http';
+import { HttpClient, HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { HttpInterceptorService } from './app-modules/core/services/http-interceptor.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -34,50 +30,44 @@ import { SharedModule } from './app-modules/core/components/shared/shared.module
 import { RegistrarService } from 'Common-UI/src/registrar/services/registrar.service';
 import { RegistrationModule } from 'Common-UI/src/registrar/registration.module';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    ServiceComponent,
-    ServicePointComponent,
-    SetSecurityQuestionsComponent,
-    SetPasswordComponent,
-    TmLogoutComponent,
-    ResetPasswordComponent,
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    MaterialModule,
-    AppRoutingModule,
-    MatIconModule,
-    MatCardModule,
-    MatSelectModule,
-    MatListModule,
-    MatTooltipModule,
-    MatFormFieldModule,
-    NgFor,
-    CoreModule.forRoot(),
-    BrowserAnimationsModule,
-    SharedModule,
-    RegistrationModule,
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [
-    HttpClient,
-    ServicePointResolve,
-    ServicePointService,
-    AudioRecordingService,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HttpInterceptorService,
-      multi: true,
-    },
-    RegistrarService,
-  ],
-  bootstrap: [AppComponent],
-})
+@NgModule({ declarations: [
+        AppComponent,
+        LoginComponent,
+        ServiceComponent,
+        ServicePointComponent,
+        SetSecurityQuestionsComponent,
+        SetPasswordComponent,
+        TmLogoutComponent,
+        ResetPasswordComponent,
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        FormsModule,
+        MatFormFieldModule,
+        ReactiveFormsModule,
+        MaterialModule,
+        AppRoutingModule,
+        MatIconModule,
+        MatCardModule,
+        MatSelectModule,
+        MatListModule,
+        MatTooltipModule,
+        MatFormFieldModule,
+        NgFor,
+        CoreModule.forRoot(),
+        BrowserAnimationsModule,
+        SharedModule,
+        RegistrationModule], providers: [
+        HttpClient,
+        ServicePointResolve,
+        ServicePointService,
+        AudioRecordingService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: HttpInterceptorService,
+            multi: true,
+        },
+        RegistrarService,
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {}
