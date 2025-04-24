@@ -473,6 +473,7 @@ export const environment = {
   createFamilyUrl: `${IDENTITY_API}family/createFamily`,
   getFamilyMemberUrl: `${IDENTITY_API}family/getFamilyDetails`,
 
+
   // Customization APIs
   getBenIdForhealthID: `${FHIR_API}healthID/getBenIdForhealthID`,
 
