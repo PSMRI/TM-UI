@@ -30,9 +30,10 @@ import {
 } from 'src/app/app-modules/core/services';
 
 @Component({
-  selector: 'app-set-password',
-  templateUrl: './set-password.component.html',
-  styleUrls: ['./set-password.component.css'],
+    selector: 'app-set-password',
+    templateUrl: './set-password.component.html',
+    styleUrls: ['./set-password.component.css'],
+    standalone: false
 })
 export class SetPasswordComponent implements OnInit {
   newpwd: any;

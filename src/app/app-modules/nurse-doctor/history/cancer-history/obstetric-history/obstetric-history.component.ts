@@ -39,9 +39,10 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-nurse-cancer-obstetric-history',
-  templateUrl: './obstetric-history.component.html',
-  styleUrls: ['./obstetric-history.component.css'],
+    selector: 'app-nurse-cancer-obstetric-history',
+    templateUrl: './obstetric-history.component.html',
+    styleUrls: ['./obstetric-history.component.css'],
+    standalone: false
 })
 export class ObstetricHistoryComponent
   implements OnInit, DoCheck, OnChanges, OnDestroy

@@ -36,9 +36,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 
 @Component({
-  selector: 'app-doctor-breast-examination',
-  templateUrl: './breast-examination.component.html',
-  styleUrls: ['./breast-examination.component.css'],
+    selector: 'app-doctor-breast-examination',
+    templateUrl: './breast-examination.component.html',
+    styleUrls: ['./breast-examination.component.css'],
+    standalone: false
 })
 export class BreastExaminationComponent implements OnInit, DoCheck, OnDestroy {
   @Input()

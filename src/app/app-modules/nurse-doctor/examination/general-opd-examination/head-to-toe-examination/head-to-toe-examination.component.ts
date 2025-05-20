@@ -26,9 +26,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 
 @Component({
-  selector: 'app-nurse-head-to-toe-examination',
-  templateUrl: './head-to-toe-examination.component.html',
-  styleUrls: ['./head-to-toe-examination.component.css'],
+    selector: 'app-nurse-head-to-toe-examination',
+    templateUrl: './head-to-toe-examination.component.html',
+    styleUrls: ['./head-to-toe-examination.component.css'],
+    standalone: false
 })
 export class HeadToToeExaminationComponent implements OnInit, DoCheck {
   @Input()

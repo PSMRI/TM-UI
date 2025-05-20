@@ -37,9 +37,10 @@ import { HttpServiceService } from '../../core/services/http-service.service';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-nurse-pnc',
-  templateUrl: './pnc.component.html',
-  styleUrls: ['./pnc.component.css'],
+    selector: 'app-nurse-pnc',
+    templateUrl: './pnc.component.html',
+    styleUrls: ['./pnc.component.css'],
+    standalone: false
 })
 export class PncComponent implements OnInit, DoCheck, OnChanges, OnDestroy {
   @Input()

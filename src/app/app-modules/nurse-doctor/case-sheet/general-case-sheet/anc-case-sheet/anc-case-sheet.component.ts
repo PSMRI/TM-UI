@@ -25,9 +25,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 
 @Component({
-  selector: 'app-anc-case-sheet',
-  templateUrl: './anc-case-sheet.component.html',
-  styleUrls: ['./anc-case-sheet.component.css'],
+    selector: 'app-anc-case-sheet',
+    templateUrl: './anc-case-sheet.component.html',
+    styleUrls: ['./anc-case-sheet.component.css'],
+    standalone: false
 })
 export class AncCaseSheetComponent implements OnInit, OnChanges, DoCheck {
   @Input()

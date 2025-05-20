@@ -27,9 +27,10 @@ import { MatSnackBarRef } from '@angular/material/snack-bar';
 import { SpecialistLoginComponent } from '../specialist-login/specialist-login.component';
 
 @Component({
-  selector: 'app-footer',
-  templateUrl: './app-footer.component.html',
-  styleUrls: ['./app-footer.component.css'],
+    selector: 'app-footer',
+    templateUrl: './app-footer.component.html',
+    styleUrls: ['./app-footer.component.css'],
+    standalone: false
 })
 export class AppFooterComponent implements OnInit, DoCheck {
   currentLanguageSet: any;

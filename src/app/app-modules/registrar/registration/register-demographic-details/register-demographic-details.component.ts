@@ -31,9 +31,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-register-demographic-details',
-  templateUrl: './register-demographic-details.component.html',
-  styleUrls: ['./register-demographic-details.component.css'],
+    selector: 'app-register-demographic-details',
+    templateUrl: './register-demographic-details.component.html',
+    styleUrls: ['./register-demographic-details.component.css'],
+    standalone: false
 })
 export class RegisterDemographicDetailsComponent
   implements OnInit, OnDestroy, DoCheck

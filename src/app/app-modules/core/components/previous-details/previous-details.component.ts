@@ -26,12 +26,13 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SetLanguageComponent } from '../set-language.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import * as moment from 'moment';
+import moment from 'moment';
 
 @Component({
-  selector: 'app-previous-details',
-  templateUrl: './previous-details.component.html',
-  styleUrls: ['./previous-details.component.css'],
+    selector: 'app-previous-details',
+    templateUrl: './previous-details.component.html',
+    styleUrls: ['./previous-details.component.css'],
+    standalone: false
 })
 export class PreviousDetailsComponent implements OnInit, DoCheck {
   dataList: any = [];

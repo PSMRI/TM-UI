@@ -36,9 +36,10 @@ import { GeneralUtils } from 'src/app/app-modules/nurse-doctor/shared/utility';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-ncd-care-diagnosis',
-  templateUrl: './ncd-care-diagnosis.component.html',
-  styleUrls: ['./ncd-care-diagnosis.component.css'],
+    selector: 'app-ncd-care-diagnosis',
+    templateUrl: './ncd-care-diagnosis.component.html',
+    styleUrls: ['./ncd-care-diagnosis.component.css'],
+    standalone: false
 })
 export class NcdCareDiagnosisComponent implements OnInit, DoCheck {
   utils = new GeneralUtils(this.fb, this.sessionstorage);

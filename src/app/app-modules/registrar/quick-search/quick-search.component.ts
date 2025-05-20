@@ -28,9 +28,10 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { SetLanguageComponent } from '../../core/components/set-language.component';
 
 @Component({
-  selector: 'app-quick-search',
-  templateUrl: './quick-search.component.html',
-  styleUrls: ['./quick-search.component.css'],
+    selector: 'app-quick-search',
+    templateUrl: './quick-search.component.html',
+    styleUrls: ['./quick-search.component.css'],
+    standalone: false
 })
 export class QuickSearchComponent implements OnInit, DoCheck {
   currentLanguageSet: any;

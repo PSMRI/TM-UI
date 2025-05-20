@@ -41,9 +41,10 @@ import { environment } from 'src/environments/environment';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-patient-investigations',
-  templateUrl: './investigations.component.html',
-  styleUrls: ['./investigations.component.css'],
+    selector: 'app-patient-investigations',
+    templateUrl: './investigations.component.html',
+    styleUrls: ['./investigations.component.css'],
+    standalone: false
 })
 export class InvestigationsComponent implements OnInit, DoCheck, OnDestroy {
   @Input()

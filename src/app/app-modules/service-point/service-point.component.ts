@@ -31,9 +31,10 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-service-point',
-  templateUrl: './service-point.component.html',
-  styleUrls: ['./service-point.component.css'],
+    selector: 'app-service-point',
+    templateUrl: './service-point.component.html',
+    styleUrls: ['./service-point.component.css'],
+    standalone: false
 })
 export class ServicePointComponent implements OnInit, DoCheck {
   designation: any;

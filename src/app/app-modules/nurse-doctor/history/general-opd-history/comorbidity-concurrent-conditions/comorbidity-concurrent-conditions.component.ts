@@ -42,9 +42,10 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-general-comorbidity-concurrent-conditions',
-  templateUrl: './comorbidity-concurrent-conditions.component.html',
-  styleUrls: ['./comorbidity-concurrent-conditions.component.css'],
+    selector: 'app-general-comorbidity-concurrent-conditions',
+    templateUrl: './comorbidity-concurrent-conditions.component.html',
+    styleUrls: ['./comorbidity-concurrent-conditions.component.css'],
+    standalone: false
 })
 export class ComorbidityConcurrentConditionsComponent
   implements OnInit, DoCheck, OnDestroy

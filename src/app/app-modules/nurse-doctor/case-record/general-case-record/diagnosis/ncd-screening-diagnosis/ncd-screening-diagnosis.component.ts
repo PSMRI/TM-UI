@@ -39,9 +39,10 @@ import { GeneralUtils } from 'src/app/app-modules/nurse-doctor/shared/utility';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-ncd-screening-diagnosis',
-  templateUrl: './ncd-screening-diagnosis.component.html',
-  styleUrls: ['./ncd-screening-diagnosis.component.css'],
+    selector: 'app-ncd-screening-diagnosis',
+    templateUrl: './ncd-screening-diagnosis.component.html',
+    styleUrls: ['./ncd-screening-diagnosis.component.css'],
+    standalone: false
 })
 export class NcdScreeningDiagnosisComponent
   implements OnInit, OnChanges, DoCheck

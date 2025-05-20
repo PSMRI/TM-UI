@@ -32,7 +32,7 @@ import { NurseService, DoctorService } from '../../shared/services';
 import { CameraService } from '../../../core/services/camera.service';
 import { BeneficiaryDetailsService } from '../../../core/services/beneficiary-details.service';
 
-import * as moment from 'moment';
+import moment from 'moment';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
@@ -41,9 +41,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SchedulerComponent } from '../../scheduler/scheduler.component';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 @Component({
-  selector: 'app-nurse-tm-future-worklist',
-  templateUrl: './nurse-tm-future-worklist.component.html',
-  styleUrls: ['./nurse-tm-future-worklist.component.css'],
+    selector: 'app-nurse-tm-future-worklist',
+    templateUrl: './nurse-tm-future-worklist.component.html',
+    styleUrls: ['./nurse-tm-future-worklist.component.css'],
+    standalone: false
 })
 export class NurseTmFutureWorklistComponent
   implements OnInit, DoCheck, OnDestroy

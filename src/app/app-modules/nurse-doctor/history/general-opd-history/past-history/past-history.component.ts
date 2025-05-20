@@ -49,9 +49,10 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-general-past-history',
-  templateUrl: './past-history.component.html',
-  styleUrls: ['./past-history.component.css'],
+    selector: 'app-general-past-history',
+    templateUrl: './past-history.component.html',
+    styleUrls: ['./past-history.component.css'],
+    standalone: false
 })
 export class PastHistoryComponent implements OnInit, DoCheck, OnDestroy {
   @Input()

@@ -36,9 +36,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-nurse-general-opd-examination',
-  templateUrl: './general-opd-examination.component.html',
-  styleUrls: ['./general-opd-examination.component.css'],
+    selector: 'app-nurse-general-opd-examination',
+    templateUrl: './general-opd-examination.component.html',
+    styleUrls: ['./general-opd-examination.component.css'],
+    standalone: false
 })
 export class GeneralOpdExaminationComponent
   implements OnInit, OnChanges, OnDestroy, DoCheck

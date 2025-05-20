@@ -50,9 +50,10 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-general-past-obsteric-history',
-  templateUrl: './past-obsteric-history.component.html',
-  styleUrls: ['./past-obsteric-history.component.css'],
+    selector: 'app-general-past-obsteric-history',
+    templateUrl: './past-obsteric-history.component.html',
+    styleUrls: ['./past-obsteric-history.component.css'],
+    standalone: false
 })
 export class PastObstericHistoryComponent
   implements OnInit, DoCheck, OnDestroy, OnChanges

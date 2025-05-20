@@ -39,9 +39,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-travel-history',
-  templateUrl: './travel-history.component.html',
-  styleUrls: ['./travel-history.component.css'],
+    selector: 'app-travel-history',
+    templateUrl: './travel-history.component.html',
+    styleUrls: ['./travel-history.component.css'],
+    standalone: false
 })
 export class TravelHistoryComponent
   implements OnInit, DoCheck, OnChanges, OnDestroy

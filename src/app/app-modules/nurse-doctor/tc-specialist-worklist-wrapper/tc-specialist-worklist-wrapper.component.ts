@@ -26,9 +26,10 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { SetLanguageComponent } from '../../core/components/set-language.component';
 
 @Component({
-  selector: 'app-tc-specialist-worklist-wrapper',
-  templateUrl: './tc-specialist-worklist-wrapper.component.html',
-  styleUrls: ['./tc-specialist-worklist-wrapper.component.css'],
+    selector: 'app-tc-specialist-worklist-wrapper',
+    templateUrl: './tc-specialist-worklist-wrapper.component.html',
+    styleUrls: ['./tc-specialist-worklist-wrapper.component.css'],
+    standalone: false
 })
 export class TcSpecialistWorklistWrapperComponent implements OnInit, DoCheck {
   currentLanguageSet: any;

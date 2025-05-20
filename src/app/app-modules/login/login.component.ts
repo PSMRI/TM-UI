@@ -34,9 +34,10 @@ import { DataSyncLoginComponent } from '../data-sync/data-sync-login/data-sync-l
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-login-cmp',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+    selector: 'app-login-cmp',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css'],
+    standalone: false
 })
 export class LoginComponent implements OnInit {
   dynamictype = 'password';

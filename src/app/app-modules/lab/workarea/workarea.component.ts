@@ -41,9 +41,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-workarea',
-  templateUrl: './workarea.component.html',
-  styleUrls: ['./workarea.component.css'],
+    selector: 'app-workarea',
+    templateUrl: './workarea.component.html',
+    styleUrls: ['./workarea.component.css'],
+    standalone: false
 })
 export class WorkareaComponent
   implements OnInit, DoCheck, CanComponentDeactivate

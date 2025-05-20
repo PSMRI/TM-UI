@@ -25,9 +25,10 @@ import { HttpServiceService } from '../../services/http-service.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-mmu-rbs-details',
-  templateUrl: './mmu-rbs-details.component.html',
-  styleUrls: ['./mmu-rbs-details.component.css'],
+    selector: 'app-mmu-rbs-details',
+    templateUrl: './mmu-rbs-details.component.html',
+    styleUrls: ['./mmu-rbs-details.component.css'],
+    standalone: false
 })
 export class MmuRbsDetailsComponent implements OnInit {
   current_language_set: any;

@@ -26,9 +26,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 
 @Component({
-  selector: 'app-general-case-record',
-  templateUrl: './general-case-record.component.html',
-  styleUrls: ['./general-case-record.component.css'],
+    selector: 'app-general-case-record',
+    templateUrl: './general-case-record.component.html',
+    styleUrls: ['./general-case-record.component.css'],
+    standalone: false
 })
 export class GeneralCaseRecordComponent implements OnInit, DoCheck {
   @Input()

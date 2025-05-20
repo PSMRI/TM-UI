@@ -24,9 +24,10 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-case-record',
-  templateUrl: './case-record.component.html',
-  styleUrls: ['./case-record.component.css'],
+    selector: 'app-case-record',
+    templateUrl: './case-record.component.html',
+    styleUrls: ['./case-record.component.css'],
+    standalone: false
 })
 export class CaseRecordComponent implements OnInit {
   @Input()

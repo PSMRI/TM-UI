@@ -42,9 +42,10 @@ import { IdrsscoreService } from '../../../shared/services/idrsscore.service';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-family-history-ncdscreening',
-  templateUrl: './family-history-ncdscreening.component.html',
-  styleUrls: ['./family-history-ncdscreening.component.css'],
+    selector: 'app-family-history-ncdscreening',
+    templateUrl: './family-history-ncdscreening.component.html',
+    styleUrls: ['./family-history-ncdscreening.component.css'],
+    standalone: false
 })
 export class FamilyHistoryNcdscreeningComponent
   implements OnInit, DoCheck, OnDestroy

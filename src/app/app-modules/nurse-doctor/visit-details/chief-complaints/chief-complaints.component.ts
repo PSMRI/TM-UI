@@ -52,9 +52,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-patient-chief-complaints',
-  templateUrl: './chief-complaints.component.html',
-  styleUrls: ['./chief-complaints.component.css'],
+    selector: 'app-patient-chief-complaints',
+    templateUrl: './chief-complaints.component.html',
+    styleUrls: ['./chief-complaints.component.css'],
+    standalone: false
 })
 export class ChiefComplaintsComponent implements OnInit, DoCheck, OnDestroy {
   @Input()

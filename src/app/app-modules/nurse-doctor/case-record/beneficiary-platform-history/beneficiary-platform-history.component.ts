@@ -34,9 +34,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-beneficiary-platform-history',
-  templateUrl: './beneficiary-platform-history.component.html',
-  styleUrls: ['./beneficiary-platform-history.component.css'],
+    selector: 'app-beneficiary-platform-history',
+    templateUrl: './beneficiary-platform-history.component.html',
+    styleUrls: ['./beneficiary-platform-history.component.css'],
+    standalone: false
 })
 export class BeneficiaryPlatformHistoryComponent implements OnInit, DoCheck {
   current_language_set: any;

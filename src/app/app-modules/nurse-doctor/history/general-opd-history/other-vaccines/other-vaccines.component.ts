@@ -41,9 +41,10 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-general-other-vaccines',
-  templateUrl: './other-vaccines.component.html',
-  styleUrls: ['./other-vaccines.component.css'],
+    selector: 'app-general-other-vaccines',
+    templateUrl: './other-vaccines.component.html',
+    styleUrls: ['./other-vaccines.component.css'],
+    standalone: false
 })
 export class OtherVaccinesComponent implements OnInit, DoCheck, OnDestroy {
   @Input()

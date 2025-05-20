@@ -28,9 +28,10 @@ import { HttpServiceService } from '../../core/services/http-service.service';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-case-sheet',
-  templateUrl: './case-sheet.component.html',
-  styleUrls: ['./case-sheet.component.css'],
+    selector: 'app-case-sheet',
+    templateUrl: './case-sheet.component.html',
+    styleUrls: ['./case-sheet.component.css'],
+    standalone: false
 })
 export class CaseSheetComponent implements OnInit, DoCheck {
   QC = false;

@@ -34,9 +34,10 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 
 @Component({
-  selector: 'app-doctor-gynecological-examination',
-  templateUrl: './gynecological-examination.component.html',
-  styleUrls: ['./gynecological-examination.component.css'],
+    selector: 'app-doctor-gynecological-examination',
+    templateUrl: './gynecological-examination.component.html',
+    styleUrls: ['./gynecological-examination.component.css'],
+    standalone: false
 })
 export class GynecologicalExaminationComponent implements OnInit, DoCheck {
   @Input()

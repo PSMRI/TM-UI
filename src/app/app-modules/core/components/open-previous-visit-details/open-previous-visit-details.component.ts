@@ -27,9 +27,10 @@ import { SetLanguageComponent } from '../set-language.component';
 import { DoctorService } from 'src/app/app-modules/nurse-doctor/shared/services';
 
 @Component({
-  selector: 'app-open-previous-visit-details',
-  templateUrl: './open-previous-visit-details.component.html',
-  styleUrls: ['./open-previous-visit-details.component.css'],
+    selector: 'app-open-previous-visit-details',
+    templateUrl: './open-previous-visit-details.component.html',
+    styleUrls: ['./open-previous-visit-details.component.css'],
+    standalone: false
 })
 export class OpenPreviousVisitDetailsComponent implements OnInit {
   currentLanguageSet: any;

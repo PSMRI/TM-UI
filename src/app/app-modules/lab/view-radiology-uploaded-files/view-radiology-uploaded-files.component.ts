@@ -26,9 +26,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SetLanguageComponent } from '../../core/components/set-language.component';
 
 @Component({
-  selector: 'app-view-radiology-uploaded-files',
-  templateUrl: './view-radiology-uploaded-files.component.html',
-  styleUrls: ['./view-radiology-uploaded-files.component.css'],
+    selector: 'app-view-radiology-uploaded-files',
+    templateUrl: './view-radiology-uploaded-files.component.html',
+    styleUrls: ['./view-radiology-uploaded-files.component.css'],
+    standalone: false
 })
 export class ViewRadiologyUploadedFilesComponent implements OnInit, DoCheck {
   current_language_set: any;

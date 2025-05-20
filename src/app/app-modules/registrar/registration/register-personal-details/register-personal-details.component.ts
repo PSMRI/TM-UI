@@ -36,7 +36,7 @@ import { ConfirmationService } from '../../../core/services/confirmation.service
 import { CameraService } from '../../../core/services/camera.service';
 import { RegistrarService } from '../../shared/services/registrar.service';
 import { BeneficiaryDetailsService } from '../../../core/services/beneficiary-details.service';
-import * as moment from 'moment';
+import moment from 'moment';
 import { setTheme } from 'ngx-bootstrap/utils';
 import { BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
@@ -45,9 +45,10 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 
 @Component({
-  selector: 'app-register-personal-details',
-  templateUrl: './register-personal-details.component.html',
-  styleUrls: ['./register-personal-details.component.css'],
+    selector: 'app-register-personal-details',
+    templateUrl: './register-personal-details.component.html',
+    styleUrls: ['./register-personal-details.component.css'],
+    standalone: false
 })
 export class RegisterPersonalDetailsComponent
   implements OnInit, DoCheck, OnDestroy, AfterViewChecked

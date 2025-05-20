@@ -23,7 +23,8 @@
 import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 
 @Directive({
-  selector: '[appMyHealthId]',
+    selector: '[appMyHealthId]',
+    standalone: false
 })
 export class MyHealthIdDirective {
   constructor(element: ElementRef) {}

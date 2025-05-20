@@ -473,6 +473,8 @@ export const environment = {
   createFamilyUrl: `${IDENTITY_API}family/createFamily`,
   getFamilyMemberUrl: `${IDENTITY_API}family/getFamilyDetails`,
 
+
+  // Customization APIs
   getBenIdForhealthID: `${FHIR_API}healthID/getBenIdForhealthID`,
 
   /* ABDM Mapped Facility */
@@ -486,4 +488,5 @@ export const environment = {
   requestOtpForLogin: `${FHIR_API}abhaLogin/abhaLoginRequestOtp`,
   verifyOtpForLogin: `${FHIR_API}abhaLogin/verifyAbhaLogin`,
   printPngCard: `${FHIR_API}abhaCreation/printAbhaCard`,
+  printWebLoginPhrCard: `${FHIR_API}abhaLogin/printWebLoginPhrCard`,
 };

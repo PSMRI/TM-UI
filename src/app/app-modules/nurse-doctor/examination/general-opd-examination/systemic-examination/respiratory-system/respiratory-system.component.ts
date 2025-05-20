@@ -26,9 +26,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 
 @Component({
-  selector: 'app-nurse-respiratory-system',
-  templateUrl: './respiratory-system.component.html',
-  styleUrls: ['./respiratory-system.component.css'],
+    selector: 'app-nurse-respiratory-system',
+    templateUrl: './respiratory-system.component.html',
+    styleUrls: ['./respiratory-system.component.css'],
+    standalone: false
 })
 export class RespiratorySystemComponent implements OnInit, DoCheck {
   @Input()

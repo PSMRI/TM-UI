@@ -36,9 +36,10 @@ import { TestInVitalsService } from '../../../shared/services/test-in-vitals.ser
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-test-and-radiology',
-  templateUrl: './test-and-radiology.component.html',
-  styleUrls: ['./test-and-radiology.component.css'],
+    selector: 'app-test-and-radiology',
+    templateUrl: './test-and-radiology.component.html',
+    styleUrls: ['./test-and-radiology.component.css'],
+    standalone: false
 })
 export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
   current_language_set: any;

@@ -29,9 +29,10 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-general-immunization-history',
-  templateUrl: './immunization-history.component.html',
-  styleUrls: ['./immunization-history.component.css'],
+    selector: 'app-general-immunization-history',
+    templateUrl: './immunization-history.component.html',
+    styleUrls: ['./immunization-history.component.css'],
+    standalone: false
 })
 export class ImmunizationHistoryComponent
   implements OnInit, DoCheck, OnDestroy

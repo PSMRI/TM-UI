@@ -35,9 +35,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-previous-significiant-findings',
-  templateUrl: './previous-significiant-findings.component.html',
-  styleUrls: ['./previous-significiant-findings.component.css'],
+    selector: 'app-previous-significiant-findings',
+    templateUrl: './previous-significiant-findings.component.html',
+    styleUrls: ['./previous-significiant-findings.component.css'],
+    standalone: false
 })
 export class PreviousSignificiantFindingsComponent
   implements OnInit, OnDestroy, DoCheck

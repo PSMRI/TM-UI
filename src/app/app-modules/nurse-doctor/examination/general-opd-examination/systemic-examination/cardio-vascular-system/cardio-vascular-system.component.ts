@@ -26,9 +26,10 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 
 @Component({
-  selector: 'app-nurse-cardio-vascular-system',
-  templateUrl: './cardio-vascular-system.component.html',
-  styleUrls: ['./cardio-vascular-system.component.css'],
+    selector: 'app-nurse-cardio-vascular-system',
+    templateUrl: './cardio-vascular-system.component.html',
+    styleUrls: ['./cardio-vascular-system.component.css'],
+    standalone: false
 })
 export class CardioVascularSystemComponent implements OnInit, DoCheck {
   @Input()

@@ -37,10 +37,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-health-id-display-modal',
-  templateUrl: './health-id-display-modal.component.html',
-  styleUrls: ['./health-id-display-modal.component.css'],
-  providers: [DatePipe],
+    selector: 'app-health-id-display-modal',
+    templateUrl: './health-id-display-modal.component.html',
+    styleUrls: ['./health-id-display-modal.component.css'],
+    providers: [DatePipe],
+    standalone: false
 })
 export class HealthIdDisplayModalComponent implements OnInit, DoCheck {
   chooseHealthID: any;

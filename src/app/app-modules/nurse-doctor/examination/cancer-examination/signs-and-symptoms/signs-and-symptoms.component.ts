@@ -43,9 +43,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-doctor-signs-and-symptoms',
-  templateUrl: './signs-and-symptoms.component.html',
-  styleUrls: ['./signs-and-symptoms.component.css'],
+    selector: 'app-doctor-signs-and-symptoms',
+    templateUrl: './signs-and-symptoms.component.html',
+    styleUrls: ['./signs-and-symptoms.component.css'],
+    standalone: false
 })
 export class SignsAndSymptomsComponent implements OnInit, OnDestroy, DoCheck {
   @Input()

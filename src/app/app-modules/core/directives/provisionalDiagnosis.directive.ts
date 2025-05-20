@@ -33,7 +33,8 @@ import { QuickConsultUtils } from '../../nurse-doctor/shared/utility';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Directive({
-  selector: '[appDiagnosisSearch]',
+    selector: '[appDiagnosisSearch]',
+    standalone: false
 })
 export class DiagnosisSearchDirective {
   @Input()

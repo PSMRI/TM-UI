@@ -30,10 +30,11 @@ import { SetLanguageComponent } from '../../core/components/set-language.compone
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-data-sync-login',
-  templateUrl: './data-sync-login.component.html',
-  styleUrls: ['./data-sync-login.component.css'],
-  providers: [DataSyncService],
+    selector: 'app-data-sync-login',
+    templateUrl: './data-sync-login.component.html',
+    styleUrls: ['./data-sync-login.component.css'],
+    providers: [DataSyncService],
+    standalone: false
 })
 export class DataSyncLoginComponent implements OnInit, DoCheck {
   userName!: string;
@@ -80,7 +81,7 @@ export class DataSyncLoginComponent implements OnInit, DoCheck {
       this.dataSyncService
         .dataSyncLogin(this.userName, this.password)
         .subscribe((res: any) => {
-          if ((res.statusCode = '200' && res.data)) {
+          if ((res.statusCode === '200' && res.data)) {
             this.sessionstorage.setItem('serverKey', res.data.key);
             if (this.data && this.data.masterDowloadFirstTime) {
               const mmuService = res.data.previlegeObj.filter((item: any) => {

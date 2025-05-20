@@ -35,7 +35,7 @@ import { DoctorService, MasterdataService } from '../shared/services';
 import { CameraService } from '../../core/services/camera.service';
 import { HttpServiceService } from '../../core/services/http-service.service';
 import { SetLanguageComponent } from '../../core/components/set-language.component';
-import * as moment from 'moment';
+import moment from 'moment';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -43,9 +43,10 @@ import { SchedulerComponent } from '../scheduler/scheduler.component';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-doctor-worklist',
-  templateUrl: './doctor-worklist.component.html',
-  styleUrls: ['./doctor-worklist.component.css'],
+    selector: 'app-doctor-worklist',
+    templateUrl: './doctor-worklist.component.html',
+    styleUrls: ['./doctor-worklist.component.css'],
+    standalone: false
 })
 export class DoctorWorklistComponent implements OnInit, OnDestroy, DoCheck {
   rowsPerPage = 5;

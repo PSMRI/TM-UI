@@ -39,9 +39,10 @@ import { IdrsscoreService } from '../../../shared/services/idrsscore.service';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-physical-activity-history',
-  templateUrl: './physical-activity-history.component.html',
-  styleUrls: ['./physical-activity-history.component.css'],
+    selector: 'app-physical-activity-history',
+    templateUrl: './physical-activity-history.component.html',
+    styleUrls: ['./physical-activity-history.component.css'],
+    standalone: false
 })
 export class PhysicalActivityHistoryComponent implements OnInit, DoCheck {
   @Input()

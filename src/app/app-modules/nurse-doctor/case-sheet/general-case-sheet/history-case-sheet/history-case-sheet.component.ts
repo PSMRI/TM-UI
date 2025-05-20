@@ -22,14 +22,15 @@
 
 import { Component, OnInit, Input, OnChanges, DoCheck } from '@angular/core';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
-import * as moment from 'moment';
+import moment from 'moment';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 
 @Component({
-  selector: 'app-history-case-sheet',
-  templateUrl: './history-case-sheet.component.html',
-  styleUrls: ['./history-case-sheet.component.css'],
+    selector: 'app-history-case-sheet',
+    templateUrl: './history-case-sheet.component.html',
+    styleUrls: ['./history-case-sheet.component.css'],
+    standalone: false
 })
 export class HistoryCaseSheetComponent implements OnInit, OnChanges, DoCheck {
   @Input()

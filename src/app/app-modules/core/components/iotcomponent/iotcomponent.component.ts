@@ -34,9 +34,10 @@ import { CalibrationComponent } from '../calibration/calibration.component';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-iotcomponent',
-  templateUrl: './iotcomponent.component.html',
-  styleUrls: ['./iotcomponent.component.css'],
+    selector: 'app-iotcomponent',
+    templateUrl: './iotcomponent.component.html',
+    styleUrls: ['./iotcomponent.component.css'],
+    standalone: false
 })
 export class IotcomponentComponent implements OnInit, DoCheck {
   errorMsg: any;

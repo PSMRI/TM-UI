@@ -38,9 +38,10 @@ import { IotcomponentComponent } from 'src/app/app-modules/core/components/iotco
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-nurse-general-patient-vitals',
-  templateUrl: './general-patient-vitals.component.html',
-  styleUrls: ['./general-patient-vitals.component.css'],
+    selector: 'app-nurse-general-patient-vitals',
+    templateUrl: './general-patient-vitals.component.html',
+    styleUrls: ['./general-patient-vitals.component.css'],
+    standalone: false
 })
 export class GeneralPatientVitalsComponent
   implements OnInit, OnChanges, OnDestroy

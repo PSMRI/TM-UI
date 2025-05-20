@@ -39,16 +39,17 @@ import { SetLanguageComponent } from '../../core/components/set-language.compone
 import { CommonService } from '../../core/services/common-services.service';
 import { HttpServiceService } from '../../core/services/http-service.service';
 import { QuickSearchComponent } from '../quick-search/quick-search.component';
-import * as moment from 'moment';
+import moment from 'moment';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { HealthIdDisplayModalComponent } from '../../core/components/health-id-display-modal/health-id-display-modal.component';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-search',
-  templateUrl: './search.component.html',
-  styleUrls: ['./search.component.css'],
+    selector: 'app-search',
+    templateUrl: './search.component.html',
+    styleUrls: ['./search.component.css'],
+    standalone: false
 })
 export class SearchComponent implements OnInit, DoCheck {
   rowsPerPage = 5;

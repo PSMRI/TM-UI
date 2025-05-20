@@ -36,9 +36,10 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
-  selector: 'app-covid-vaccination-status',
-  templateUrl: './covid-vaccination-status.component.html',
-  styleUrls: ['./covid-vaccination-status.component.css'],
+    selector: 'app-covid-vaccination-status',
+    templateUrl: './covid-vaccination-status.component.html',
+    styleUrls: ['./covid-vaccination-status.component.css'],
+    standalone: false
 })
 export class CovidVaccinationStatusComponent implements OnInit, DoCheck {
   currentLanguageSet: any;
