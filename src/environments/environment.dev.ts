@@ -58,6 +58,9 @@ const IOT_API = 'http://localhost:8085/ezdx-hub-connect-srv';
 const FHIR_API = `${FHIRIP}/fhirapi-v1.0/`;
 const mmuUICasesheet = `${tmUI_IP}tmui-v1.0`;
 const sessionStorageEncKey = '';
+const siteKey = '';
+const captchaChallengeURL = '';
+const enableCaptcha = false;
 
 export const environment = {
   production: true,
@@ -502,4 +505,10 @@ export const environment = {
   requestOtpForLogin: `${FHIR_API}abhaLogin/abhaLoginRequestOtp`,
   verifyOtpForLogin: `${FHIR_API}abhaLogin/verifyAbhaLogin`,
   printPngCard: `${FHIR_API}abhaCreation/printAbhaCard`,
+  //adding this missing env to resolve an error from common-ui
+  printWebLoginPhrCard: `${FHIR_API}abhaLogin/printWebLoginPhrCard`,
+
+  siteKey: siteKey,
+  captchaChallengeURL: captchaChallengeURL,
+  enableCaptcha: enableCaptcha,
 };

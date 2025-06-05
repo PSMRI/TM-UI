@@ -28,10 +28,12 @@ import {
   AuthService,
   ConfirmationService,
 } from 'src/app/app-modules/core/services';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MasterDownloadComponent } from '../data-sync/master-download/master-download.component';
 import { DataSyncLoginComponent } from '../data-sync/data-sync-login/data-sync-login.component';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
+import { environment } from 'src/environments/environment';
+import { CaptchaComponent } from '../captcha/captcha.component';
 
 @Component({
   selector: 'app-login-cmp',
@@ -39,6 +41,7 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
+  @ViewChild('captchaCmp') captchaCmp: CaptchaComponent | undefined;
   dynamictype = 'password';
   encryptedVar: any;
   key: any;
@@ -51,6 +54,8 @@ export class LoginComponent implements OnInit {
   _iterationCount: any;
 
   @ViewChild('focus') private elementRef!: ElementRef;
+  captchaToken!: string;
+  enableCaptcha = environment.enableCaptcha;
 
   constructor(
     private router: Router,
@@ -66,8 +71,8 @@ export class LoginComponent implements OnInit {
   }
 
   loginForm = this.fb.group({
-    userName: [''],
-    password: [''],
+    userName: ['', Validators.required],
+    password: ['', Validators.required],
   });
 
   ngOnInit() {
@@ -99,6 +104,7 @@ export class LoginComponent implements OnInit {
           this.loginForm.controls.userName.value.trim(),
           encryptPassword,
           false,
+          this.enableCaptcha ? this.captchaToken : undefined,
         )
         .subscribe(
           (res: any) => {
@@ -135,6 +141,9 @@ export class LoginComponent implements OnInit {
                                 this.loginForm.controls.userName.value,
                                 encryptPassword,
                                 true,
+                                this.enableCaptcha
+                                  ? this.captchaToken
+                                  : undefined,
                               )
                               .subscribe((userLoggedIn: any) => {
                                 if (userLoggedIn.statusCode === 200) {
@@ -181,6 +190,7 @@ export class LoginComponent implements OnInit {
           },
         );
     }
+    this.resetCaptcha();
   }
 
   get keySize() {
@@ -308,5 +318,20 @@ export class LoginComponent implements OnInit {
           });
       }
     });
+  }
+
+  onCaptchaResolved(token: any) {
+    this.captchaToken = token;
+  }
+
+  resetCaptcha() {
+    if (
+      this.enableCaptcha &&
+      this.captchaCmp &&
+      typeof this.captchaCmp.reset === 'function'
+    ) {
+      this.captchaCmp.reset();
+      this.captchaToken = '';
+    }
   }
 }
