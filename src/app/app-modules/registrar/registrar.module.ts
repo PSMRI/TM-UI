@@ -56,6 +56,7 @@ import {
 import { GenerateMobileOtpGenerationComponent } from './generate-mobile-otp-generation/generate-mobile-otp-generation.component';
 import { ViewHealthIdCardComponent } from './registration/register-other-details/view-health-id-card/view-health-id-card.component';
 import { SetPasswordForAbhaComponent } from './set-password-for-abha/set-password-for-abha.component';
+import { SharedModule } from '../core/components/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -75,6 +76,7 @@ import { SetPasswordForAbhaComponent } from './set-password-for-abha/set-passwor
     RegistrarRoutingModule,
     ReactiveFormsModule,
     BsDatepickerModule.forRoot(),
+    SharedModule,
   ],
   providers: [RegistrarService],
   declarations: [

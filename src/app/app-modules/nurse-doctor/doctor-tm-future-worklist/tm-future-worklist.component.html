@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row m-t-10">
-    <div class="col-xs-8 col-sm-6 col-md-4">
+    <div class="col-xs-8 col-sm-6 col-md-4 fit_to_content">
       <div class="sw">
         <input
           type="search"
@@ -16,7 +16,7 @@
         </button>
       </div>
     </div>
-    <div class="col-xs-4 col-sm-6 col-md-8">
+    <div class="col-xs-4 col-sm-6 col-md-8 fit_to_content">
       <button
         mat-raised-button
         id="caseSheetButton"
@@ -41,10 +41,11 @@
   <div class="row m-t-10 m-b-40">
     <div class="col-sm-12">
       <mat-card>
-        <section class="table-responsive" style="padding-bottom: 30px">
-          <div class="mat-elevation-z8 responsiveTable">
+        <section class="" style="padding-bottom: 30px">
+          <div class="">
             <table
               mat-table
+              class="table table-striped"
               [dataSource]="dataSource"
               aria-describedby="EmergencyCaseSheetTbl"
             >
@@ -214,6 +215,47 @@
                 </td>
               </ng-container>
 
+              <ng-container matColumnDef="action">
+                <th
+                  mat-header-cell
+                  style="border-bottom: unset !important; text-align: center"
+                  *matHeaderCellDef
+                  mat-sort-header
+                  colspan="3"
+                  id="action"
+                >
+                  {{ current_language_set?.bendetails?.action }}
+                </th>
+                <td
+                  mat-cell
+                  *matCellDef="let element"
+                  class="col-12"
+                  style="text-align: center; width: 26%"
+                >
+                  <button
+                    mat-raised-button
+                    (click)="cancelTCRequest(element)"
+                    matTooltip="{{ current_language_set?.tc?.cancelTc }}"
+                    color="warn"
+                    class="mat_blue_table col-4"
+                    [disabled]="element.specialist_flag !== 1"
+                  >
+                    {{ current_language_set?.common?.cancel }}
+                  </button>
+                  <button
+                    style="margin: 0px 10px 0px 10px !important"
+                    mat-raised-button
+                    (click)="reSchedule(element)"
+                    matTooltip="{{ current_language_set?.tc?.reschedule }}"
+                    color="primary"
+                    class="mat_blue_table col-4"
+                    [disabled]="element.specialist_flag !== 4"
+                  >
+                    {{ current_language_set?.tc?.schedule }}
+                  </button>
+                </td>
+              </ng-container>
+
               <td colspan="2">
                 <div class="totalCount" *ngIf="dataSource.data.length > 0">
                   {{ current_language_set?.common?.totalCount }} :
@@ -246,7 +288,7 @@
           </div>
           <div
             class="pull-center"
-            style="margin-top: 35px; text-align: center"
+            style="margin-bottom: 15px; text-align: center; margin-top: 15px"
             [hidden]="dataSource.data.length > 0"
           >
             <strong>{{ current_language_set?.common?.noRecordsFound }}</strong>

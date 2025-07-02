@@ -71,7 +71,7 @@ export class AppFooterComponent implements OnInit, DoCheck {
       });
     snackBarRef.afterDismissed().subscribe(() => {
       // value to be stored here -
-      //  console.log('locsl', JSON.parse(localStorage.getItem('swymedLogin')));
+      //  console.log('locsl', JSON.parse(this.sessionstorage.getItem('swymedLogin')));
     });
   }
 }

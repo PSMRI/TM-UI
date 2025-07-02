@@ -35,6 +35,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 import { MmuRbsDetailsComponent } from 'src/app/app-modules/core/components/mmu-rbs-details/mmu-rbs-details.component';
 import { IotcomponentComponent } from 'src/app/app-modules/core/components/iotcomponent/iotcomponent.component';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-nurse-general-patient-vitals',
@@ -130,6 +131,7 @@ export class GeneralPatientVitalsComponent
     private route: ActivatedRoute,
     private audioRecordingService: AudioRecordingService,
     private sanitizer: DomSanitizer,
+    readonly sessionstorage: SessionStorageService,
   ) {
     this.audioRecordingService
       .recordingFailed()
@@ -179,10 +181,12 @@ export class GeneralPatientVitalsComponent
           ? (this.rbsSelectedInInvestigation = false)
           : (this.rbsSelectedInInvestigation = response),
       );
-    if (localStorage.getItem('mmuReferredVisitCode')) {
-      this.referredVisitcode = localStorage.getItem('mmuReferredVisitCode');
-    } else if (localStorage.getItem('referredVisitCode')) {
-      this.referredVisitcode = localStorage.getItem('referredVisitCode');
+    if (this.sessionstorage.getItem('mmuReferredVisitCode')) {
+      this.referredVisitcode = this.sessionstorage.getItem(
+        'mmuReferredVisitCode',
+      );
+    } else if (this.sessionstorage.getItem('referredVisitCode')) {
+      this.referredVisitcode = this.sessionstorage.getItem('referredVisitCode');
     } else {
       this.referredVisitcode = 'undefined';
     }
@@ -206,7 +210,7 @@ export class GeneralPatientVitalsComponent
   }
 
   ngOnChanges() {
-    const visitCategory1 = localStorage.getItem('visitCategory');
+    const visitCategory1 = this.sessionstorage.getItem('visitCategory');
     console.log('page54' + visitCategory1);
     if (
       this.visitCategory === 'ANC' ||
@@ -223,19 +227,19 @@ export class GeneralPatientVitalsComponent
     }
 
     if (String(this.mode) === 'view') {
-      const visitID = localStorage.getItem('visitID');
-      const benRegID = localStorage.getItem('beneficiaryRegID');
+      const visitID = this.sessionstorage.getItem('visitID');
+      const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
       this.getGeneralVitalsData();
       this.getAssessmentID();
       this.doctorScreen = true;
     }
-    const specialistFlagString = localStorage.getItem('specialistFlag');
+    const specialistFlagString = this.sessionstorage.getItem('specialistFlag');
     if (
       specialistFlagString !== null &&
       parseInt(specialistFlagString) === 100
     ) {
-      const visitID = localStorage.getItem('visitID');
-      const benRegID = localStorage.getItem('beneficiaryRegID');
+      const visitID = this.sessionstorage.getItem('visitID');
+      const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
       this.getGeneralVitalsData();
     }
 
@@ -243,6 +247,36 @@ export class GeneralPatientVitalsComponent
       this.doctorScreen = true;
       this.updateGeneralVitals(this.patientVitalsForm);
     }
+
+    this.attendant = this.route.snapshot.params['attendant'];
+    if (this.attendant === 'nurse') {
+      this.getPreviousVisitAnthropometry();
+    }
+  }
+
+  previousAnthropometryDataSubscription: any;
+  getPreviousVisitAnthropometry() {
+    console.log('getPreviousVisitAnthropometry');
+    this.previousAnthropometryDataSubscription = this.doctorService
+      .getPreviousVisitAnthropometry({
+        benRegID: this.sessionstorage.getItem('beneficiaryRegID'),
+      })
+      .subscribe((anthropometryData: any) => {
+        if (
+          anthropometryData &&
+          anthropometryData.data &&
+          anthropometryData.data.response &&
+          anthropometryData.data.response !== 'Visit code is not found' &&
+          anthropometryData.data.response !== 'No data found'
+        ) {
+          const heightStr = anthropometryData.data.response.toString();
+          this.patientVitalsForm.controls['height_cm'].patchValue(
+            heightStr.endsWith('.0')
+              ? Math.round(anthropometryData.data.response)
+              : anthropometryData.data.response,
+          );
+        }
+      });
   }
 
   checkNurseRequirements(medicalForm: any) {
@@ -291,14 +325,13 @@ export class GeneralPatientVitalsComponent
         required.push(this.currentLanguageSet.rbsTestResult);
       }
     } else {
-      if (this.visitCategory === 'ANC') {
-        if (vitalsForm.controls['systolicBP_1stReading'].errors) {
-          required.push(this.currentLanguageSet.systolicBPReading);
-        }
-        if (vitalsForm.controls['diastolicBP_1stReading'].errors) {
-          required.push(this.currentLanguageSet.diastolicBPReading);
-        }
+      if (vitalsForm.controls['systolicBP_1stReading'].errors) {
+        required.push(this.currentLanguageSet.systolicBPReading);
       }
+      if (vitalsForm.controls['diastolicBP_1stReading'].errors) {
+        required.push(this.currentLanguageSet.diastolicBPReading);
+      }
+
       if (vitalsForm.controls['height_cm'].errors) {
         required.push(this.currentLanguageSet.vitalsDetails.height);
       }
@@ -382,12 +415,12 @@ export class GeneralPatientVitalsComponent
   loadMMURBS() {
     this.doctorService
       .getRBSPreviousVitals({
-        benRegID: localStorage.getItem('beneficiaryRegID'),
-        benVisitID: localStorage.getItem('referredVisitID'),
+        benRegID: this.sessionstorage.getItem('beneficiaryRegID'),
+        benVisitID: this.sessionstorage.getItem('referredVisitID'),
         visitCode:
           this.attendant !== 'nurse'
-            ? localStorage.getItem('referredVisitCode')
-            : localStorage.getItem('mmuReferredVisitCode'),
+            ? this.sessionstorage.getItem('referredVisitCode')
+            : this.sessionstorage.getItem('mmuReferredVisitCode'),
       })
       .subscribe((data) => {
         if (data) {
@@ -428,8 +461,8 @@ export class GeneralPatientVitalsComponent
   getGeneralVitalsData() {
     this.generalVitalsDataSubscription = this.doctorService
       .getGenericVitals({
-        benRegID: localStorage.getItem('beneficiaryRegID'),
-        benVisitID: localStorage.getItem('visitID'),
+        benRegID: this.sessionstorage.getItem('beneficiaryRegID'),
+        benVisitID: this.sessionstorage.getItem('visitID'),
       })
       .subscribe((vitalsData) => {
         if (vitalsData) {
@@ -500,6 +533,8 @@ export class GeneralPatientVitalsComponent
       this.rbsSelectedInInvestigationSubscription.unsubscribe();
     this.nurseService.rbsTestResultFromDoctorFetch = null;
     this.nurseService.isAssessmentDone = false;
+    if (this.previousAnthropometryDataSubscription)
+      this.previousAnthropometryDataSubscription.unsubscribe();
   }
 
   checkDiasableRBS() {
@@ -746,12 +781,20 @@ export class GeneralPatientVitalsComponent
       this.patientVitalsForm.patchValue({
         systolicBP_1stReading: null,
       });
+    } else if (systolic === '' || systolic === undefined) {
+      this.patientVitalsForm.patchValue({
+        systolicBP_1stReading: null,
+      });
     }
   }
 
   checkDiastolicLower(systolic: any, diastolic: any) {
     if (systolic && diastolic && parseInt(diastolic) >= parseInt(systolic)) {
       this.confirmationService.alert(this.currentLanguageSet.alerts.info.sysBp);
+      this.patientVitalsForm.patchValue({
+        diastolicBP_1stReading: null,
+      });
+    } else if (diastolic === '' || diastolic === undefined) {
       this.patientVitalsForm.patchValue({
         diastolicBP_1stReading: null,
       });
@@ -1116,8 +1159,8 @@ export class GeneralPatientVitalsComponent
   }
 
   getHRPDetails() {
-    const beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
-    const visitCode = localStorage.getItem('visitCode');
+    const beneficiaryRegID = this.sessionstorage.getItem('beneficiaryRegID');
+    const visitCode = this.sessionstorage.getItem('visitCode');
     this.doctorService
       .getHRPDetails(beneficiaryRegID, visitCode)
       .subscribe((res: any) => {
@@ -1180,7 +1223,7 @@ export class GeneralPatientVitalsComponent
   }
 
   getGender() {
-    const gender = localStorage.getItem('beneficiaryGender');
+    const gender = this.sessionstorage.getItem('beneficiaryGender');
     if (gender === 'Female') this.benGenderType = 1;
     else if (gender === 'Male') this.benGenderType = 0;
     else if (gender === 'Transgender') this.benGenderType = 2;
@@ -1203,10 +1246,10 @@ export class GeneralPatientVitalsComponent
       coughsoundfile: null,
       gender: this.benGenderType,
       age: this.benAge,
-      patientId: localStorage.getItem('beneficiaryRegID'),
+      patientId: this.sessionstorage.getItem('beneficiaryRegID'),
       assessmentId: null,
-      providerServiceMapID: localStorage.getItem('providerServiceID'),
-      createdBy: localStorage.getItem('userName'),
+      providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
+      createdBy: this.sessionstorage.getItem('userName'),
       symptoms: symptoms,
     };
     const file = new File([this.coughBlobFile], 'coughSound.wav');
@@ -1237,7 +1280,7 @@ export class GeneralPatientVitalsComponent
   }
 
   getAssessmentID() {
-    const benRegID = localStorage.getItem('beneficiaryRegID');
+    const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
     this.doctorService.getAssessment(benRegID).subscribe((res: any) => {
       if (res.statusCode === 200 && res.data !== null && res.data.length > 0) {
         const lastElementIndex = res.data.length - 1;

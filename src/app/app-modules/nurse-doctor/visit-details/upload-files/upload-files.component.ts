@@ -31,6 +31,7 @@ import { DoctorService } from '../../shared/services';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-patient-upload-files',
@@ -75,6 +76,7 @@ export class UploadFilesComponent implements OnInit, DoCheck, OnChanges {
     private dialog: MatDialog,
     public httpServiceService: HttpServiceService,
     private doctorService: DoctorService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -89,7 +91,7 @@ export class UploadFilesComponent implements OnInit, DoCheck, OnChanges {
     this.currentLanguageSet = getLanguageJson.currentLanguageObject;
   }
   ngOnChanges() {
-    const specialistFlagString = localStorage.getItem('specialistFlag');
+    const specialistFlagString = this.sessionstorage.getItem('specialistFlag');
     if (String(this.mode) === 'view' && !this.enableFileSelection) {
       this.disableFileSelection = true;
     } else if (String(this.mode) === 'view' && this.enableFileSelection) {
@@ -182,15 +184,18 @@ export class UploadFilesComponent implements OnInit, DoCheck, OnChanges {
 
   fileObj: any = [];
   assignFileObject(fileContent: any) {
-    const serviceLineDetails: any = localStorage.getItem('serviceLineDetails');
+    const serviceLineDetails: any =
+      this.sessionstorage.getItem('serviceLineDetails');
     const kmFileManager = {
       fileName: this.file !== undefined ? this.file.name : '',
       fileExtension:
         this.file !== undefined ? '.' + this.file.name.split('.')[1] : '',
-      userID: localStorage.getItem('userID'),
+      userID: this.sessionstorage.getItem('userID'),
       fileContent: fileContent !== undefined ? fileContent.split(',')[1] : '',
       vanID: JSON.parse(serviceLineDetails).vanID,
       isUploaded: false,
+      providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
+      createdBy: this.sessionstorage.getItem('userName'),
     };
     this.fileObj.push(kmFileManager);
     this.nurseService.fileData = this.fileObj;
@@ -307,17 +312,14 @@ export class UploadFilesComponent implements OnInit, DoCheck, OnChanges {
     );
     ViewTestReport.afterClosed().subscribe((result) => {
       if (result) {
-        this.labService.viewFileContent(result).subscribe((res: any) => {
-          const blob = new Blob([res], { type: res.type });
-          console.log(blob, 'blob');
-          const url = window.URL.createObjectURL(blob);
-          // window.open(url);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = result.fileName;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
+        const fileID = {
+          fileID: result,
+        };
+        this.labService.viewFileContent(fileID).subscribe((res: any) => {
+          if (res && res.data && res.data.statusCode === 200) {
+            const fileContent = res.data.data?.response;
+            location.href = fileContent;
+          }
         });
       }
     });

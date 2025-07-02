@@ -25,17 +25,18 @@
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
-const commonIP = 'http://183.82.107.186:8080/';
-const tmIP = 'http://183.82.107.186:8080/';
-const mmuIP = 'http://183.82.107.186:8080/';
-const schedulerIP = 'http://183.82.107.186:8080/';
-const tmUI_IP = 'http://183.82.107.186:8080/';
-const schedulerUI_IP = 'http://183.82.107.186:8080/';
-const inventoryUI_IP = 'http://183.82.107.186:8080/';
+const commonIP = 'https://amritwprdev.piramalswasthya.org/';
+const tmIP = 'https://amritwprdev.piramalswasthya.org/';
+const mmuIP = 'https://amritwprdev.piramalswasthya.org/';
+const schedulerIP = 'https://amritwprdev.piramalswasthya.org/';
+const tmUI_IP = 'https://amritwprdev.piramalswasthya.org/';
+const schedulerUI_IP = 'https://amritwprdev.piramalswasthya.org/';
+const inventoryUI_IP = 'https://amritwprdev.piramalswasthya.org/';
 const SERVER_IP = 'dataSYNCIP';
 const SWYMED_IP = 'swymed://14.143.13.109';
-const adminIP = 'http://183.82.107.186:8080';
-const FHIRIP = 'http://183.82.107.186:8080';
+const adminIP = 'https://amritwprdev.piramalswasthya.org';
+const FHIRIP = 'https://amritwprdev.piramalswasthya.org';
+const identityIP = 'https://amritwprdev.piramalswasthya.org/';
 
 // With API MAN Configuration
 // const COMMON_API_OPEN = `http://${IP}:8080/apiman-gateway/IEMR/Common/open/`;
@@ -45,6 +46,7 @@ const FHIRIP = 'http://183.82.107.186:8080';
 //  const SCHEDULER_API = `http://${IP}:8080/apiman-gateway/IEMR/Scheduling/1.0/`;
 
 // Without API MAN Configuration
+const IDENTITY_API = `${identityIP}/identity-0.0.1/`;
 const COMMON_API_OPEN = `${commonIP}commonapi-v1.0/`;
 const COMMON_API = `${commonIP}commonapi-v1.0/`;
 const TM_API = `${tmIP}tmapi-v1.0/`;
@@ -55,10 +57,16 @@ const ADMIN_API = `${adminIP}/adminapi-v1.0`;
 const IOT_API = 'http://localhost:8085/ezdx-hub-connect-srv';
 const FHIR_API = `${FHIRIP}/fhirapi-v1.0/`;
 const mmuUICasesheet = `${tmUI_IP}tmui-v1.0`;
+const sessionStorageEncKey = '';
+
+const siteKey = '';
+const captchaChallengeURL = '';
+const enableCaptcha = false;
 
 export const environment = {
   production: true,
   isTMOffline: false,
+  encKey: sessionStorageEncKey,
 
   app: `MMU`,
   RBSTest: `RBS Test`,
@@ -67,11 +75,11 @@ export const environment = {
   abhaExtension: `@abdm`,
   parentAPI: `${TM_API}`,
 
-  INVENTORY_URL: `${inventoryUI_IP}/inventory-ui-v1.0/#/redirin?`,
+  INVENTORY_URL: `${inventoryUI_IP}/inventory/#/redirin?`,
   fallbackUrl: `/pharmacist/redirfallback`,
   redirInUrl: `/pharmacist/redirin`,
 
-  TELEMEDICINE_URL: `${schedulerUI_IP}/schedulerui-v1.0/#/?`,
+  TELEMEDICINE_URL: `${schedulerUI_IP}/scheduler/#/?`,
   fallbackMMUUrl: `/logout-tm`,
   redirInMMUUrl: `/common/tcspecialist-worklist`,
 
@@ -127,6 +135,7 @@ export const environment = {
    */
 
   getDistrictListUrl: `${TM_API}location/get/districtMaster/`,
+  getDistrictTalukUrl: `${MMU_API}location/get/DistrictTalukMaster/`,
   getSubDistrictListUrl: `${TM_API}location/get/districtBlockMaster/`,
   getVillageListUrl: `${TM_API}location/get/villageMasterFromBlockID/`,
   demographicsCurrentMasterUrl: `${TM_API}location/getLocDetailsBasedOnSpIDAndPsmID`,
@@ -463,4 +472,37 @@ export const environment = {
 
   generateABHAForBio: `${FHIR_API}healthIDWithBio/verifyBio`,
   generateABHAForBioMobileOTP: `${FHIR_API}healthIDWithBio/generateMobileOTP`,
+
+  /** Previous Anthropometry  Urls */
+  getPreviousAnthropometryUrl: `${TM_API}anthropometryVitals/getBenHeightDetailsFrmNurse`,
+  /* Customization APIs*/
+  getAllRegistrationData: `${COMMON_API}customization/fetchAllData`,
+
+  /*Family Tagging Urls */
+  relationShipUrl: `${TM_API}registrar/registrarMasterData`,
+  saveFamilyTaggingUrl: `${IDENTITY_API}family/addTag`,
+  editFamilyTaggingUrl: `${IDENTITY_API}family/editFamilyTagging`,
+  untagFamilyUrl: `${IDENTITY_API}family/untag`,
+  familySearchUrl: `${IDENTITY_API}family/searchFamily`,
+  createFamilyUrl: `${IDENTITY_API}family/createFamily`,
+  getFamilyMemberUrl: `${IDENTITY_API}family/getFamilyDetails`,
+
+  /* ABDM Mapped Facility */
+  getAbdmMappedFacility: `${COMMON_API}facility/getWorklocationMappedAbdmFacility/`,
+  saveAbdmFacilityIdForVisit: `${FHIR_API}facility/saveAbdmFacilityId`,
+
+  getBenIdForhealthID: `${FHIR_API}healthID/getBenIdForhealthID`,
+
+  /* Abha V3 APIs */
+  requestOtpForAbhaEnroll: `${FHIR_API}abhaCreation/requestOtpForAbhaEnrollment`,
+  abhaEnrollmentByAadhaar: `${FHIR_API}abhaCreation/abhaEnrollmentByAadhaar`,
+  verifyMobileForAbhaAuth: `${FHIR_API}abhaCreation/verifyAuthByMobile`,
+  requestOtpForLogin: `${FHIR_API}abhaLogin/abhaLoginRequestOtp`,
+  verifyOtpForLogin: `${FHIR_API}abhaLogin/verifyAbhaLogin`,
+  printPngCard: `${FHIR_API}abhaCreation/printAbhaCard`,
+  //adding this missing env to resolve an error from common-ui
+  printWebLoginPhrCard: `${FHIR_API}abhaLogin/printWebLoginPhrCard`,
+  siteKey: siteKey,
+  captchaChallengeURL: captchaChallengeURL,
+  enableCaptcha: enableCaptcha,
 };

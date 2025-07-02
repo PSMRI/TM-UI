@@ -17,7 +17,11 @@
         <mat-icon class="md-18">history</mat-icon>
       </button>
     </div>
-    <div class="col-xs-12" formArrayName="pastIllness">
+    <div
+      class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
+      formArrayName="pastIllness"
+      style="width: 100%"
+    >
       <header class="description">
         <h4 style="font-size: 18px">
           <strong>{{
@@ -38,8 +42,8 @@
         [ngClass]="{ odd: !isOdd }"
       >
         <ng-container [formGroupName]="i">
-          <div class="col-md-3 box">
-            <mat-form-field>
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 box">
+            <mat-form-field [style.width]="'100%'" class="input-full-width">
               <mat-label class="mat-label-text">{{
                 currentLanguageSet?.historyData?.ancHistory
                   ?.pastIllnessDataANC_OPD_NCD_PNC?.illness
@@ -49,7 +53,7 @@
                 name="pastAcuteIllness"
                 formControlName="illnessType"
                 (selectionChange)="
-                  filterPastIllnessType($event, i, pastIllness)
+                  filterPastIllnessType($event.value, i, pastIllness)
                 "
               >
                 <mat-option
@@ -63,10 +67,10 @@
           </div>
 
           <div
-            class="col-2 box"
+            class="col-md-4 col-xs-12 col-md-4 col-lg-2 box"
             *ngIf="pastIllness.value.illnessType?.illnessType === 'Other'"
           >
-            <mat-form-field class="input-full-width">
+            <mat-form-field [style.width]="'100%'" class="input-full-width">
               <mat-label class="mat-label-text">{{
                 currentLanguageSet?.historyData?.opd_NCD_PNCHistory?.obstetric
                   ?.others
@@ -83,16 +87,8 @@
             </mat-form-field>
           </div>
 
-          <div
-            class="col-2 box"
-            *ngIf="
-              (pastIllness?.value?.illnessType !== null &&
-                pastIllness?.value?.illnessType !== '') ||
-              pastIllness.value.illnessType?.illnessType === 'Nil' ||
-              pastIllness.value.illnessType?.illnessType === 'None'
-            "
-          >
-            <mat-form-field class="input-full-width">
+          <div class="col-md-4 col-xs-12 col-md-4 col-lg-2 box">
+            <mat-form-field [style.width]="'100%'" class="input-full-width">
               <mat-label class="mat-label-text">{{
                 currentLanguageSet?.nurseData?.chiefComplaintsDetails?.duration
               }}</mat-label>
@@ -104,19 +100,13 @@
                 maxlength="2"
                 name="timePeriodAgo"
                 formControlName="timePeriodAgo"
-                (selectionChange)="validateDuration(pastIllness)"
+                (change)="validateDuration(pastIllness)"
               />
             </mat-form-field>
           </div>
 
-          <div
-            class="col-3 box"
-            *ngIf="
-              pastIllness?.value?.timePeriodAgo !== null &&
-              pastIllness?.value?.timePeriodAgo !== ''
-            "
-          >
-            <mat-form-field>
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 box">
+            <mat-form-field [style.width]="'100%'" class="input-full-width">
               <mat-label class="mat-label-text">{{
                 currentLanguageSet?.DurationData?.timeperiodAgo
               }}</mat-label>
@@ -134,7 +124,10 @@
             </mat-form-field>
           </div>
 
-          <div class="col-2 box">
+          <div
+            class="col-md-4 col-xs-12 col-md-4 col-lg-2 box"
+            style="margin-top: 15px"
+          >
             <button
               style="margin-right: 5px"
               mat-mini-fab
@@ -164,7 +157,7 @@
     </div>
   </div>
 
-  <div class="col-xs-12" formArrayName="pastSurgery">
+  <div class="col-12" formArrayName="pastSurgery" style="width: 100%">
     <header class="description">
       <h4 style="font-size: 18px">
         <strong>{{
@@ -174,8 +167,8 @@
       </h4>
     </header>
     <div
-      class="row multi-row-select col-12"
-      style="margin: 65px 0px 15px 0px; background-color: #f0f5f5"
+      class="row multi-row-select col-xs-12 col-sm-6 col-md-3 col-lg-3"
+      style="width: 100%; margin: 65px 0px 15px 0px; background-color: #f0f5f5"
       *ngFor="
         let pastSurgery of getPastSurgery();
         let i = index;
@@ -185,8 +178,8 @@
       [ngClass]="{ odd: !isOdd }"
     >
       <ng-container [formGroupName]="i">
-        <div class="col-3 box">
-          <mat-form-field>
+        <div class="col-md-4 col-xs-12 col-md-4 col-lg-3 box">
+          <mat-form-field [style.width]="'100%'">
             <mat-label class="mat-label-text">{{
               currentLanguageSet?.historyData?.ancHistory
                 ?.pastHOSurgeryANC_OPD_NCD_PNC?.hoSurgery
@@ -195,7 +188,9 @@
               class="select-full-width"
               formControlName="surgeryType"
               name="surgeryType"
-              (selectionChange)="filterPastSurgeryType($event, i, pastSurgery)"
+              (selectionChange)="
+                filterPastSurgeryType($event.value, i, pastSurgery)
+              "
             >
               <mat-option
                 *ngFor="let surgery of pastSurgerySelectList[i]"
@@ -207,10 +202,10 @@
         </div>
 
         <div
-          class="col-2 box"
+          class="col-md-4 col-xs-12 col-md-4 col-lg-2 box"
           *ngIf="pastSurgery.value.surgeryType?.surgeryType === 'Other'"
         >
-          <mat-form-field class="input-full-width">
+          <mat-form-field [style.width]="'100%'" class="input-full-width">
             <mat-label class="mat-label-text">{{
               currentLanguageSet?.historyData?.opd_NCD_PNCHistory?.obstetric
                 ?.others
@@ -227,16 +222,8 @@
           </mat-form-field>
         </div>
 
-        <div
-          class="col-2 box"
-          *ngIf="
-            (pastSurgery?.value?.surgeryType !== null &&
-              pastSurgery?.value?.surgeryType !== '') ||
-            pastSurgery.value.surgeryType?.surgeryType === 'None' ||
-            pastSurgery.value.surgeryType?.surgeryType === 'Nil'
-          "
-        >
-          <mat-form-field class="input-full-width">
+        <div class="col-md-4 col-xs-12 col-md-4 col-lg-2 box">
+          <mat-form-field [style.width]="'100%'" class="input-full-width">
             <mat-label class="mat-label-text">{{
               currentLanguageSet?.nurseData?.chiefComplaintsDetails?.duration
             }}</mat-label>
@@ -248,19 +235,13 @@
               maxlength="2"
               name="timePeriodAgo"
               formControlName="timePeriodAgo"
-              (selectionChange)="validateDuration(pastSurgery)"
+              (change)="validateDuration(pastSurgery)"
             />
           </mat-form-field>
         </div>
 
-        <div
-          class="col-3 box"
-          *ngIf="
-            pastSurgery?.value?.timePeriodAgo !== null &&
-            pastSurgery?.value?.timePeriodAgo !== ''
-          "
-        >
-          <mat-form-field>
+        <div class="col-md-4 col-xs-12 col-md-4 col-lg-3 box">
+          <mat-form-field [style.width]="'100%'">
             <mat-label class="mat-label-text">{{
               currentLanguageSet?.DurationData?.timeperiodAgo
             }}</mat-label>
@@ -268,7 +249,7 @@
               class="select-full-width"
               formControlName="timePeriodUnit"
               name="timePeriodUnit"
-              (selectionChange)="validateDuration(pastSurgery)"
+              (change)="validateDuration(pastSurgery)"
             >
               <mat-option value="Days">Day(s)</mat-option>
               <mat-option value="Weeks">Week(s)</mat-option>
@@ -278,7 +259,10 @@
           </mat-form-field>
         </div>
 
-        <div class="col-2 box">
+        <div
+          class="col-md-4 col-xs-12 col-md-4 col-lg-2 box"
+          style="margin-top: 15px"
+        >
           <button
             mat-mini-fab
             color="warn"

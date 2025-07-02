@@ -7,6 +7,7 @@ import {
   HttpResponse,
   HttpClient,
   HttpErrorResponse,
+  HttpHeaders,
 } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
@@ -15,6 +16,7 @@ import { throwError } from 'rxjs/internal/observable/throwError';
 import { SpinnerService } from './spinner.service';
 import { ConfirmationService } from './confirmation.service';
 import { environment } from 'src/environments/environment';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,11 +24,16 @@ import { environment } from 'src/environments/environment';
 export class HttpInterceptorService implements HttpInterceptor {
   timerRef: any;
   currentLanguageSet: any;
+  donotShowSpinnerUrl = [
+    environment.syncDownloadProgressUrl,
+    environment.ioturl,
+  ];
   constructor(
     private spinnerService: SpinnerService,
     private router: Router,
     private confirmationService: ConfirmationService,
     private http: HttpClient,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   intercept(
@@ -34,17 +41,23 @@ export class HttpInterceptorService implements HttpInterceptor {
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
     const key: any = sessionStorage.getItem('key');
-    let modifiedReq = null;
-    if (key !== undefined && key !== null) {
+    let modifiedReq = req;
+    if (req.body instanceof FormData) {
       modifiedReq = req.clone({
-        headers: req.headers
-          .set('Authorization', key)
-          .set('Content-Type', 'application/json'),
+        headers: req.headers.set('Authorization', key || ''),
       });
     } else {
-      modifiedReq = req.clone({
-        headers: req.headers.set('Authorization', ''),
-      });
+      if (key !== undefined && key !== null) {
+        modifiedReq = req.clone({
+          headers: req.headers
+            .set('Authorization', key)
+            .set('Content-Type', 'application/json'),
+        });
+      } else {
+        modifiedReq = req.clone({
+          headers: req.headers.set('Authorization', ''),
+        });
+      }
     }
     return next.handle(modifiedReq).pipe(
       tap((event: HttpEvent<any>) => {
@@ -73,7 +86,7 @@ export class HttpInterceptorService implements HttpInterceptor {
       url.indexOf('user/userAuthenticate') < 0
     ) {
       sessionStorage.clear();
-      localStorage.clear();
+      this.sessionstorage.clear();
       setTimeout(() => this.router.navigate(['/login']), 0);
       this.confirmationService.alert(response.errorMessage, 'error');
     } else {
@@ -105,7 +118,7 @@ export class HttpInterceptorService implements HttpInterceptor {
               } else if (result.action === 'timeout') {
                 clearTimeout(this.timerRef);
                 sessionStorage.clear();
-                localStorage.clear();
+                this.sessionstorage.clear();
                 this.confirmationService.alert(
                   this.currentLanguageSet.sessionExpired,
                   'error',
@@ -115,7 +128,7 @@ export class HttpInterceptorService implements HttpInterceptor {
                 setTimeout(() => {
                   clearTimeout(this.timerRef);
                   sessionStorage.clear();
-                  localStorage.clear();
+                  this.sessionstorage.clear();
                   this.confirmationService.alert(
                     this.currentLanguageSet.sessionExpired,
                     'error',

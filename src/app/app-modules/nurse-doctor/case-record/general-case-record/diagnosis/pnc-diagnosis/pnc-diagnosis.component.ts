@@ -40,16 +40,51 @@ import { GeneralUtils } from '../../../../shared/utility';
 import { ConfirmationService } from './../../../../../core/services/confirmation.service';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
+import {
+  MomentDateAdapter,
+  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+} from '@angular/material-moment-adapter';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-pnc-diagnosis',
   templateUrl: './pnc-diagnosis.component.html',
   styleUrls: ['./pnc-diagnosis.component.css'],
+  providers: [
+    {
+      provide: MAT_DATE_LOCALE,
+      useValue: 'en-US', // Set the desired locale (e.g., 'en-GB' for dd/MM/yyyy)
+    },
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+    },
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: {
+        parse: {
+          dateInput: 'LL',
+        },
+        display: {
+          dateInput: 'DD/MM/YYYY', // Set the desired display format
+          monthYearLabel: 'MMM YYYY',
+          dateA11yLabel: 'LL',
+          monthYearA11yLabel: 'MMMM YYYY',
+        },
+      },
+    },
+  ],
 })
 export class PncDiagnosisComponent
   implements OnInit, OnChanges, OnDestroy, DoCheck
 {
-  utils = new GeneralUtils(this.fb);
+  utils = new GeneralUtils(this.fb, this.sessionstorage);
   @Input()
   generalDiagnosisForm!: FormGroup;
 
@@ -65,6 +100,7 @@ export class PncDiagnosisComponent
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     private doctorService: DoctorService,
     public httpServiceService: HttpServiceService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   beneficiaryAge: any;
@@ -80,7 +116,7 @@ export class PncDiagnosisComponent
       this.today.getTime() - 365 * 24 * 60 * 60 * 1000,
     );
     this.assignSelectedLanguage();
-    this.designation = localStorage.getItem('designation');
+    this.designation = this.sessionstorage.getItem('designation');
     if (this.designation === 'TC Specialist') {
       this.generalDiagnosisForm.controls['specialistDiagnosis'].enable();
       this.specialist = true;
@@ -106,13 +142,14 @@ export class PncDiagnosisComponent
 
   ngOnChanges() {
     if (this.caseRecordMode === 'view') {
-      const beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
-      const visitID = localStorage.getItem('visitID');
-      const visitCategory = localStorage.getItem('visitCategory');
-      const specialistFlagString = localStorage.getItem('specialist_flag');
+      const beneficiaryRegID = this.sessionstorage.getItem('beneficiaryRegID');
+      const visitID = this.sessionstorage.getItem('visitID');
+      const visitCategory = this.sessionstorage.getItem('visitCategory');
+      const specialistFlagString =
+        this.sessionstorage.getItem('specialist_flag');
       if (
-        localStorage.getItem('referredVisitCode') === 'undefined' ||
-        localStorage.getItem('referredVisitCode') === null
+        this.sessionstorage.getItem('referredVisitCode') === 'undefined' ||
+        this.sessionstorage.getItem('referredVisitCode') === null
       ) {
         this.getDiagnosisDetails(beneficiaryRegID, visitID, visitCategory);
       } else if (
@@ -123,14 +160,14 @@ export class PncDiagnosisComponent
           beneficiaryRegID,
           visitID,
           visitCategory,
-          localStorage.getItem('visitCode'),
+          this.sessionstorage.getItem('visitCode'),
         );
       } else {
         this.getMMUDiagnosisDetails(
           beneficiaryRegID,
-          localStorage.getItem('referredVisitID'),
+          this.sessionstorage.getItem('referredVisitID'),
           visitCategory,
-          localStorage.getItem('referredVisitCode'),
+          this.sessionstorage.getItem('referredVisitCode'),
         );
       }
     }

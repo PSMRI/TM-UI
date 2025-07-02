@@ -39,6 +39,7 @@ import { BeneficiaryDetailsService } from '../../../../core/services/beneficiary
 import { MatDialog } from '@angular/material/dialog';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-general-medication-history',
@@ -67,6 +68,7 @@ export class MedicationHistoryComponent implements OnInit, DoCheck, OnDestroy {
     private masterdataService: MasterdataService,
     public httpServiceService: HttpServiceService,
     private beneficiaryDetailsService: BeneficiaryDetailsService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -103,17 +105,18 @@ export class MedicationHistoryComponent implements OnInit, DoCheck, OnDestroy {
           this.masterData = masterData;
 
           if (String(this.mode) === 'view') {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             this.getGeneralHistory(benRegID, visitID);
           }
-          const specialistFlagString = localStorage.getItem('specialistFlag');
+          const specialistFlagString =
+            this.sessionstorage.getItem('specialistFlag');
           if (
             specialistFlagString !== null &&
             parseInt(specialistFlagString) === 100
           ) {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             this.getGeneralHistory(benRegID, visitID);
           }
         }
@@ -157,7 +160,21 @@ export class MedicationHistoryComponent implements OnInit, DoCheck, OnDestroy {
       this.addMedicationHistory();
     }
     formArray.patchValue(temp);
+    for (const formGroup of formArray.controls) {
+      if (formGroup instanceof FormGroup) {
+        if (
+          formGroup?.get('timePeriodAgo')?.value !== null &&
+          formGroup?.get('timePeriodUnit')?.value !== null
+        ) {
+          formGroup?.get('timePeriodAgo')?.enable();
+          formGroup?.get('timePeriodUnit')?.enable();
+        }
+        formGroup.markAsTouched();
+        formGroup.markAsDirty();
+      }
+    }
     formArray.markAsTouched();
+    formArray.markAsDirty();
   }
 
   addMedicationHistory() {
@@ -187,6 +204,9 @@ export class MedicationHistoryComponent implements OnInit, DoCheck, OnDestroy {
               timePeriodAgo: null,
               timePeriodUnit: null,
             });
+            // to disable the fields
+            medicationHistoryForm?.get('timePeriodAgo')?.disable();
+            medicationHistoryForm?.get('timePeriodUnit')?.disable();
           } else medicationHistoryList.removeAt(i);
           this.medicationHistoryForm.updateValueAndValidity();
           console.log(this.medicationHistoryForm.dirty);
@@ -201,7 +221,7 @@ export class MedicationHistoryComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   getPreviousMedicationHistory() {
-    const benRegID = localStorage.getItem('beneficiaryRegID');
+    const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
     this.nurseService
       .getPreviousMedicationHistory(benRegID, this.visitType)
       .subscribe(
@@ -244,8 +264,8 @@ export class MedicationHistoryComponent implements OnInit, DoCheck, OnDestroy {
   initMedicationHistory() {
     return this.fb.group({
       currentMedication: null,
-      timePeriodAgo: null,
-      timePeriodUnit: null,
+      timePeriodAgo: { value: null, disabled: true },
+      timePeriodUnit: { value: null, disabled: true },
     });
   }
 
@@ -272,11 +292,21 @@ export class MedicationHistoryComponent implements OnInit, DoCheck, OnDestroy {
       );
       formGroup.patchValue({ timePeriodAgo: null, timePeriodUnit: null });
     }
+    if (duration && !durationUnit) {
+      formGroup?.get('timePeriodUnit')?.enable();
+      formGroup?.get('timePeriodUnit')?.reset();
+    } else if (!duration) {
+      formGroup?.get('timePeriodUnit')?.disable();
+      formGroup?.get('timePeriodUnit')?.reset();
+    }
   }
 
-  checkValidity(medicationForm: any) {
-    const temp = medicationForm.value;
-    if (temp.currentMedication && temp.timePeriodAgo && temp.timePeriodUnit) {
+  checkValidity(medicationForm: AbstractControl<any, any>) {
+    if (
+      medicationForm?.get('currentMedication')?.value &&
+      medicationForm?.get('timePeriodAgo')?.value &&
+      medicationForm?.get('timePeriodUnit')?.value
+    ) {
       return false;
     } else {
       return true;
@@ -289,5 +319,16 @@ export class MedicationHistoryComponent implements OnInit, DoCheck, OnDestroy {
     const getLanguageJson = new SetLanguageComponent(this.httpServiceService);
     getLanguageJson.setLanguage();
     this.currentLanguageSet = getLanguageJson.currentLanguageObject;
+  }
+  enableDuration(medicationHistory?: AbstractControl<any, any>) {
+    if (medicationHistory?.value?.currentMedication) {
+      medicationHistory?.get('timePeriodAgo')?.enable();
+      medicationHistory?.get('timePeriodAgo')?.reset();
+    } else {
+      medicationHistory?.get('timePeriodAgo')?.disable();
+      medicationHistory?.get('timePeriodAgo')?.reset();
+      medicationHistory?.get('timePeriodUnit')?.disable();
+      medicationHistory?.get('timePeriodUnit')?.reset();
+    }
   }
 }

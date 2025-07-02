@@ -32,6 +32,7 @@ import { PreviousDetailsComponent } from '../../../../core/components/previous-d
 import { MatDialog } from '@angular/material/dialog';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-general-perinatal-history',
@@ -58,6 +59,7 @@ export class PerinatalHistoryComponent implements OnInit, DoCheck, OnDestroy {
     private dialog: MatDialog,
     public httpServiceService: HttpServiceService,
     private confirmationService: ConfirmationService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -82,17 +84,18 @@ export class PerinatalHistoryComponent implements OnInit, DoCheck, OnDestroy {
           this.masterData = masterData;
           this.selectDeliveryTypes = this.masterData.deliveryTypes;
           if (String(this.mode) === 'view') {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             this.getGeneralHistory(benRegID, visitID);
           }
-          const specialistFlagString = localStorage.getItem('specialistFlag');
+          const specialistFlagString =
+            this.sessionstorage.getItem('specialistFlag');
           if (
             specialistFlagString !== null &&
             parseInt(specialistFlagString) === 100
           ) {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             this.getGeneralHistory(benRegID, visitID);
           }
         }
@@ -141,6 +144,12 @@ export class PerinatalHistoryComponent implements OnInit, DoCheck, OnDestroy {
               })[0];
 
           this.perinatalHistoryForm.patchValue(this.perinatalHistoryData);
+          //enabling the fields
+          if (this.perinatalHistoryForm.controls['typeOfDelivery'].value) {
+            this.perinatalHistoryForm?.get('typeOfDelivery')?.enable();
+          } else {
+            this.perinatalHistoryForm?.get('typeOfDelivery')?.disable();
+          }
         }
       });
   }
@@ -184,6 +193,12 @@ export class PerinatalHistoryComponent implements OnInit, DoCheck, OnDestroy {
       this.selectDeliveryTypes = this.masterData.deliveryTypes;
     }
     this.perinatalHistoryForm.patchValue({ otherPlaceOfDelivery: null });
+    //enabling the fields
+    if (this.placeOfDelivery.deliveryPlace) {
+      this.perinatalHistoryForm?.get('typeOfDelivery')?.enable();
+    } else {
+      this.perinatalHistoryForm?.get('typeOfDelivery')?.disable();
+    }
   }
 
   resetOtherComplicationAtBirth() {
@@ -191,7 +206,7 @@ export class PerinatalHistoryComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   getPreviousPerinatalHistory() {
-    const benRegID = localStorage.getItem('beneficiaryRegID');
+    const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
     console.log('here checkig', this.visitType);
 
     this.nurseService

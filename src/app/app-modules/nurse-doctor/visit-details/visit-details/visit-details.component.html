@@ -75,7 +75,7 @@
       patientVisitDetailsForm!.controls['visitCategory']?.value !== 'PNC'
     "
   >
-    <mat-form-field class="mat_form_field_width">
+    <mat-form-field class="mat_form_field_width" [style.width]="'100%'">
       <mat-label class="mat-label-text">{{
         currentLanguageSet?.nurseData?.visitDetailsForm?.pregnancyStatus
       }}</mat-label>

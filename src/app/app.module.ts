@@ -30,6 +30,10 @@ import { ResetPasswordComponent } from './app-modules/reset-password/reset-passw
 import { RegistrarModule } from './app-modules/registrar/registrar.module';
 import { NgFor } from '@angular/common';
 import { AudioRecordingService } from './app-modules/nurse-doctor/shared/services/audio-recording.service';
+import { SharedModule } from './app-modules/core/components/shared/shared.module';
+import { RegistrarService } from 'Common-UI/src/registrar/services/registrar.service';
+import { RegistrationModule } from 'Common-UI/src/registrar/registration.module';
+import { CaptchaComponent } from './app-modules/captcha/captcha.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +45,7 @@ import { AudioRecordingService } from './app-modules/nurse-doctor/shared/service
     SetPasswordComponent,
     TmLogoutComponent,
     ResetPasswordComponent,
+    CaptchaComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,9 +62,10 @@ import { AudioRecordingService } from './app-modules/nurse-doctor/shared/service
     MatTooltipModule,
     MatFormFieldModule,
     NgFor,
-    RegistrarModule,
     CoreModule.forRoot(),
     BrowserAnimationsModule,
+    SharedModule,
+    RegistrationModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
@@ -72,6 +78,7 @@ import { AudioRecordingService } from './app-modules/nurse-doctor/shared/service
       useClass: HttpInterceptorService,
       multi: true,
     },
+    RegistrarService,
   ],
   bootstrap: [AppComponent],
 })

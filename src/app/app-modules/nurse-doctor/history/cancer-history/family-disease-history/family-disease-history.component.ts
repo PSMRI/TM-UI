@@ -39,6 +39,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 import { CancerUtils } from '../../../shared/utility';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-nurse-cancer-family-disease-history',
@@ -78,8 +79,9 @@ export class FamilyDiseaseHistoryComponent
     private confirmationService: ConfirmationService,
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     public httpServiceService: HttpServiceService,
+    readonly sessionstorage: SessionStorageService,
   ) {
-    this.formUtils = new CancerUtils(this.fb);
+    this.formUtils = new CancerUtils(this.fb, this.sessionstorage);
   }
 
   ngOnInit() {
@@ -159,17 +161,18 @@ export class FamilyDiseaseHistoryComponent
           };
 
           if (String(this.mode) === 'view') {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             this.getCancerHistory(benRegID, visitID);
           }
-          const specialistFlagString = localStorage.getItem('specialistFlag');
+          const specialistFlagString =
+            this.sessionstorage.getItem('specialistFlag');
           if (
             specialistFlagString !== null &&
             parseInt(specialistFlagString) === 100
           ) {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             this.getCancerHistory(benRegID, visitID);
           }
         }
@@ -321,7 +324,7 @@ export class FamilyDiseaseHistoryComponent
   }
 
   getPreviousCancerFamilyHistory() {
-    const benRegID = localStorage.getItem('beneficiaryRegID');
+    const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
     this.nurseService.getPreviousCancerFamilyHistory(benRegID).subscribe(
       (data: any) => {
         if (data !== null && data.data !== null) {

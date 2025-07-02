@@ -39,6 +39,7 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { SchedulerComponent } from '../../scheduler/scheduler.component';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-nurse-tm-worklist',
@@ -81,31 +82,32 @@ export class NurseTmWorklistComponent implements OnInit, DoCheck, OnDestroy {
     public httpServiceService: HttpServiceService,
     private doctorService: DoctorService,
     private dialog: MatDialog,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
     this.assignSelectedLanguage();
-    localStorage.setItem('currentRole', 'Nurse');
+    this.sessionstorage.setItem('currentRole', 'Nurse');
     this.removeBeneficiaryDataForNurseVisit();
     this.getNurseTMWorklist();
     this.beneficiaryDetailsService.reset();
   }
 
   ngOnDestroy() {
-    localStorage.removeItem('currentRole');
+    this.sessionstorage.removeItem('currentRole');
   }
 
   removeBeneficiaryDataForNurseVisit() {
-    localStorage.removeItem('visitCode');
-    localStorage.removeItem('beneficiaryGender');
-    localStorage.removeItem('benFlowID');
-    localStorage.removeItem('visitCategory');
-    localStorage.removeItem('beneficiaryRegID');
-    localStorage.removeItem('visitID');
-    localStorage.removeItem('beneficiaryID');
-    localStorage.removeItem('doctorFlag');
-    localStorage.removeItem('nurseFlag');
-    localStorage.removeItem('pharmacist_flag');
+    this.sessionstorage.removeItem('visitCode');
+    this.sessionstorage.removeItem('beneficiaryGender');
+    this.sessionstorage.removeItem('benFlowID');
+    this.sessionstorage.removeItem('visitCategory');
+    this.sessionstorage.removeItem('beneficiaryRegID');
+    this.sessionstorage.removeItem('visitID');
+    this.sessionstorage.removeItem('beneficiaryID');
+    this.sessionstorage.removeItem('doctorFlag');
+    this.sessionstorage.removeItem('nurseFlag');
+    this.sessionstorage.removeItem('pharmacist_flag');
   }
 
   getNurseTMWorklist() {
@@ -207,7 +209,7 @@ export class NurseTmWorklistComponent implements OnInit, DoCheck, OnDestroy {
 
   loadNursePatientDetails(beneficiary: any) {
     console.log('Beneficiary', beneficiary);
-    localStorage.setItem('visitCode', beneficiary.visitCode);
+    this.sessionstorage.setItem('visitCode', beneficiary.visitCode);
     if (beneficiary.statusCode === 5) {
       this.confirmationService.alert(beneficiary.statusMessage);
     } else if (beneficiary.statusCode === 4) {
@@ -227,19 +229,28 @@ export class NurseTmWorklistComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   routeToCaseSheet(beneficiary: any) {
-    localStorage.setItem('caseSheetBenFlowID', beneficiary.benFlowID);
-    localStorage.setItem('caseSheetVisitCategory', beneficiary.VisitCategory);
-    localStorage.setItem(
+    this.sessionstorage.setItem('caseSheetBenFlowID', beneficiary.benFlowID);
+    this.sessionstorage.setItem(
+      'caseSheetVisitCategory',
+      beneficiary.VisitCategory,
+    );
+    this.sessionstorage.setItem(
       'caseSheetBeneficiaryRegID',
       beneficiary.beneficiaryRegID,
     );
-    localStorage.setItem('caseSheetVisitID', beneficiary.benVisitID);
+    this.sessionstorage.setItem('caseSheetVisitID', beneficiary.benVisitID);
     this.router.navigate(['/nurse-doctor/print/' + 'TM' + '/' + 'current']);
   }
 
   filterBeneficiaryList(searchTerm: string) {
-    if (!searchTerm) this.filteredBeneficiaryList = this.beneficiaryList;
-    else {
+    if (!searchTerm) {
+      this.filteredBeneficiaryList = this.beneficiaryList;
+      this.dataSource.data = this.filteredBeneficiaryList;
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.data.forEach((sectionCount: any, index: number) => {
+        sectionCount.sno = index + 1;
+      });
+    } else {
       this.filteredBeneficiaryList = [];
       this.dataSource.data = [];
       this.dataSource.paginator = this.paginator;
@@ -284,7 +295,7 @@ export class NurseTmWorklistComponent implements OnInit, DoCheck, OnDestroy {
                   break;
                 }
               } else {
-                const val = 'Revist';
+                const val = 'Revisit';
                 if (val.toLowerCase().indexOf(searchTerm.toLowerCase()) >= 0) {
                   this.filteredBeneficiaryList.push(item);
                   this.dataSource.data.push(item);
@@ -302,12 +313,6 @@ export class NurseTmWorklistComponent implements OnInit, DoCheck, OnDestroy {
         }
       });
     }
-    this.activePage = 1;
-    this.pageChanged({
-      page: 1,
-      itemsPerPage: this.rowsPerPage,
-    });
-    this.currentPage = 1;
   }
 
   toggleArrivalStatus(evt: any, benFlowID: any) {
@@ -350,7 +355,7 @@ export class NurseTmWorklistComponent implements OnInit, DoCheck, OnDestroy {
                 visitCode: arrivedBeneficiary.visitCode,
                 status: evt.checked,
                 userID: arrivedBeneficiary.tCSpecialistUserID,
-                modifiedBy: localStorage.getItem('userName'),
+                modifiedBy: this.sessionstorage.getItem('userName'),
               })
               .subscribe(
                 (res: any) => {
@@ -403,7 +408,7 @@ export class NurseTmWorklistComponent implements OnInit, DoCheck, OnDestroy {
               benRegID: beneficiary.beneficiaryRegID,
               visitCode: beneficiary.visitCode,
               userID: beneficiary.tCSpecialistUserID,
-              modifiedBy: localStorage.getItem('userName'),
+              modifiedBy: this.sessionstorage.getItem('userName'),
             })
             .subscribe(
               (res: any) => {
@@ -441,8 +446,8 @@ export class NurseTmWorklistComponent implements OnInit, DoCheck, OnDestroy {
       benVisitID: beneficiary.benVisitID,
       visitCode: beneficiary.visitCode,
       vanID: beneficiary.vanID,
-      providerServiceMapID: localStorage.getItem('providerServiceID'),
-      createdBy: localStorage.getItem('userName'),
+      providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
+      createdBy: this.sessionstorage.getItem('userName'),
       tcRequest: tcRequest,
     };
     this.doctorService.scheduleTC(scedulerRequest).subscribe(

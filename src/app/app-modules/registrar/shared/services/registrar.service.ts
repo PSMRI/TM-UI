@@ -292,6 +292,19 @@ export class RegistrarService {
     return this.http.get(environment.getdeviceRDServiceUrl + pid);
   }
 
+  districtMainList = new BehaviorSubject<any[]>([]);
+  districtList$ = this.districtMainList.asObservable();
+
+  updateDistrictList(districtList: any[]) {
+    this.districtMainList.next(districtList);
+  }
+
+  subDistrictMainList = new BehaviorSubject<any[]>([]);
+  subDistrictList$ = this.subDistrictMainList.asObservable();
+  updateSubDistrictList(subDistrictList: any) {
+    this.subDistrictMainList.next(subDistrictList);
+  }
+
   maritalStatusDetail: any = null;
   isMarriageStatus = new BehaviorSubject<any>(this.maritalStatusDetail);
   maritalStatus$ = this.isMarriageStatus.asObservable();

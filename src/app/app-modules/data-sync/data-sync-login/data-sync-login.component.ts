@@ -27,6 +27,7 @@ import { DataSyncService } from '../shared/service/data-sync.service';
 import { HttpServiceService } from '../../core/services/http-service.service';
 import { ConfirmationService } from '../../core/services';
 import { SetLanguageComponent } from '../../core/components/set-language.component';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-data-sync-login',
@@ -48,6 +49,7 @@ export class DataSyncLoginComponent implements OnInit, DoCheck {
     private dataSyncService: DataSyncService,
     private injector: Injector,
     private confirmationService: ConfirmationService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -79,13 +81,13 @@ export class DataSyncLoginComponent implements OnInit, DoCheck {
         .dataSyncLogin(this.userName, this.password)
         .subscribe((res: any) => {
           if ((res.statusCode = '200' && res.data)) {
-            localStorage.setItem('serverKey', res.data.key);
+            this.sessionstorage.setItem('serverKey', res.data.key);
             if (this.data && this.data.masterDowloadFirstTime) {
               const mmuService = res.data.previlegeObj.filter((item: any) => {
                 return item.serviceName === 'MMU';
               });
               sessionStorage.setItem('key', res.data.key);
-              localStorage.setItem('providerServiceID', '2049');
+              this.sessionstorage.setItem('providerServiceID', '2049');
               this.dialogRef.close(true);
             } else {
               this.router.navigate(['/datasync/workarea']);

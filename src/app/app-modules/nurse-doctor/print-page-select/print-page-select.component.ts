@@ -50,6 +50,7 @@ export class PrintPageSelectComponent implements OnInit, DoCheck {
 
   visitCategory: any;
   currentLanguageSet: any;
+  isCovidVaccinationStatusVisible = false;
 
   constructor(
     public dialogRef: MatDialogRef<PrintPageSelectComponent>,

@@ -37,6 +37,7 @@ import { ConfirmationService } from '../../../../core/services/confirmation.serv
 import { MatDialog } from '@angular/material/dialog';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-general-family-history',
@@ -72,6 +73,7 @@ export class FamilyHistoryComponent implements OnInit, DoCheck, OnDestroy {
     private confirmationService: ConfirmationService,
     public httpServiceService: HttpServiceService,
     private masterdataService: MasterdataService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
@@ -108,17 +110,18 @@ export class FamilyHistoryComponent implements OnInit, DoCheck, OnDestroy {
           this.addFamilyDisease();
 
           if (String(this.mode) === 'view') {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             this.getGeneralHistory(benRegID, visitID);
           }
-          const specialistFlagString = localStorage.getItem('specialistFlag');
+          const specialistFlagString =
+            this.sessionstorage.getItem('specialistFlag');
           if (
             specialistFlagString !== null &&
             parseInt(specialistFlagString) === 100
           ) {
-            const visitID = localStorage.getItem('visitID');
-            const benRegID = localStorage.getItem('beneficiaryRegID');
+            const visitID = this.sessionstorage.getItem('visitID');
+            const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
             this.getGeneralHistory(benRegID, visitID);
           }
         }
@@ -160,7 +163,15 @@ export class FamilyHistoryComponent implements OnInit, DoCheck, OnDestroy {
         const k: any = formArray.get('' + i);
         k.patchValue(temp[i]);
         k.markAsTouched();
+        k.markAsDirty();
         this.filterFamilyDiseaseList(temp[i].diseaseType, i);
+        if (
+          k?.get('diseaseType')?.value !== null &&
+          k?.get('diseaseType')?.value !== 'None' &&
+          k?.get('diseaseType')?.value !== 'Nil'
+        ) {
+          k?.get('familyMembers')?.enable();
+        }
       }
 
       if (i + 1 < temp.length) this.addFamilyDisease();
@@ -193,13 +204,12 @@ export class FamilyHistoryComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   filterFamilyDiseaseList(
-    event: any,
+    disease: any,
     i: any,
     familyDiseaseForm?: AbstractControl<any, any>,
   ) {
-    const disease: any = event.value;
     const previousValue: any = this.previousSelectedDiseaseList[i];
-    if (disease?.diseaseType === 'None') {
+    if (disease.diseaseType === 'None') {
       this.removeFamilyDiseaseExecptNone();
     }
 
@@ -226,6 +236,16 @@ export class FamilyHistoryComponent implements OnInit, DoCheck, OnDestroy {
     });
 
     this.previousSelectedDiseaseList[i] = disease;
+    //To disable the fields
+    console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%', disease);
+
+    if (disease.diseaseType !== 'Nil' && disease.diseaseType !== 'None') {
+      familyDiseaseForm?.get('familyMembers')?.enable();
+      familyDiseaseForm?.get('familyMembers')?.reset();
+    } else {
+      familyDiseaseForm?.get('familyMembers')?.disable();
+      familyDiseaseForm?.get('familyMembers')?.reset();
+    }
   }
 
   removeFamilyDiseaseExecptNone() {
@@ -277,7 +297,7 @@ export class FamilyHistoryComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   getPreviousFamilyHistory() {
-    const benRegID = localStorage.getItem('beneficiaryRegID');
+    const benRegID = this.sessionstorage.getItem('beneficiaryRegID');
     this.nurseService
       .getPreviousFamilyHistory(benRegID, this.visitType)
       .subscribe(
@@ -323,7 +343,7 @@ export class FamilyHistoryComponent implements OnInit, DoCheck, OnDestroy {
       diseaseTypeID: null,
       diseaseType: null,
       otherDiseaseType: null,
-      familyMembers: null,
+      familyMembers: { value: null, disabled: true },
       snomedCode: null,
       snomedTerm: null,
     });
@@ -345,9 +365,11 @@ export class FamilyHistoryComponent implements OnInit, DoCheck, OnDestroy {
     });
   }
 
-  checkValidity(diseaseForm: any) {
-    const temp = diseaseForm.value;
-    if (temp.diseaseType && temp.familyMembers) {
+  checkValidity(diseaseForm: AbstractControl<any, any>) {
+    if (
+      diseaseForm?.get('diseaseType')?.value &&
+      diseaseForm?.get('familyMembers')?.value
+    ) {
       return false;
     } else {
       return true;

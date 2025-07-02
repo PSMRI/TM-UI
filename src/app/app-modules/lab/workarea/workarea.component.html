@@ -43,7 +43,7 @@
                             matTooltip="{{ current_language_set?.startTest }}"
                             md-button
                             type="button"
-                            class="button-style"
+                            class="mat_blue"
                             style="margin-right: 15px"
                             *ngIf="
                               procedure?.value?.procedureStartAPI !== undefined
@@ -99,6 +99,7 @@
                                   <mat-card-content>
                                     <section
                                       class="container-fluid"
+                                      style="padding: unset !important"
                                       #textboxChoice
                                       *ngIf="
                                         component.value.inputType === 'TextBox'
@@ -106,7 +107,10 @@
                                     >
                                       <div style="text-align: center" class="">
                                         <mat-form-field
-                                          style="width: 93%; margin-left: -38px"
+                                          style="
+                                            width: 86% !important;
+                                            margin-left: -6px;
+                                          "
                                           [ngClass]="{
                                             'mat-input-invalid':
                                               component.value.abnormal,
@@ -245,28 +249,36 @@
                                           </mat-radio-button>
                                         </mat-radio-group>
                                         <div>
-                                          <mat-select
+                                          <mat-form-field
+                                            class=""
+                                            style="
+                                              margin-left: unset !important;
+                                              padding: unset;
+                                            "
                                             *ngIf="
                                               procedure.value.procedureName.includes(
                                                 'ECG'
                                               ) && enableEcgAbnormal
                                             "
-                                            multiple
-                                            class="p-t-12"
-                                            [style.width]="'100%'"
-                                            formControlName="ecgAbnormalities"
-                                            style="line-height: unset"
-                                            placeholder="ECG Abnormalities"
-                                            required
                                           >
-                                            <mat-option
-                                              *ngFor="
-                                                let option of ecgAbnormalities
-                                              "
-                                              [value]="option.ecgAbnormality"
-                                              >{{ option.ecgAbnormality }}
-                                            </mat-option>
-                                          </mat-select>
+                                            <mat-select
+                                              multiple
+                                              class="p-t-12"
+                                              [style.width]="'100%'"
+                                              formControlName="ecgAbnormalities"
+                                              style="line-height: unset"
+                                              placeholder="ECG Abnormalities"
+                                              required
+                                            >
+                                              <mat-option
+                                                *ngFor="
+                                                  let option of ecgAbnormalities
+                                                "
+                                                [value]="option.ecgAbnormality"
+                                                >{{ option.ecgAbnormality }}
+                                              </mat-option>
+                                            </mat-select>
+                                          </mat-form-field>
                                         </div>
                                       </div>
                                     </section>
@@ -277,43 +289,59 @@
                                       "
                                     >
                                       <div>
-                                        <mat-select
-                                          class="p-t-12"
-                                          [style.width]="'100%'"
-                                          formControlName="compOptSelected"
-                                          style="line-height: unset"
-                                          placeholder="{{
-                                            current_language_set?.common?.result
-                                          }}"
-                                          [required]="
-                                            procedure.value.isMandatory ===
-                                              true &&
-                                            procedure.value.procedureName ===
-                                              testName &&
-                                            stripSelected === true
-                                              ? true
-                                              : false ||
-                                                  (procedure.value
-                                                    .procedureName !==
-                                                    testName &&
-                                                    procedure.value
-                                                      .isMandatory === true)
-                                                ? true
-                                                : false
+                                        <mat-form-field
+                                          class="mat_form_field"
+                                          style="
+                                            margin-left: unset !important;
+                                            padding: unset;
+                                            margin-top: unset;
                                           "
                                         >
-                                          <mat-option
-                                            *ngFor="
-                                              let options of component?.controls
-                                                .compOpt?.controls
+                                          <mat-select
+                                            class="p-t-12"
+                                            [style.width]="'100%'"
+                                            formControlName="compOptSelected"
+                                            style="line-height: unset"
+                                            placeholder="{{
+                                              current_language_set?.common
+                                                ?.result
+                                            }}"
+                                            [required]="
+                                              procedure.value.isMandatory ===
+                                                true &&
+                                              procedure.value.procedureName ===
+                                                testName &&
+                                              stripSelected === true
+                                                ? true
+                                                : false ||
+                                                    (procedure.value
+                                                      .procedureName !==
+                                                      testName &&
+                                                      procedure.value
+                                                        .isMandatory === true)
+                                                  ? true
+                                                  : false
                                             "
-                                            [value]="options.value.name"
-                                            >{{ options.value.name }}
-                                          </mat-option>
-                                        </mat-select>
+                                          >
+                                            <mat-option
+                                              *ngFor="
+                                                let options of component
+                                                  ?.controls.compOpt?.controls
+                                              "
+                                              [value]="options.value.name"
+                                              >{{ options.value.name }}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
                                       </div>
                                     </section>
-                                    <mat-form-field class="mat_form_field">
+                                    <mat-form-field
+                                      class="mat_form_field"
+                                      style="
+                                        margin-left: unset !important;
+                                        margin-top: 25px;
+                                      "
+                                    >
                                       <input
                                         autocomplete="off"
                                         matInput

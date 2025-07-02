@@ -20,7 +20,7 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 export class LabUtils {
   constructor(private fb: FormBuilder) {}
@@ -73,7 +73,7 @@ export class LabUtils {
       range_normal_max: null,
       range_normal_min: null,
       abnormal: null,
-      inputValue: null,
+      inputValue: [null, Validators.required],
       testComponentDesc: null,
       testComponentID: null,
       testComponentName: null,
@@ -133,7 +133,7 @@ export class LabUtils {
   createRadiologyComponent() {
     return this.fb.group({
       inputType: null,
-      inputValue: null,
+      inputValue: [null, Validators.required],
       testComponentDesc: null,
       testComponentID: null,
       remarks: null,

@@ -75,7 +75,7 @@
 <div class="container-fluid" *ngIf="scheduledData === null">
   <form [formGroup]="schedulerForm">
     <div class="row m-t-10">
-      <div class="col-xs-12 box">
+      <div class="col-xs-6 box">
         <label class="control-label" for="allocationStatus"
           >{{ currentLanguageSet?.common?.allocation }}*</label
         >
@@ -94,7 +94,7 @@
           }}</mat-radio-button>
         </mat-radio-group>
       </div>
-      <div class="col-xs-12 box">
+      <div class="col-xs-6 box">
         <mat-form-field
           class="fieldAlignment fontStyle"
           style="margin-top: 10px"
@@ -112,7 +112,6 @@
             [matDatepicker]="schedulerDatePicker"
             (change)="getMasterSpecialization()"
           />
-          <mat-hint>MM/DD/YYYY</mat-hint>
           <mat-datepicker-toggle
             matSuffix
             [for]="schedulerDatePicker"
@@ -120,8 +119,8 @@
           <mat-datepicker #schedulerDatePicker></mat-datepicker>
         </mat-form-field>
       </div>
-      <div class="col-xs-12 box" style="margin-top: 23px">
-        <mat-form-field style="width: 100%">
+      <div class="col-xs-12 box">
+        <mat-form-field style="width: 60%">
           <mat-label>{{
             currentLanguageSet?.common?.specialization
           }}</mat-label>
@@ -142,7 +141,7 @@
         </mat-form-field>
       </div>
       <div class="col-xs-12 box">
-        <mat-form-field style="width: 100%">
+        <mat-form-field style="width: 60%">
           <mat-label>{{
             currentLanguageSet?.common?.specialistDetails
           }}</mat-label>
@@ -188,12 +187,13 @@
     </div>
   </div>
 
-  <div class="row m-t-10 m-b-20">
+  <div class="row m-b-20">
     <div class="col-xs-12" *ngIf="selectedSlot && selectedSlot !== null">
       <button
         mat-raised-button
         class="mat_blue"
         style="float: right"
+        color="primary"
         id="slot"
         (click)="saveScheduledSlot()"
       >

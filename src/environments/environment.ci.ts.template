@@ -1,80 +1,69 @@
 /*
- * AMRIT � Accessible Medical Records via Integrated Technology
- * Integrated EHR (Electronic Health Records) Solution
- *
- * Copyright (C) "Piramal Swasthya Management and Research Institute"
- *
- * This file is part of AMRIT.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses/.
- */
+* AMRIT � Accessible Medical Records via Integrated Technology
+* Integrated EHR (Electronic Health Records) Solution
+*
+* Copyright (C) "Piramal Swasthya Management and Research Institute"
+*
+* This file is part of AMRIT.
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see https://www.gnu.org/licenses/.
+*/
+
 
 // The file contents for the current environment will overwrite these during build.
 // The build system defaults to the dev environment which uses `environment.ts`, but if you do
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
-const commonIP = 'http://183.82.107.186:8080';
-const tmIP = 'http://183.82.107.186:8080';
-const IP104 = 'http://183.82.107.186:8080';
-const mmuIP = 'http://183.82.107.186:8080';
-const schedulerIP = 'http://183.82.107.186:8080';
-const adminIP = 'http://183.82.107.186:8080';
-const FHIRIP = 'http://183.82.107.186:8080';
-const inventoryUI_IP = 'http://183.82.107.186:8080';
-
-const SERVER_IP = '10.208.122.39';
-
-const SWYMED_IP = 'swymed://14.143.13.109';
-
-// With API MAN Configuration
-// const COMMON_API_OPEN = `http://${IP}:8080/apiman-gateway/IEMR/Common/open/`;
-// const COMMON_API = `http://${IP}:8080/apiman-gateway/IEMR/Common/1.0/`;
-// const TM_API = `http://${IP}:8080/apiman-gateway/IEMR/TM/1.0/`;
-// const MMU_API = `http://${IP}:8080/apiman-gateway/IEMR/MMU/1.0/`
-// const SCHEDULER_API = `http://${IP}:8080/apiman-gateway/IEMR/Scheduling/1.0/`;
-
-// Without API MAN Configuration
-const COMMON_API_OPEN = `${commonIP}/commonapi-v1.0/`;
-const COMMON_API = `${commonIP}/commonapi-v1.0/`;
-const TM_API = `${tmIP}/tmapi-v1.0/`;
-const API104 = `${IP104}/104api-v1.0/`;
-const MMU_API = `${mmuIP}/mmuapi-v1.0/`;
-const COMMON_API_OPEN_SYNC = `http://${SERVER_IP}:8080/commonapi-v1.0/`;
-const SCHEDULER_API = `${schedulerIP}/schedulerapi-v1.0/`;
-const mmuUICasesheet = 'http://localhost:4200/';
-const ADMIN_API = `${adminIP}/adminapi-v1.0`;
-
-const IOT_API = 'http://localhost:8085/ezdx-hub-connect-srv';
-
-const FHIR_API = `${FHIRIP}/fhirapi-v1.0/`;
+const SERVER_IP = '<%= SERVER_IP %>';
+const SWYMED_IP = '<%= SWYMED_IP %>';
+const COMMON_API_OPEN = '<%= COMMON_API_BASE %>';
+const COMMON_API = '<%= COMMON_API_BASE %>';
+const TM_API = '<%= TM_API_BASE %>';
+const MMU_API =  '<%= MMU_API_BASE %>';
+const COMMON_API_OPEN_SYNC = '<%= COMMON_API_OPEN_SYNC %>';
+const SCHEDULER_API =  '<%= SCHEDULER_API_BASE %>';
+const ADMIN_API = '<%= ADMIN_API_BASE %>';
+const biologicalScreeningDeviceAPI = `${ADMIN_API}/diagnostics/biologicalScreeningDevice`;
+const IOT_API = '<%= IOT_API_BASE %>';
+const FHIR_API = '<%= FHIR_API_BASE %>';
+const mmuUICasesheet = '<%= TM_API_BASE %>';
+const SCHEDULER_UI =  '<%= SCHEDULER_UI_BASE %>';
+const INVENTORY_UI =  '<%= INVENTORY_UI_BASE %>';
+const IDENTITY_API = `<%= IDENTITY_API_BASE %>`;
+const sessionStorageEncKey = '<%= SESSION_STORAGE_ENC_KEY %>';
+const siteKey = '<%= SITE_KEY %>';
+const captchaChallengeURL = '<%= CAPTCHA_CHALLENGE_URL %>';
+const enableCaptcha = <%= ENABLE_CAPTCHA %>;
 
 export const environment = {
-  production: false,
+  production: true,
   isTMOffline: true,
+  encKey: sessionStorageEncKey,
+
   app: `MMU`,
   RBSTest: `RBS Test`,
   visualAcuityTest: `Visual Acuity Test`,
   haemoglobinTest: `Hemoglobin Test`,
   abhaExtension: `@abdm`,
-
   parentAPI: `${TM_API}`,
 
-  INVENTORY_URL: inventoryUI_IP + '/inventory-ui-next/#/redirin?',
-  fallbackUrl: '/pharmacist/redirfallback',
-  redirInUrl: '/pharmacist/redirin',
-  TELEMEDICINE_URL: schedulerIP + '/scheduler-ui-next/#/?',
+  INVENTORY_URL: `${INVENTORY_UI}/#/redirin?`,
+  fallbackUrl: `/pharmacist/redirfallback`,
+  redirInUrl: `/pharmacist/redirin`,
+
+  TELEMEDICINE_URL: `${SCHEDULER_UI}/#/?`,
   fallbackMMUUrl: `/logout-tm`,
   redirInMMUUrl: `/nurse-doctor/tcspecialist-worklist`,
 
@@ -135,6 +124,8 @@ export const environment = {
   nurseMasterDataUrl: `${TM_API}master/nurse/masterData/`,
   doctorMasterDataUrl: `${TM_API}master/doctor/masterData/`,
   snomedCTRecordURL: `${TM_API}snomed/getSnomedCTRecord`,
+  getDistrictTalukUrl: `${MMU_API}location/get/DistrictTalukMaster/`,
+
   /**
    * Lab Data Urls
    */
@@ -397,13 +388,14 @@ export const environment = {
   deviceDisconnectUrl: `${IOT_API}api/v1/bluetooth/hub/disconnect`,
   connectdeviceBluetoothurl: `${IOT_API}api/v1/bluetooth/hub_connection`,
 
-  startWeighturl: '/api/v1/physical_tests/weight',
-  startTempurl: '/api/v1/physical_tests/temperature',
-  startPulseurl: '/api/v1/physical_tests/pulse_oxymetry',
-  startBPurl: '/api/v1/physical_tests/blood_pressure',
-  startHemoglobinurl: '/api/v1/wbpoct_tests/hemoglobin',
-  startBloodGlucoseurl: '/api/v1/wbpoct_tests/blood_glucose',
+  startWeighturl: "/api/v1/physical_tests/weight",
+  startTempurl: "/api/v1/physical_tests/temperature",
+  startPulseurl: "/api/v1/physical_tests/pulse_oxymetry",
+  startBPurl: "/api/v1/physical_tests/blood_pressure",
+  startHemoglobinurl: "/api/v1/wbpoct_tests/hemoglobin",
+  startBloodGlucoseurl: "/api/v1/wbpoct_tests/blood_glucose",
   startRBSurl: '/api/v1/wbpoct_tests/blood_glucose',
+
 
   /*Doctor signature download */
   downloadSignUrl: `${COMMON_API}signature1/`,
@@ -470,4 +462,37 @@ export const environment = {
 
   generateABHAForBio: `${FHIR_API}healthIDWithBio/verifyBio`,
   generateABHAForBioMobileOTP: `${FHIR_API}healthIDWithBio/generateMobileOTP`,
+
+    /** Previous Anthropometry  Urls */
+ getPreviousAnthropometryUrl: `${TM_API}anthropometryVitals/getBenHeightDetailsFrmNurse`,
+   /* Customization APIs*/
+  getAllRegistrationData: `${COMMON_API}customization/fetchAllData`,
+
+  /*Family Tagging Urls */
+  relationShipUrl: `${TM_API}registrar/registrarMasterData`,
+  saveFamilyTaggingUrl: `${IDENTITY_API}family/addTag`,
+  editFamilyTaggingUrl: `${IDENTITY_API}family/editFamilyTagging`,
+  untagFamilyUrl: `${IDENTITY_API}family/untag`,
+  familySearchUrl: `${IDENTITY_API}family/searchFamily`,
+  createFamilyUrl: `${IDENTITY_API}family/createFamily`,
+  getFamilyMemberUrl: `${IDENTITY_API}family/getFamilyDetails`,
+
+  getBenIdForhealthID: `${FHIR_API}healthID/getBenIdForhealthID`,
+
+  /* ABDM Mapped Facility */
+  getAbdmMappedFacility: `${COMMON_API}facility/getWorklocationMappedAbdmFacility/`,
+  saveAbdmFacilityIdForVisit: `${FHIR_API}facility/saveAbdmFacilityId`,
+
+  /* Abha V3 APIs */
+  requestOtpForAbhaEnroll: `${FHIR_API}abhaCreation/requestOtpForAbhaEnrollment`,
+  abhaEnrollmentByAadhaar: `${FHIR_API}abhaCreation/abhaEnrollmentByAadhaar`,
+  verifyMobileForAbhaAuth: `${FHIR_API}abhaCreation/verifyAuthByMobile`,
+  requestOtpForLogin: `${FHIR_API}abhaLogin/abhaLoginRequestOtp`,
+  verifyOtpForLogin: `${FHIR_API}abhaLogin/verifyAbhaLogin`,
+  printPngCard: `${FHIR_API}abhaCreation/printAbhaCard`,
+  printWebLoginPhrCard: `${FHIR_API}abhaLogin/printWebLoginPhrCard`,
+
+  siteKey: siteKey,
+  captchaChallengeURL: captchaChallengeURL,
+  enableCaptcha: enableCaptcha,
 };

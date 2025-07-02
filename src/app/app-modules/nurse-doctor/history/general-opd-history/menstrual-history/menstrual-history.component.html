@@ -16,7 +16,7 @@
   </button>
 </div>
 <div class="row m-t-10" [formGroup]="menstrualHistoryForm">
-  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 box">
+  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 box">
     <mat-form-field class="mat_form_field_width">
       <mat-label class="mat-label-text">{{
         currentLanguageSet?.historyData?.ancHistory?.menstrualHistoryANC
@@ -124,7 +124,7 @@
       </mat-form-field>
     </div>
   </ng-template>
-  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 box">
+  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 box">
     <mat-form-field class="fieldAlignment fontStyle">
       <mat-label class="mat-label-text" class="fontStyle"
         >{{
@@ -140,9 +140,7 @@
         [min]="minimumLMPDate"
         [max]="today"
         [matDatepicker]="lmpPicker"
-        [disabled]="visitType === 'ANC'"
       />
-      <mat-hint>MM/DD/YYYY</mat-hint>
       <mat-datepicker-toggle
         matSuffix
         [for]="lmpPicker"

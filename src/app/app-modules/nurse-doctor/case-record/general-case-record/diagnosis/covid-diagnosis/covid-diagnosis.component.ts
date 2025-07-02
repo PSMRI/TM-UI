@@ -26,6 +26,7 @@ import { DoctorService } from '../../../../shared/services';
 import { GeneralUtils } from '../../../../shared/utility';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-covid-diagnosis',
@@ -33,7 +34,7 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
   styleUrls: ['./covid-diagnosis.component.css'],
 })
 export class CovidDiagnosisComponent implements OnInit, OnChanges, DoCheck {
-  utils = new GeneralUtils(this.fb);
+  utils = new GeneralUtils(this.fb, this.sessionstorage);
 
   @Input()
   generalDiagnosisForm!: FormGroup;
@@ -49,11 +50,12 @@ export class CovidDiagnosisComponent implements OnInit, OnChanges, DoCheck {
     private fb: FormBuilder,
     public httpServiceService: HttpServiceService,
     private doctorService: DoctorService,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
     this.assignSelectedLanguage();
-    this.designation = localStorage.getItem('designation');
+    this.designation = this.sessionstorage.getItem('designation');
     if (this.designation === 'TC Specialist') {
       this.generalDiagnosisForm.controls['specialistDiagnosis'].enable();
       this.specialist = true;
@@ -89,9 +91,9 @@ export class CovidDiagnosisComponent implements OnInit, OnChanges, DoCheck {
 
   ngOnChanges() {
     if (this.caseRecordMode === 'view') {
-      const beneficiaryRegID = localStorage.getItem('beneficiaryRegID');
-      const visitID = localStorage.getItem('visitID');
-      const visitCategory = localStorage.getItem('visitCategory');
+      const beneficiaryRegID = this.sessionstorage.getItem('beneficiaryRegID');
+      const visitID = this.sessionstorage.getItem('visitID');
+      const visitCategory = this.sessionstorage.getItem('visitCategory');
       this.getDiagnosisDetails(beneficiaryRegID, visitID, visitCategory);
     }
   }

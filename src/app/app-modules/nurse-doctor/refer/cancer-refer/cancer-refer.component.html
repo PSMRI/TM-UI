@@ -128,9 +128,8 @@
             [matDatepicker]="picker"
             formControlName="revisitDate"
             [min]="tomorrow"
-            (change)="checkdate(revisitDate)"
+            (dateChange)="checkdate($event.value)"
           />
-          <mat-hint>MM/DD/YYYY</mat-hint>
           <mat-datepicker-toggle
             matSuffix
             [for]="picker"

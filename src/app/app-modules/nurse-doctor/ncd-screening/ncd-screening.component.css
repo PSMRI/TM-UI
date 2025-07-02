@@ -19,7 +19,7 @@ h5 {
 }
 
 .box {
-    height: 60px;
+    height: 70px;
 }
 
 .abnormal {
@@ -71,3 +71,9 @@ ul li div i {
 .marker span {
     margin-left: 5px;
 }
+
+.fontawesomesvg {
+    width: 1em;
+    height: 1em;
+    vertical-align: -.125em;
+  }

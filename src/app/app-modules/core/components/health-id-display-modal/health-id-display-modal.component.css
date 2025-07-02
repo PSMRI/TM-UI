@@ -8,7 +8,9 @@ md2-pagination {
 }
 
 .info {
-    background: #0277bd;
+    background: #336CFB !important;
+    font-weight: bold;
+    letter-spacing: 0.05em;
 }
 
 .title {

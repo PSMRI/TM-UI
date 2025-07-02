@@ -38,6 +38,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SchedulerComponent } from '../scheduler/scheduler.component';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 @Component({
   selector: 'app-tm-future-worklist',
@@ -65,6 +66,7 @@ export class TmFutureWorklistComponent implements OnInit, DoCheck, OnDestroy {
     'district',
     'tcDate',
     'image',
+    'action',
   ];
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
   dataSource = new MatTableDataSource<any>();
@@ -76,10 +78,11 @@ export class TmFutureWorklistComponent implements OnInit, DoCheck, OnDestroy {
     private beneficiaryDetailsService: BeneficiaryDetailsService,
     private doctorService: DoctorService,
     private dialog: MatDialog,
+    readonly sessionstorage: SessionStorageService,
   ) {}
 
   ngOnInit() {
-    localStorage.setItem('currentRole', 'Doctor');
+    this.sessionstorage.setItem('currentRole', 'Doctor');
     this.loadWorklist();
     this.assignSelectedLanguage();
   }
@@ -94,7 +97,7 @@ export class TmFutureWorklistComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   ngOnDestroy() {
-    localStorage.removeItem('currentRole');
+    this.sessionstorage.removeItem('currentRole');
   }
 
   pageChanged(event: any): void {
@@ -243,7 +246,7 @@ export class TmFutureWorklistComponent implements OnInit, DoCheck, OnDestroy {
               benRegID: beneficiary.beneficiaryRegID,
               visitCode: beneficiary.visitCode,
               userID: beneficiary.tCSpecialistUserID,
-              modifiedBy: localStorage.getItem('userName'),
+              modifiedBy: this.sessionstorage.getItem('userName'),
             })
             .subscribe(
               (res: any) => {
@@ -283,8 +286,8 @@ export class TmFutureWorklistComponent implements OnInit, DoCheck, OnDestroy {
       benVisitID: beneficiary.benVisitID,
       visitCode: beneficiary.visitCode,
       vanID: beneficiary.vanID,
-      providerServiceMapID: localStorage.getItem('providerServiceID'),
-      createdBy: localStorage.getItem('userName'),
+      providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
+      createdBy: this.sessionstorage.getItem('userName'),
       tcRequest: tcRequest,
     };
     this.doctorService.scheduleTC(scedulerRequest).subscribe(
