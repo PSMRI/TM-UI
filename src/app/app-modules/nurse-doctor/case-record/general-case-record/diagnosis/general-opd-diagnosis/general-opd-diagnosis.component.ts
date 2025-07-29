@@ -47,6 +47,7 @@ export class GeneralOpdDiagnosisComponent
   implements OnInit, OnChanges, DoCheck
 {
   utils = new GeneralUtils(this.fb, this.sessionstorage);
+  suggestedDiagnosisList: any = [];
 
   @Input()
   generalDiagnosisForm!: FormGroup;
@@ -56,12 +57,14 @@ export class GeneralOpdDiagnosisComponent
   current_language_set: any;
   designation: any;
   specialist!: boolean;
+
   constructor(
     private fb: FormBuilder,
     public httpServiceService: HttpServiceService,
     private doctorService: DoctorService,
     private confirmationService: ConfirmationService,
     readonly sessionstorage: SessionStorageService,
+    private masterdataService: MasterdataService
   ) {}
 
   ngOnInit() {
@@ -251,5 +254,36 @@ export class GeneralOpdDiagnosisComponent
     } else {
       return true;
     }
+  }
+
+  onDiagnosisInputKeyup(value: string, index: number) {
+    if (value.length >= 3) {
+      this.masterdataService
+        .searchDiagnosisBasedOnPageNo(value, index)
+        .subscribe((results: any) => {
+          this.suggestedDiagnosisList[index] = results?.data?.sctMaster;
+        });
+    } else {
+      this.suggestedDiagnosisList[index] = [];
+    }
+  }
+
+  displayDiagnosis(diagnosis: any): string {
+    return diagnosis?.term || '';
+  }
+
+  onDiagnosisSelected(selected: any, index: number) {
+    // this.patientQuickConsultForm.get(['provisionalDiagnosisList', index])?.setValue(selected);
+    const diagnosisFormArray = this.generalDiagnosisForm.get(
+      'provisionalDiagnosisList'
+    ) as FormArray;
+    const diagnosisFormGroup = diagnosisFormArray.at(index) as FormGroup;
+
+    // Set the nested and top-level fields
+    diagnosisFormGroup.patchValue({
+      viewProvisionalDiagnosisProvided: selected,
+      conceptID: selected?.conceptID || null,
+      term: selected?.term || null,
+    });
   }
 }
