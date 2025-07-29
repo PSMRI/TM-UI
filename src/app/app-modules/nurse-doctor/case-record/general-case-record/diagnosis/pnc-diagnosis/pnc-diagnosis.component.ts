@@ -35,7 +35,7 @@ import {
   FormArray,
   AbstractControl,
 } from '@angular/forms';
-import { DoctorService } from '../../../../shared/services';
+import { DoctorService, MasterdataService } from '../../../../shared/services';
 import { GeneralUtils } from '../../../../shared/utility';
 import { ConfirmationService } from './../../../../../core/services/confirmation.service';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
@@ -93,6 +93,7 @@ export class PncDiagnosisComponent
   current_language_set: any;
   designation: any;
   specialist!: boolean;
+  suggestedDiagnosisList: any[] = [];
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -101,6 +102,7 @@ export class PncDiagnosisComponent
     private doctorService: DoctorService,
     public httpServiceService: HttpServiceService,
     readonly sessionstorage: SessionStorageService,
+    private masterdataService: MasterdataService
   ) {}
 
   beneficiaryAge: any;
@@ -422,5 +424,36 @@ export class PncDiagnosisComponent
     } else {
       return true;
     }
+  }
+
+  onDiagnosisInputKeyup(value: string, index: number) {
+    if (value.length >= 3) {
+      this.masterdataService
+        .searchDiagnosisBasedOnPageNo(value, index)
+        .subscribe((results: any) => {
+          this.suggestedDiagnosisList[index] = results?.data?.sctMaster;
+        });
+    } else {
+      this.suggestedDiagnosisList[index] = [];
+    }
+  }
+
+  displayDiagnosis(diagnosis: any): string {
+    return diagnosis?.term || '';
+  }
+
+  onDiagnosisSelected(selected: any, index: number) {
+    // this.patientQuickConsultForm.get(['provisionalDiagnosisList', index])?.setValue(selected);
+    const diagnosisFormArray = this.generalDiagnosisForm.get(
+      'provisionalDiagnosisList'
+    ) as FormArray;
+    const diagnosisFormGroup = diagnosisFormArray.at(index) as FormGroup;
+
+    // Set the nested and top-level fields
+    diagnosisFormGroup.patchValue({
+      viewProvisionalDiagnosisProvided: selected,
+      conceptID: selected?.conceptID || null,
+      term: selected?.term || null,
+    });
   }
 }
