@@ -181,8 +181,7 @@ export class NcdCareDiagnosisComponent implements OnInit, DoCheck {
         (<FormGroup>diagnosisArrayList.at(i)).controls[
           'viewProvisionalDiagnosisProvided'
         ].disable();
-        if (diagnosisArrayList.length < savedDiagnosisData.length)
-          this.addDiagnosis();
+        this.addDiagnosis();
       }
     }
   }
@@ -200,13 +199,11 @@ export class NcdCareDiagnosisComponent implements OnInit, DoCheck {
     }
   }
 
-  getProvisionalDiagnosisList(): AbstractControl[] | null {
-    const provisionalDiagnosisListControl = this.generalDiagnosisForm.get(
-      'provisionalDiagnosisList',
+  get provisionalDiagnosisControls(): AbstractControl[] {
+    return (
+      (this.generalDiagnosisForm.get('provisionalDiagnosisList') as FormArray)
+        ?.controls || []
     );
-    return provisionalDiagnosisListControl instanceof FormArray
-      ? provisionalDiagnosisListControl.controls
-      : null;
   }
 
   removeDiagnosisFromList(
@@ -285,7 +282,7 @@ export class NcdCareDiagnosisComponent implements OnInit, DoCheck {
   }
 
   displayDiagnosis(diagnosis: any): string {
-    return diagnosis?.term || '';
+    return typeof diagnosis === 'string' ? diagnosis : diagnosis?.term || '';
   }
 
   onDiagnosisSelected(selected: any, index: number) {
