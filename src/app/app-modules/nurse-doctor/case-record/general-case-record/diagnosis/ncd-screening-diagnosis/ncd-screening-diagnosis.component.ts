@@ -32,6 +32,7 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
 import {
   DoctorService,
+  MasterdataService,
   NurseService,
 } from 'src/app/app-modules/nurse-doctor/shared/services';
 import { IdrsscoreService } from 'src/app/app-modules/nurse-doctor/shared/services/idrsscore.service';
@@ -63,6 +64,7 @@ export class NcdScreeningDiagnosisComponent
   confirmDisease = [];
   confirmHyperTensionDisease = [];
   enableProvisionalDiag!: boolean;
+  suggestedDiagnosisList: any = [];
   constructor(
     private fb: FormBuilder,
     private doctorService: DoctorService,
@@ -71,6 +73,7 @@ export class NcdScreeningDiagnosisComponent
     private idrsScoreService: IdrsscoreService,
     private nurseService: NurseService,
     readonly sessionstorage: SessionStorageService,
+    private masterdataService: MasterdataService
   ) {}
 
   ngOnInit() {
@@ -217,8 +220,7 @@ export class NcdScreeningDiagnosisComponent
         (<FormGroup>diagnosisArrayList.at(i)).controls[
           'viewProvisionalDiagnosisProvided'
         ].disable();
-        if (diagnosisArrayList.length < savedDiagnosisData.length)
-          this.addDiagnosis();
+        this.addDiagnosis();
       }
     }
   }
@@ -236,13 +238,11 @@ export class NcdScreeningDiagnosisComponent
     }
   }
 
-  getProvisionalDiagnosisList(): AbstractControl[] | null {
-    const provisionalDiagnosisListControl = this.generalDiagnosisForm.get(
-      'provisionalDiagnosisList',
+  get provisionalDiagnosisControls(): AbstractControl[] {
+    return (
+      (this.generalDiagnosisForm.get('provisionalDiagnosisList') as FormArray)
+        ?.controls || []
     );
-    return provisionalDiagnosisListControl instanceof FormArray
-      ? provisionalDiagnosisListControl.controls
-      : null;
   }
 
   removeDiagnosisFromList(
@@ -323,5 +323,36 @@ export class NcdScreeningDiagnosisComponent
   }
   addHyperTensionToConfirmDisease(hyperConfirmation: any) {
     this.idrsScoreService.finalDiagnosisHypertensionConfirm(hyperConfirmation);
+  }
+
+   onDiagnosisInputKeyup(value: string, index: number) {
+    if (value.length >= 3) {
+      this.masterdataService
+        .searchDiagnosisBasedOnPageNo(value, index)
+        .subscribe((results: any) => {
+          this.suggestedDiagnosisList[index] = results?.data?.sctMaster;
+        });
+    } else {
+      this.suggestedDiagnosisList[index] = [];
+    }
+  }
+
+  displayDiagnosis(diagnosis: any): string {
+    return typeof diagnosis === 'string' ? diagnosis : diagnosis?.term || '';
+  }
+
+  onDiagnosisSelected(selected: any, index: number) {
+    // this.patientQuickConsultForm.get(['provisionalDiagnosisList', index])?.setValue(selected);
+    const diagnosisFormArray = this.generalDiagnosisForm.get(
+      'provisionalDiagnosisList'
+    ) as FormArray;
+    const diagnosisFormGroup = diagnosisFormArray.at(index) as FormGroup;
+
+    // Set the nested and top-level fields
+    diagnosisFormGroup.patchValue({
+      viewProvisionalDiagnosisProvided: selected,
+      conceptID: selected?.conceptID || null,
+      term: selected?.term || null,
+    });
   }
 }
