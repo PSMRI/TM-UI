@@ -25,18 +25,18 @@
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
-const commonIP = 'https://amritwprdev.piramalswasthya.org/';
-const tmIP = 'https://amritwprdev.piramalswasthya.org/';
-const mmuIP = 'https://amritwprdev.piramalswasthya.org/';
-const schedulerIP = 'https://amritwprdev.piramalswasthya.org/';
-const tmUI_IP = 'https://amritwprdev.piramalswasthya.org/';
-const schedulerUI_IP = 'https://amritwprdev.piramalswasthya.org/';
-const inventoryUI_IP = 'https://amritwprdev.piramalswasthya.org/';
+const commonIP = 'https://uatamrit.piramalswasthya.org/';
+const tmIP = 'https://uatamrit.piramalswasthya.org/';
+const mmuIP = 'https://uatamrit.piramalswasthya.org/';
+const schedulerIP = 'https://uatamrit.piramalswasthya.org/';
+const tmUI_IP = 'https://uatamrit.piramalswasthya.org/';
+const schedulerUI_IP = 'https://uatamrit.piramalswasthya.org/';
+const inventoryUI_IP = 'https://uatamrit.piramalswasthya.org/';
 const SERVER_IP = 'dataSYNCIP';
 const SWYMED_IP = 'swymed://14.143.13.109';
-const adminIP = 'https://amritwprdev.piramalswasthya.org';
-const FHIRIP = 'https://amritwprdev.piramalswasthya.org';
-const identityIP = 'https://amritwprdev.piramalswasthya.org/';
+const adminIP = 'https://uatamrit.piramalswasthya.org';
+const FHIRIP = 'https://uatamrit.piramalswasthya.org';
+const identityIP = 'https://uatamrit.piramalswasthya.org/';
 
 // With API MAN Configuration
 // const COMMON_API_OPEN = `http://${IP}:8080/apiman-gateway/IEMR/Common/open/`;

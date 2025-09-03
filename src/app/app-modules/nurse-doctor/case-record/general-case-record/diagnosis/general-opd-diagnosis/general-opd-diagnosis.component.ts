@@ -305,7 +305,6 @@ export class GeneralOpdDiagnosisComponent
 
   onPanelReady(index: number, panelEl: HTMLElement) {
     if (panelEl.scrollHeight <= panelEl.clientHeight && !this.noMore[index]) {
-      this.bootstrapUntilScrollable(index, panelEl);
     }
   }
 
