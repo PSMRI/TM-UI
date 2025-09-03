@@ -257,8 +257,7 @@ export class BeneficiaryPlatformHistoryComponent implements OnInit, DoCheck {
             visit.benVisitID,
           );
           if (print) {
-            const url = 'http://localhost:4203/';
-            // const url = environment.newTaburl;
+            const url = environment.newTaburl;
             window.open(
               url + '#/nurse-doctor/print/' + serviceType + '/' + 'previous',
             );
