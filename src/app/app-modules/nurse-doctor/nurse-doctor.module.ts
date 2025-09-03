@@ -160,6 +160,7 @@ import { GeneralCaseSheetComponent } from './case-sheet/general-case-sheet/gener
 import { HistoryCaseSheetComponent } from './case-sheet/general-case-sheet/history-case-sheet/history-case-sheet.component';
 import { PncCaseSheetComponent } from './case-sheet/general-case-sheet/pnc-case-sheet/pnc-case-sheet.component';
 import { SharedModule } from '../core/components/shared/shared.module';
+import { AutocompleteScrollerDirective } from './shared/utility/autocomplete-scroller.directive';
 
 @NgModule({
   imports: [
@@ -291,6 +292,7 @@ import { SharedModule } from '../core/components/shared/shared.module';
     NurseMmuTmReferredWorklistComponent,
     DiseaseconfirmationComponent,
     CovidVaccinationStatusComponent,
+    AutocompleteScrollerDirective,
   ],
 
   providers: [
