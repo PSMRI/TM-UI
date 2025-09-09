@@ -177,20 +177,19 @@ export class CancerDoctorDiagnosisCaseSheetComponent
     return len > 0 ? new Array(len).join('0') + this : this;
   }
   downloadSign() {
-    if (this.beneficiaryDetails && this.beneficiaryDetails.tCSpecialistUserID) {
-      const tCSpecialistUserID = this.beneficiaryDetails.tCSpecialistUserID;
-      this.doctorService.downloadSign(tCSpecialistUserID).subscribe(
-        (response) => {
-          const blob = new Blob([response], { type: response.type });
-          this.showSign(blob);
-        },
-        (err) => {
-          console.log('error');
-        },
-      );
-    } else {
-      console.log('No tCSpecialistUserID found');
-    }
+   const userId =
+      this.beneficiaryDetails?.tCSpecialistUserID ??
+      this.sessionstorage.getItem('userID');
+
+    this.doctorService.downloadSign(userId).subscribe(
+      (response: any) => {
+        const blob = new Blob([response], { type: response.type });
+        this.showSign(blob);
+      },
+      (err: any) => {
+        console.error('Error downloading signature:', err);
+      }
+    );
   }
   showSign(blob: any) {
     const reader = new FileReader();
