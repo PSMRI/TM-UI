@@ -66,7 +66,13 @@ export const environment = {
   production: true,
   encKey: sessionStorageEncKey,
   isTMOffline: false,
-
+  tracking: {
+    enabled: true,
+    trackingPlatform: 'matomo',
+    platform: 'matomo',
+    siteId: 3, // The new Site ID from Matomo
+    trackerUrl: 'https://matomo.piramalswasthya.org/',
+  },
   app: `MMU`,
   RBSTest: `RBS Test`,
   visualAcuityTest: `Visual Acuity Test`,
