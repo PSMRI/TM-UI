@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.iemr.tm-ui</groupId>
   <artifactId>tm-ui</artifactId>
-  <version>3.5.0</version>
+  <version>3.8.0</version>
   <name>TM-UI</name>
   <description>Piramal - tm: Module ui</description>
   <packaging>war</packaging>
