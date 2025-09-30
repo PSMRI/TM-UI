@@ -2847,6 +2847,12 @@ export class DoctorService {
       .get(environment.downloadSignUrl + userID, { responseType: 'blob' })
       .pipe(map((res: any) => <Blob>res.blob()));
   }
+
+  /* Get UserID using UserName */
+  getUserId(userName: any) {
+    return this.http.get(environment.getUserId + userName);
+  }
+
   getIDRSDetails(beneficiaryID: string, visitID: string): Observable<any> {
     const visitCategory = this.sessionstorage.getItem('visitCategory');
     const otherDetails = Object.assign({
