@@ -29,6 +29,7 @@ import { RegistrarService } from 'src/app/app-modules/registrar/shared/services/
 import { NurseService, MasterdataService } from '../../../shared/services';
 import * as moment from 'moment';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-doctor-diagnosis-case-sheet',
@@ -100,6 +101,7 @@ export class DoctorDiagnosisCaseSheetComponent
   serviceList = '';
   referralReasonList = '';
   isCovidVaccinationStatusVisible = false;
+  userName: any;
 
   constructor(
     private doctorService: DoctorService,
@@ -379,22 +381,28 @@ export class DoctorDiagnosisCaseSheetComponent
     const len = String(10).length - String(this).length + 1;
     return len > 0 ? new Array(len).join('0') + this : this;
   }
-  downloadSign() {
-    if (this.beneficiaryDetails && this.beneficiaryDetails.tCSpecialistUserID) {
-      const tCSpecialistUserID = this.beneficiaryDetails.tCSpecialistUserID;
-      this.doctorService.downloadSign(tCSpecialistUserID).subscribe(
-        (response) => {
+ 
+   downloadSign() {
+    this.getUserId().subscribe((userId) => {
+      const userIdToUse = this.beneficiaryDetails?.tCSpecialistUserID ?? userId;
+      this.doctorService.downloadSign(userIdToUse).subscribe(
+        (response: any) => {
           const blob = new Blob([response], { type: response.type });
           this.showSign(blob);
         },
-        (err) => {
-          console.log('error');
+        (err: any) => {
+          console.error('Error downloading signature:', err);
         },
       );
-    } else {
-      console.log('No tCSpecialistUserID found');
-    }
+    });
   }
+
+  getUserId(): Observable<any> {
+    return this.doctorService
+      .getUserId(this.userName)
+      .pipe(map((res: any) => res?.userId || null));
+  }
+
   showSign(blob: any) {
     const reader = new FileReader();
     reader.readAsDataURL(blob);
