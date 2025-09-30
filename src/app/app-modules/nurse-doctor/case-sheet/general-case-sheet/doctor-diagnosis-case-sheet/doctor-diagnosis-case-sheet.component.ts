@@ -397,6 +397,7 @@ export class DoctorDiagnosisCaseSheetComponent
         },
       );
     });
+
   }
 
   getUserId(): Observable<any> {
