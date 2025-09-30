@@ -135,13 +135,11 @@ export class DoctorDiagnosisCaseSheetComponent
 
     this.ncdScreeningCondition = null;
     if (this.casesheetData) {
-      console.log('cases');
-      console.log(this.casesheetData);
+      this.userName = this.casesheetData?.doctorData?.diagnosis?.createdBy;
       const temp2 = this.casesheetData.nurseData.covidDetails;
       if (this.casesheetData.doctorData.diagnosis.doctorDiagnonsis) {
         this.doctorDiagnosis =
           this.casesheetData.doctorData.diagnosis.doctorDiagnonsis;
-        this.userName = this.casesheetData?.doctorData?.diagnosis?.createdBy;
         this.diagnosisFlag = true;
       }
       if (temp2 !== undefined) {
@@ -387,7 +385,8 @@ export class DoctorDiagnosisCaseSheetComponent
  
    downloadSign() {
     this.getUserId().subscribe((userId) => {
-      const userIdToUse = this.beneficiaryDetails?.tCSpecialistUserID ?? userId;
+      const tcSpecId = this.beneficiaryDetails?.tCSpecialistUserID;
+      const userIdToUse = tcSpecId && tcSpecId !== 0 ? tcSpecId : userId;
       this.doctorService.downloadSign(userIdToUse).subscribe(
         (response: any) => {
           const blob = new Blob([response], { type: response.type });
