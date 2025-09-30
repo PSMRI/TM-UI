@@ -124,6 +124,7 @@ export class DoctorDiagnosisCaseSheetComponent
   ngDoCheck() {
     this.assignSelectedLanguage();
   }
+  
   assignSelectedLanguage() {
     const getLanguageJson = new SetLanguageComponent(this.httpServiceService);
     getLanguageJson.setLanguage();
@@ -131,6 +132,7 @@ export class DoctorDiagnosisCaseSheetComponent
   }
 
   ngOnChanges() {
+
     this.ncdScreeningCondition = null;
     if (this.casesheetData) {
       console.log('cases');
@@ -139,6 +141,7 @@ export class DoctorDiagnosisCaseSheetComponent
       if (this.casesheetData.doctorData.diagnosis.doctorDiagnonsis) {
         this.doctorDiagnosis =
           this.casesheetData.doctorData.diagnosis.doctorDiagnonsis;
+        this.userName = this.casesheetData?.doctorData?.diagnosis?.createdBy;
         this.diagnosisFlag = true;
       }
       if (temp2 !== undefined) {
