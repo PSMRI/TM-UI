@@ -1679,6 +1679,11 @@ export class WorkareaComponent
       );
 
       const diagForm3 = <FormGroup>diagForm2.controls[0];
+      if (diagForm3.controls['provisionalDiagnosis'].errors) {  
+          required.push(  
+            this.current_language_set.DiagnosisDetails.provisionaldiagnosis  
+          );  
+        }
 
       if (!diagForm3.controls['viewProvisionalDiagnosisProvided'].errors) {
         diagForm2.value.filter((item: any) => {
