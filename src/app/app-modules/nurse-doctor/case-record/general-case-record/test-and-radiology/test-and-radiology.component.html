@@ -85,23 +85,17 @@
                   vertical-align: middle;
                 "
               >
-                <div *ngFor="let component of element.componentList">
                   {{ component?.componentName }}
-                </div>
               </td>
               <td
                 style="width: 110px; word-break: normal; vertical-align: middle"
               >
-                <div *ngFor="let component of element.componentList">
                   {{ component?.testResultValue }}
-                </div>
               </td>
               <td
                 style="width: 150px; word-break: normal; vertical-align: middle"
               >
-                <div *ngFor="let component of element.componentList">
                   {{ component?.testResultUnit }}
-                </div>
               </td>
               <td
                 style="
@@ -110,9 +104,7 @@
                   vertical-align: middle;
                 "
               >
-                <div *ngFor="let component of element.componentList">
-                  {{ component?.remarks }}
-                </div>
+                {{ component?.remarks }}
               </td>
             </tr>
           </ng-container>
