@@ -189,7 +189,10 @@ export class GeneralOpdDiagnosisComponent
         (<FormGroup>diagnosisArrayList.at(i)).controls[
           'viewProvisionalDiagnosisProvided'
         ].disable();
-        this.addDiagnosis();
+
+        if (diagnosisArrayList.length < savedDiagnosisData.length) {
+          this.addDiagnosis();
+        }
       }
     }
   }
