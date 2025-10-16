@@ -52,7 +52,9 @@
           </tr>
         </tbody>
         <tbody *ngIf="filteredLabResults?.length > 0">
-          <ng-container *ngFor="let test of currentLabPagedList; let i = index">
+          <ng-container *ngFor="let test of filteredLabResults 
+                        | paginate: { itemsPerPage: currentLabRowsPerPage, currentPage: currentLabActivePage }; let i = index">
+
             <tr>
               <td
                 [attr.rowspan]="test?.componentList.length + 1"
@@ -120,7 +122,7 @@
             <td colspan="7">
               <pagination-controls
                 class="pull-right"
-                (pageChanged)="currentLabPageChanged($event)"
+               (pageChange)="currentLabActivePage = $event"
                 *ngIf="filteredLabResults.length"
                 previousText="&lsaquo;"
                 nextText="&rsaquo;"
