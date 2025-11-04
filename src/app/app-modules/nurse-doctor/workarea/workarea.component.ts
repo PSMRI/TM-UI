@@ -2826,6 +2826,7 @@ export class WorkareaComponent
           { quickConsultation: patientQuickConsultDetails },
           this.schedulerData,
           this.isSpecialist,
+          this.doctorSignatureFlag,
         )
         .subscribe(
           (res: any) => {

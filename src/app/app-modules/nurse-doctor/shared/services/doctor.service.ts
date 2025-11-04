@@ -606,6 +606,7 @@ export class DoctorService {
     consultationData: any,
     tcRequest: any,
     isSpecialist: any,
+    doctorSignatureFlag: any
   ) {
     const serviceLineDetails: any =
       this.sessionstorage.getItem('serviceLineDetails');
@@ -628,6 +629,7 @@ export class DoctorService {
       vanID: vanID,
       tcRequest: tcRequest,
       isSpecialist: isSpecialist,
+      doctorSignatureFlag: doctorSignatureFlag
     };
     const quickConsultation = Object.assign(
       {},
