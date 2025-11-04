@@ -1261,6 +1261,7 @@ export class WorkareaComponent
             visitCategory,
             otherDetails,
             this.schedulerData,
+            this.doctorSignatureFlag
           )
           .subscribe(
             (res: any) => {
