@@ -281,9 +281,9 @@ export class PncDiagnosisComponent
       .subscribe((res: any) => {
         if (res && res.statusCode === 200 && res.data && res.data.diagnosis) {
           this.generalDiagnosisForm.patchValue(res.data.diagnosis);
-          if (res.data.diagnosis.provisionalDiagnosisList) {
+          if (res.data.diagnosis) {
             this.patchDiagnosisDetails(
-              res.data.diagnosis.provisionalDiagnosisList,
+              res.data.diagnosis
             );
           }
         }
@@ -297,6 +297,8 @@ export class PncDiagnosisComponent
     this.handleDiagnosisData(diagnosis);
   }
   handleDiagnosisData(diagnosis: any) {
+        console.log("provisionalDiagnosisDataList dia", diagnosis.provisionalDiagnosisList);
+
     if (
       diagnosis.provisionalDiagnosisList &&
       diagnosis.provisionalDiagnosisList.length > 0
@@ -315,8 +317,13 @@ export class PncDiagnosisComponent
     const provisionalDiagnosisList = this.generalDiagnosisForm.controls[
       'provisionalDiagnosisList'
     ] as FormArray;
+
+    console.log("provisionalDiagnosisDataList", provisionalDiagnosisDataList);
+    
+
     for (let i = 0; i < provisionalDiagnosisDataList.length; i++) {
       provisionalDiagnosisList.at(i).patchValue({
+        provisionalDiagnosis: provisionalDiagnosisDataList[i].term,
         viewProvisionalDiagnosisProvided: provisionalDiagnosisDataList[i].term,
         term: provisionalDiagnosisDataList[i].term,
         conceptID: provisionalDiagnosisDataList[i].conceptID,
@@ -324,14 +331,17 @@ export class PncDiagnosisComponent
       (<FormGroup>provisionalDiagnosisList.at(i)).controls[
         'viewProvisionalDiagnosisProvided'
       ].disable();
-      this.addProvisionalDiagnosis();
-    }
+      if (provisionalDiagnosisList.length < provisionalDiagnosisDataList.length)
+        this.addProvisionalDiagnosis();
+     }
   }
 
   handleConfirmatoryDiagnosisData(confirmatoryDiagnosisDataList: any) {
     const confirmatoryDiagnosisList = this.generalDiagnosisForm.controls[
       'confirmatoryDiagnosisList'
     ] as FormArray;
+        console.log("confirmatoryDiagnosisDataList", confirmatoryDiagnosisDataList);
+
     for (let i = 0; i < confirmatoryDiagnosisDataList.length; i++) {
       confirmatoryDiagnosisList.at(i).patchValue({
         viewConfirmatoryDiagnosisProvided:
@@ -342,9 +352,7 @@ export class PncDiagnosisComponent
       (<FormGroup>confirmatoryDiagnosisList.at(i)).controls[
         'viewConfirmatoryDiagnosisProvided'
       ].disable();
-      if (
-        confirmatoryDiagnosisList.length < confirmatoryDiagnosisDataList.length
-      )
+      if (confirmatoryDiagnosisList.length < confirmatoryDiagnosisDataList.length)
         this.addConfirmatoryDiagnosis();
     }
   }
@@ -448,6 +456,7 @@ export class PncDiagnosisComponent
 
     // Set the nested and top-level fields
     diagnosisFormGroup.patchValue({
+      provisionalDiagnosis: selected?.term || null,
       viewProvisionalDiagnosisProvided: selected,
       conceptID: selected?.conceptID || null,
       term: selected?.term || null,

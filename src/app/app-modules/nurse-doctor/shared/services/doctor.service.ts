@@ -145,8 +145,7 @@ export class DoctorService {
     return this.http.get(
       environment.specialistWorkListURL +
         this.sessionstorage.getItem('providerServiceID') +
-        `/${this.sessionstorage.getItem('serviceID')}/${this.sessionstorage.getItem(
-          'userID',
+        `/${this.sessionstorage.getItem('serviceID')},
         )}`,
     );
   }
@@ -165,8 +164,7 @@ export class DoctorService {
     return this.http.get(
       environment.specialistFutureWorkListURL +
         this.sessionstorage.getItem('providerServiceID') +
-        `/${this.sessionstorage.getItem('serviceID')}/${this.sessionstorage.getItem(
-          'userID',
+        `/${this.sessionstorage.getItem('serviceID')},
         )}`,
     );
   }
@@ -2843,10 +2841,16 @@ export class DoctorService {
   }
   /* Doctor Signature download */
   downloadSign(userID: any) {
-    return this.http
-      .get(environment.downloadSignUrl + userID, { responseType: 'blob' })
-      .pipe(map((res: any) => <Blob>res.blob()));
+    return this.http.get(environment.downloadSignUrl + userID, {
+      responseType: 'blob' as 'json',
+    });
   }
+
+  /* Get UserID using UserName */
+  getUserId(userName: any) {
+    return this.http.get(environment.getUserId + userName);
+  }
+
   getIDRSDetails(beneficiaryID: string, visitID: string): Observable<any> {
     const visitCategory = this.sessionstorage.getItem('visitCategory');
     const otherDetails = Object.assign({
