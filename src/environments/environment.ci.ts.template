@@ -38,7 +38,7 @@ const ADMIN_API = '<%= ADMIN_API_BASE %>';
 const biologicalScreeningDeviceAPI = `${ADMIN_API}/diagnostics/biologicalScreeningDevice`;
 const IOT_API = '<%= IOT_API_BASE %>';
 const FHIR_API = '<%= FHIR_API_BASE %>';
-const mmuUICasesheet = '<%= TM_API_BASE %>';
+const mmuUICasesheet = '<%= TM_UI %>';
 const SCHEDULER_UI =  '<%= SCHEDULER_UI_BASE %>';
 const INVENTORY_UI =  '<%= INVENTORY_UI %>';
 const IDENTITY_API = `<%= IDENTITY_API_BASE %>`;
@@ -495,4 +495,6 @@ export const environment = {
   siteKey: siteKey,
   captchaChallengeURL: captchaChallengeURL,
   enableCaptcha: enableCaptcha,
+
+  getUserId: `${COMMON_API}user/userName/`,
 };
