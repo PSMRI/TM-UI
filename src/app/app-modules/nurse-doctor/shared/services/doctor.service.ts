@@ -145,8 +145,7 @@ export class DoctorService {
     return this.http.get(
       environment.specialistWorkListURL +
         this.sessionstorage.getItem('providerServiceID') +
-        `/${this.sessionstorage.getItem('serviceID')}/${this.sessionstorage.getItem(
-          'userID',
+        `/${this.sessionstorage.getItem('serviceID')},
         )}`,
     );
   }
@@ -165,8 +164,7 @@ export class DoctorService {
     return this.http.get(
       environment.specialistFutureWorkListURL +
         this.sessionstorage.getItem('providerServiceID') +
-        `/${this.sessionstorage.getItem('serviceID')}/${this.sessionstorage.getItem(
-          'userID',
+        `/${this.sessionstorage.getItem('serviceID')},
         )}`,
     );
   }
