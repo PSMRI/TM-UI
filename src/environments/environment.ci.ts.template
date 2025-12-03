@@ -38,7 +38,7 @@ const ADMIN_API = '<%= ADMIN_API_BASE %>';
 const biologicalScreeningDeviceAPI = `${ADMIN_API}/diagnostics/biologicalScreeningDevice`;
 const IOT_API = '<%= IOT_API_BASE %>';
 const FHIR_API = '<%= FHIR_API_BASE %>';
-const mmuUICasesheet = '<%= TM_API_BASE %>';
+const mmuUICasesheet = '<%= TM_UI %>';
 const SCHEDULER_UI =  '<%= SCHEDULER_UI_BASE %>';
 const INVENTORY_UI =  '<%= INVENTORY_UI %>';
 const IDENTITY_API = `<%= IDENTITY_API_BASE %>`;
@@ -51,7 +51,13 @@ export const environment = {
   production: true,
   isTMOffline: true,
   encKey: sessionStorageEncKey,
-
+  tracking: {
+    enabled: true,
+    trackingPlatform: 'matomo',
+    platform: 'matomo',
+    siteId: 3, // The new Site ID from Matomo
+    trackerUrl: 'https://matomo.piramalswasthya.org/',
+  },
   app: `MMU`,
   RBSTest: `RBS Test`,
   visualAcuityTest: `Visual Acuity Test`,
