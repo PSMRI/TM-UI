@@ -84,6 +84,26 @@ export class HttpInterceptorService implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         console.error(error);
         this.spinnerService.setLoading(false);
+        if(error.status === 401){
+          this.sessionstorage.clear();
+          this.confirmationService.alert(this.currentLanguageSet.sessionExpiredPleaseLogin, 'error');
+          setTimeout(() => this.router.navigate(['/login']), 0);
+        } else if (error.status === 403) {
+          this.confirmationService.alert(
+            this.currentLanguageSet.accessDenied,
+            'error',
+          );
+        } else if (error.status === 500) {
+          this.confirmationService.alert(
+            this.currentLanguageSet.internaleServerError,
+            'error',
+          );
+        } else {
+          this.confirmationService.alert(
+            error.message || this.currentLanguageSet.somethingWentWrong,
+            'error',
+          );
+        }
         return throwError(error.error);
       }),
     );
