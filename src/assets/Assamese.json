@@ -1728,6 +1728,10 @@
         "fileUploadedSuccessfully": "File Uploaded successfully",
         "verifyMobileOtp": "Verify Mobile OTP",
         "enterMobileOtp": "Enter Mobile OTP",
-        "verify": "Verify"
+        "verify": "Verify",
+        "accessDenied": "প্ৰৱেশ অধিকার নিষিদ্ধ",
+        "internaleServerError": "আভ্যন্তৰীণ চাৰ্ভাৰ ত্ৰুটি",
+        "somethingWentWrong": "কিবা ভুল হৈ গ'ল",
+        "sessionExpiredPleaseLogin": "আপোনাৰ ছেছন সমাপ্ত, অনুগ্ৰহ কৰি পুনৰ লগইন কৰক"
   }
 }

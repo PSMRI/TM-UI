@@ -1735,7 +1735,13 @@
         "fileUploadedSuccessfully": "File Uploaded successfully",
         "verifyMobileOtp": "Verify Mobile OTP",
         "enterMobileOtp": "Enter Mobile OTP",
-        "verify": "Verify"
+        "verify": "Verify",
+        "accessDenied": "Access Denied",
+        "internaleServerError": "Internal Server Error",
+        "somethingWentWrong": "Something went wrong",
+        "sessionExpiredPleaseLogin": "Session expired, Please login again to continue"
+
+    
     }  
     
 }
