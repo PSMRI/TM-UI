@@ -1743,6 +1743,10 @@
         "fileUploadedSuccessfully": "File Uploaded successfully",
         "verifyMobileOtp": "Verify Mobile OTP",
         "enterMobileOtp": "Enter Mobile OTP",
-        "verify": "Verify"
+        "verify": "जाँच करें",
+        "accessDenied": "पहुंच अस्वीकृत",
+        "internaleServerError": "आंतरिक सर्वर त्रुटि",
+        "somethingWentWrong": "कुछ गलत हो गया",
+        "sessionExpiredPleaseLogin": "सत्र समाप्त हो गया, कृपया जारी रखने के लिए दोबारा लॉगिन करें"
   }
 }
