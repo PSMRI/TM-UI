@@ -42,21 +42,32 @@ export class HttpInterceptorService implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     const key: any = sessionStorage.getItem('key');
     let modifiedReq = req;
-    if (req.body instanceof FormData) {
-      modifiedReq = req.clone({
-        headers: req.headers.set('Authorization', key || ''),
-      });
+    const isPlatformFeedback =
+      req.url && req.url.toLowerCase().includes('/platform-feedback');
+
+    if (isPlatformFeedback) {
+      // For platform-feedback: remove Authorization and force JSON content-type
+      const headers = req.headers
+        .delete('Authorization')
+        .set('Content-Type', 'application/json');
+      modifiedReq = req.clone({ headers });
     } else {
-      if (key !== undefined && key !== null) {
+      if (req.body instanceof FormData) {
         modifiedReq = req.clone({
-          headers: req.headers
-            .set('Authorization', key)
-            .set('Content-Type', 'application/json'),
+          headers: req.headers.set('Authorization', key || ''),
         });
       } else {
-        modifiedReq = req.clone({
-          headers: req.headers.set('Authorization', ''),
-        });
+        if (key !== undefined && key !== null) {
+          modifiedReq = req.clone({
+            headers: req.headers
+              .set('Authorization', key)
+              .set('Content-Type', 'application/json'),
+          });
+        } else {
+          modifiedReq = req.clone({
+            headers: req.headers.set('Authorization', ''),
+          });
+        }
       }
     }
     return next.handle(modifiedReq).pipe(
@@ -73,7 +84,8 @@ export class HttpInterceptorService implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         console.error(error);
         this.spinnerService.setLoading(false);
-        if (error.status === 401) {
+
+        if(error.status === 401){
           this.sessionstorage.clear();
           this.confirmationService.alert(this.currentLanguageSet.sessionExpiredPleaseLogin, 'error');
           setTimeout(() => this.router.navigate(['/login']), 0);
