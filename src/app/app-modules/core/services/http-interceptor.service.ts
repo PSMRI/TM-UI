@@ -17,6 +17,8 @@ import { SpinnerService } from './spinner.service';
 import { ConfirmationService } from './confirmation.service';
 import { environment } from 'src/environments/environment';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
+import { SetLanguageComponent } from '../components/set-language.component';
+import { HttpServiceService } from './http-service.service';  
 
 @Injectable({
   providedIn: 'root',
@@ -34,12 +36,22 @@ export class HttpInterceptorService implements HttpInterceptor {
     private confirmationService: ConfirmationService,
     private http: HttpClient,
     readonly sessionstorage: SessionStorageService,
+    private httpServiceService: HttpServiceService,
   ) {}
+
+   assignSelectedLanguage() {
+    if (!this.currentLanguageSet) {
+      const getLanguageJson = new SetLanguageComponent(this.httpServiceService);
+      getLanguageJson.setLanguage();
+      this.currentLanguageSet = getLanguageJson.currentLanguageObject;
+    }
+  }
 
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
+    this.assignSelectedLanguage();
     const key: any = sessionStorage.getItem('key');
     let modifiedReq = req;
     const isPlatformFeedback =
@@ -86,24 +98,27 @@ export class HttpInterceptorService implements HttpInterceptor {
         this.spinnerService.setLoading(false);
         if(error.status === 401){
           this.sessionstorage.clear();
-          this.confirmationService.alert(this.currentLanguageSet.sessionExpiredPleaseLogin, 'error');
-          setTimeout(() => this.router.navigate(['/login']), 0);
+          this.confirmationService.alert(this.currentLanguageSet.sessionExpiredPleaseLogin || 'Session expired. Please login again.', 'error');
+          
         } else if (error.status === 403) {
           this.confirmationService.alert(
-            this.currentLanguageSet.accessDenied,
+            this.currentLanguageSet.accessDenied || 'Access Denied',
             'error',
           );
         } else if (error.status === 500) {
           this.confirmationService.alert(
-            this.currentLanguageSet.internaleServerError,
+            this.currentLanguageSet.internaleServerError || 'Internal Server Error',
             'error',
           );
         } else {
           this.confirmationService.alert(
-            error.message || this.currentLanguageSet.somethingWentWrong,
+            error.message || this.currentLanguageSet.somethingWentWrong || 'Something went wrong',
             'error',
           );
         }
+        this.router.navigate(['/login']);
+        sessionStorage.clear();
+        this.sessionstorage.clear();
         return throwError(error.error);
       }),
     );
@@ -151,7 +166,7 @@ export class HttpInterceptorService implements HttpInterceptor {
                 sessionStorage.clear();
                 this.sessionstorage.clear();
                 this.confirmationService.alert(
-                  this.currentLanguageSet.sessionExpired,
+                  this.currentLanguageSet.sessionExpiredPleaseLogin,
                   'error',
                 );
                 this.router.navigate(['/login']);
@@ -161,7 +176,7 @@ export class HttpInterceptorService implements HttpInterceptor {
                   sessionStorage.clear();
                   this.sessionstorage.clear();
                   this.confirmationService.alert(
-                    this.currentLanguageSet.sessionExpired,
+                    this.currentLanguageSet.sessionExpiredPleaseLogin,
                     'error',
                   );
                   this.router.navigate(['/login']);
