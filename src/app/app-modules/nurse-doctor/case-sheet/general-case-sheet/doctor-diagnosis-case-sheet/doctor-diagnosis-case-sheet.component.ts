@@ -355,25 +355,24 @@ export class DoctorDiagnosisCaseSheetComponent
           }
         }
       }
-      console.log(
-        'referDetailsForRefer',
-        JSON.stringify(this.referDetails, null, 4),
-      );
       if (
         this.casesheetData &&
         this.casesheetData.doctorData.Refer &&
-        this.referDetails.revisitDate &&
-        !moment(this.referDetails.revisitDate, 'DD/MM/YYYY', true).isValid()
+        this.casesheetData.doctorData.Refer.revisitDate &&
+        !moment(this.casesheetData.doctorData.Refer.revisitDate, 'DD/MM/YYYY', true).isValid()
       ) {
-        const sDate = new Date(this.referDetails.revisitDate);
-        this.referDetails.revisitDate = [
+        const sDate = new Date(this.casesheetData.doctorData.Refer.revisitDate);
+        this.casesheetData.doctorData.Refer.revisitDate = [
           this.padLeft.apply(sDate.getDate()),
           this.padLeft.apply(sDate.getMonth() + 1),
           this.padLeft.apply(sDate.getFullYear()),
         ].join('/');
       }
 
-      this.downloadSign();
+      if (this.casesheetData?.BeneficiaryData?.doctorSignatureFlag) {
+        
+        this.downloadSign();
+      }
       this.getVaccinationTypeAndDoseMaster();
     }
   }
@@ -384,9 +383,11 @@ export class DoctorDiagnosisCaseSheetComponent
   }
  
    downloadSign() {
+
     this.getUserId().subscribe((userId) => {
-      const tcSpecId = this.beneficiaryDetails?.tCSpecialistUserID;
-      const userIdToUse = tcSpecId && tcSpecId !== 0 ? tcSpecId : userId;
+      const userIdToUse = this.beneficiaryDetails?.tCSpecialistUserID ?? userId;
+      console.log("User", userIdToUse);
+      
       this.doctorService.downloadSign(userIdToUse).subscribe(
         (response: any) => {
           const blob = new Blob([response], { type: response.type });

@@ -84,6 +84,7 @@ export class HttpInterceptorService implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         console.error(error);
         this.spinnerService.setLoading(false);
+
         if(error.status === 401){
           this.sessionstorage.clear();
           this.confirmationService.alert(this.currentLanguageSet.sessionExpiredPleaseLogin, 'error');
@@ -108,6 +109,7 @@ export class HttpInterceptorService implements HttpInterceptor {
       }),
     );
   }
+
 
   private onSuccess(url: string, response: any): void {
     if (this.timerRef) clearTimeout(this.timerRef);
