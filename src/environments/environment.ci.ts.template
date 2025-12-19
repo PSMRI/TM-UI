@@ -503,4 +503,5 @@ export const environment = {
   enableCaptcha: enableCaptcha,
 
   getUserId: `${COMMON_API}user/userName/`,
+  isEnableES: false,
 };
