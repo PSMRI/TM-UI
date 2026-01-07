@@ -29,6 +29,7 @@ import { RegistrarService } from 'src/app/app-modules/registrar/shared/services/
 import { NurseService, MasterdataService } from '../../../shared/services';
 import * as moment from 'moment';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-doctor-diagnosis-case-sheet',
@@ -100,6 +101,7 @@ export class DoctorDiagnosisCaseSheetComponent
   serviceList = '';
   referralReasonList = '';
   isCovidVaccinationStatusVisible = false;
+  userName: any;
 
   constructor(
     private doctorService: DoctorService,
@@ -122,6 +124,7 @@ export class DoctorDiagnosisCaseSheetComponent
   ngDoCheck() {
     this.assignSelectedLanguage();
   }
+  
   assignSelectedLanguage() {
     const getLanguageJson = new SetLanguageComponent(this.httpServiceService);
     getLanguageJson.setLanguage();
@@ -129,10 +132,10 @@ export class DoctorDiagnosisCaseSheetComponent
   }
 
   ngOnChanges() {
+
     this.ncdScreeningCondition = null;
     if (this.casesheetData) {
-      console.log('cases');
-      console.log(this.casesheetData);
+      this.userName = this.casesheetData?.doctorData?.diagnosis?.createdBy;
       const temp2 = this.casesheetData.nurseData.covidDetails;
       if (this.casesheetData.doctorData.diagnosis.doctorDiagnonsis) {
         this.doctorDiagnosis =
@@ -352,25 +355,24 @@ export class DoctorDiagnosisCaseSheetComponent
           }
         }
       }
-      console.log(
-        'referDetailsForRefer',
-        JSON.stringify(this.referDetails, null, 4),
-      );
       if (
         this.casesheetData &&
         this.casesheetData.doctorData.Refer &&
-        this.referDetails.revisitDate &&
-        !moment(this.referDetails.revisitDate, 'DD/MM/YYYY', true).isValid()
+        this.casesheetData.doctorData.Refer.revisitDate &&
+        !moment(this.casesheetData.doctorData.Refer.revisitDate, 'DD/MM/YYYY', true).isValid()
       ) {
-        const sDate = new Date(this.referDetails.revisitDate);
-        this.referDetails.revisitDate = [
+        const sDate = new Date(this.casesheetData.doctorData.Refer.revisitDate);
+        this.casesheetData.doctorData.Refer.revisitDate = [
           this.padLeft.apply(sDate.getDate()),
           this.padLeft.apply(sDate.getMonth() + 1),
           this.padLeft.apply(sDate.getFullYear()),
         ].join('/');
       }
 
-      this.downloadSign();
+      if (this.casesheetData?.BeneficiaryData?.doctorSignatureFlag) {
+        
+        this.downloadSign();
+      }
       this.getVaccinationTypeAndDoseMaster();
     }
   }
@@ -379,22 +381,32 @@ export class DoctorDiagnosisCaseSheetComponent
     const len = String(10).length - String(this).length + 1;
     return len > 0 ? new Array(len).join('0') + this : this;
   }
-  downloadSign() {
-    if (this.beneficiaryDetails && this.beneficiaryDetails.tCSpecialistUserID) {
-      const tCSpecialistUserID = this.beneficiaryDetails.tCSpecialistUserID;
-      this.doctorService.downloadSign(tCSpecialistUserID).subscribe(
-        (response) => {
+ 
+   downloadSign() {
+
+    this.getUserId().subscribe((userId) => {
+      const userIdToUse = this.beneficiaryDetails?.tCSpecialistUserID ?? userId;
+      console.log("User", userIdToUse);
+      
+      this.doctorService.downloadSign(userIdToUse).subscribe(
+        (response: any) => {
           const blob = new Blob([response], { type: response.type });
           this.showSign(blob);
         },
-        (err) => {
-          console.log('error');
+        (err: any) => {
+          console.error('Error downloading signature:', err);
         },
       );
-    } else {
-      console.log('No tCSpecialistUserID found');
-    }
+    });
+
   }
+
+  getUserId(): Observable<any> {
+    return this.doctorService
+      .getUserId(this.userName)
+      .pipe(map((res: any) => res?.userId || null));
+  }
+
   showSign(blob: any) {
     const reader = new FileReader();
     reader.readAsDataURL(blob);

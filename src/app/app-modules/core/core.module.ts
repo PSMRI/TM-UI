@@ -90,6 +90,7 @@ import { SharedModule } from './components/shared/shared.module';
     WebcamModule,
     MatTableModule,
     SharedModule,
+    RouterModule,
   ],
   declarations: [
     CommonDialogComponent,
