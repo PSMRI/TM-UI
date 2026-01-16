@@ -136,6 +136,10 @@ export class NurseMmuTmReferredWorklistComponent
         this.dataSource.paginator = this.paginator;
       },
       (err: any) => {
+        if (err?.status == 401) {
+          // do nothing as http-interceptor will handle
+          return;
+        }
         this.confirmationService.alert(err, 'error');
       },
     );
