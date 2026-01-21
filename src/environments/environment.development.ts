@@ -79,7 +79,9 @@ export const environment = {
   haemoglobinTest: `Haemoglobin Test`,
   abhaExtension: `@sbx`,
   parentAPI: `${TM_API}`,
-
+  isEnableES: false,
+  elasticSearchUrl: '',
+  advanceElasticSearchUrl: '',
   INVENTORY_URL: `${inventoryUI_IP}/inventory/#/redirin?`,
   fallbackUrl: `/pharmacist/redirfallback`,
   redirInUrl: `/pharmacist/redirin`,
