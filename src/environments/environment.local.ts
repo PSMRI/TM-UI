@@ -86,6 +86,8 @@ export const environment = {
 
   parentAPI: `${TM_API}`,
   isEnableES: false,
+  elasticSearchUrl: '',
+  advanceElasticSearchUrl: '',
   INVENTORY_URL: inventoryUI_IP + ':4201/#/redirin?',
   fallbackUrl: '/pharmacist/redirfallback',
   redirInUrl: '/pharmacist/redirin',

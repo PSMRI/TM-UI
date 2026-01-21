@@ -65,6 +65,8 @@ export const environment = {
   abhaExtension: `@abdm`,
   parentAPI: `${TM_API}`,
   isEnableES: false,
+  elasticSearchUrl: '',
+  advanceElasticSearchUrl: '',
   INVENTORY_URL: `${INVENTORY_UI}/#/redirin?`,
   fallbackUrl: `/pharmacist/redirfallback`,
   redirInUrl: `/pharmacist/redirin`,
