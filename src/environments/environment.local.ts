@@ -85,7 +85,7 @@ export const environment = {
   encKey: sessionStorageEncKey,
 
   parentAPI: `${TM_API}`,
-
+  isEnableES: false,
   INVENTORY_URL: inventoryUI_IP + ':4201/#/redirin?',
   fallbackUrl: '/pharmacist/redirfallback',
   redirInUrl: '/pharmacist/redirin',
