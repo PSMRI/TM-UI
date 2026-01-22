@@ -1345,7 +1345,8 @@
             "image": "View Image",
             "reschedule": "Reschedule TC",
             "cancel": "Cancel",
-            "schedule": "Schedule"
+            "schedule": "Schedule",
+            "accept": "Accept"
         },
         "casesheet": {
             "caseComponent": "Select casesheet component for print",
