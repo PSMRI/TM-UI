@@ -107,7 +107,8 @@ export class WorkareaComponent
     this.getTestRequirements();
     this.stepExpand = 0;
     this.testName = environment.RBSTest;
-    this.fetchEcgAbnormalFindings();
+    // TODO: Enable once TM-API has ecgAbnormalFindings endpoint
+    // this.fetchEcgAbnormalFindings();
   }
   ngDoCheck() {
     this.assignSelectedLanguage();
@@ -990,7 +991,7 @@ export class WorkareaComponent
   }
   canDeactivate(): Observable<boolean> {
     console.log('deactivate called');
-    if (this.technicianForm.dirty)
+    if (this.technicianForm?.dirty)
       return this.confirmationService.confirm(
         `info`,
         this.current_language_set.alerts.info.navigateFurtherAlert,
