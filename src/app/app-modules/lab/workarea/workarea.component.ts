@@ -712,7 +712,7 @@ export class WorkareaComponent
   savedFileData: any;
   saveUploadDetails(procedureID: any) {
     if (this.fileObj !== undefined) {
-      if (this.savedFileData?.procedureID) {
+      if (this.savedFileData?.[procedureID]) {
         if (
           this.fileObj[procedureID].length >
           this.savedFileData[procedureID].length
@@ -749,7 +749,7 @@ export class WorkareaComponent
             'info',
           );
         }
-      } else if (this.fileObj?.procedureID?.length > 0) {
+      } else if (this.fileObj?.[procedureID]?.length > 0) {
         this.saveFileData(procedureID, this.fileObj[procedureID]);
       } else {
         this.confirmationService.alert(
