@@ -507,7 +507,7 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
           (res: any) => {
             if (res.data.statusCode === 200) {
               const fileContent = res.data.data.response;
-              location.href = fileContent;
+              window.open(fileContent, '_blank');
             }
           },
           (err) => {
