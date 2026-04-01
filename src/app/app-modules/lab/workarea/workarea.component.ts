@@ -807,6 +807,15 @@ export class WorkareaComponent
           }
 
           console.log('fileobj after upload', this.fileObj);
+          this.technicianForm.markAsDirty();
+          const radiologyControls = (this.technicianForm.get('radiologyForm') as FormArray)?.controls;
+          if (radiologyControls) {
+            radiologyControls.forEach((proc: any) => {
+              if (proc.value.procedureID?.toString() === procedureID?.toString()) {
+                proc.get('compDetails')?.get('inputValue')?.setValue('file uploaded');
+              }
+            });
+          }
           this.confirmationService.alert(
             this.current_language_set.alerts.info.successMsg,
             'success',
