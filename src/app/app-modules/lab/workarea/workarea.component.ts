@@ -933,7 +933,7 @@ export class WorkareaComponent
               for (const key in this.savedFileData) {
                 this.technicianForm.value.radiologyForm.forEach(
                   (procedureDetails: any) => {
-                    if (key === procedureDetails.procedureID) {
+                    if (key == procedureDetails.procedureID) {
                       this.savedFileData[key].forEach((fileId: any) => {
                         this.fileIDs.push(fileId.filePath);
                       });
