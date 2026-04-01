@@ -667,11 +667,12 @@ export class WorkareaComponent
         this.file !== undefined ? '.' + this.file.name.split('.')[1] : '',
       userID: this.sessionstorage.getItem('userID'),
       fileContent: fileContent !== undefined ? fileContent.split(',')[1] : '',
-      createdBy: this.sessionstorage.getItem('userName'),
       vanID: JSON.parse(
         this.sessionstorage.getItem('serviceLineDetails') ?? '{}',
       )?.vanID,
       isUploaded: false,
+      providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
+      createdBy: this.sessionstorage.getItem('userName'),
     };
 
     if (this.fileObj !== undefined) {
