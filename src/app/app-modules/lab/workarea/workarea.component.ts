@@ -935,7 +935,7 @@ export class WorkareaComponent
                   (procedureDetails: any) => {
                     if (key == procedureDetails.procedureID) {
                       this.savedFileData[key].forEach((fileId: any) => {
-                        this.fileIDs.push(fileId.filePath);
+                        this.fileIDs.push(fileId.kmFileManagerID);
                       });
                       this.radiologyObj = {
                         procedureID: procedureDetails.procedureID,
