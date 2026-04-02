@@ -500,23 +500,19 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
     );
     ViewTestReport.afterClosed().subscribe((result) => {
       if (result) {
-        const fileID = {
-          fileID: result,
-        };
-        this.labService.viewFileContent(fileID).subscribe(
+        this.labService.downloadFile({ fileID: result }).subscribe(
           (res: any) => {
-            if (res.data.statusCode === 200) {
-              const fileContent = res.data.data.response?.replace(/^(https?:\/\/)+/, '$1');
-              const a = document.createElement('a');
-              a.href = fileContent;
-              a.target = '_blank';
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
-            }
+            const blob = new Blob([res], { type: res.type });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = result.fileName || 'download';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
           },
-          (err) => {
-            this.confirmationService.alert(err.errorMessage, 'err');
+          (err: any) => {
+            this.confirmationService.alert(err.errorMessage, 'error');
           },
         );
       }

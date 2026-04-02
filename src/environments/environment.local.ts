@@ -411,6 +411,7 @@ export const environment = {
   //file upload
   saveFile: `${COMMON_API}kmfilemanager/addFile`,
   viewFileData: `${TM_API}common/getKMFile`,
+  downloadFileUrl: `${TM_API}common/downloadFile`,
   ioturl: '' + IOT_API,
   deviceStatusurl: `${IOT_API}api/v1/bluetooth/hub/connection_status`,
   deviceBluetoothurl: `${IOT_API}api/v1/bluetooth/service_discovery`,

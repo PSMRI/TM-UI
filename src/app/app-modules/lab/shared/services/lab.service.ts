@@ -52,4 +52,10 @@ export class LabService {
   viewFileContent(viewFileIndex: any) {
     return this.http.post(environment.viewFileData, viewFileIndex);
   }
+
+  downloadFile(fileID: any) {
+    return this.http.post(environment.downloadFileUrl, fileID, {
+      responseType: 'blob',
+    });
+  }
 }
