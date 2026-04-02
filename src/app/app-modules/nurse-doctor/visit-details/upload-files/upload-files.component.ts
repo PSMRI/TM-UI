@@ -317,8 +317,13 @@ export class UploadFilesComponent implements OnInit, DoCheck, OnChanges {
         };
         this.labService.viewFileContent(fileID).subscribe((res: any) => {
           if (res && res.data && res.data.statusCode === 200) {
-            const fileContent = res.data.data?.response;
-            location.href = fileContent;
+            const fileContent = res.data.data?.response?.replace(/^(https?:\/\/)+/, '$1');
+            const a = document.createElement('a');
+            a.href = fileContent;
+            a.target = '_blank';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
           }
         });
       }
