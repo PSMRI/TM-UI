@@ -312,20 +312,21 @@ export class UploadFilesComponent implements OnInit, DoCheck, OnChanges {
     );
     ViewTestReport.afterClosed().subscribe((result) => {
       if (result) {
-        const fileID = {
-          fileID: result,
-        };
-        this.labService.viewFileContent(fileID).subscribe((res: any) => {
-          if (res && res.data && res.data.statusCode === 200) {
-            const fileContent = res.data.data?.response?.replace(/^(https?:\/\/)+/, '$1');
+        this.labService.downloadFile({ fileID: result }).subscribe(
+          (res: any) => {
+            const blob = new Blob([res], { type: res.type });
+            const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = fileContent;
-            a.target = '_blank';
+            a.href = url;
+            a.download = result.fileName || 'download';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-          }
-        });
+          },
+          (err: any) => {
+            console.error('Error downloading file', err);
+          },
+        );
       }
     });
   }

@@ -1021,20 +1021,24 @@ export class WorkareaComponent
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
-        const fileID = {
-          fileID: result,
-        };
-        this.labService.viewFileContent(fileID).subscribe((res: any) => {
-          if (res && res.data && res.data.statusCode === 200) {
-            const fileContent = res.data.data?.response?.replace(/^(https?:\/\/)+/, '$1');
+        this.labService.downloadFile({ fileID: result }).subscribe(
+          (res: any) => {
+            const blob = new Blob([res], { type: res.type });
+            const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = fileContent;
-            a.target = '_blank';
+            a.href = url;
+            a.download = result.fileName || 'download';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-          }
-        });
+          },
+          (err: any) => {
+            this.confirmationService.alert(
+              this.current_language_set.alerts.info.selectNewFile,
+              'error',
+            );
+          },
+        );
       }
     });
   }

@@ -411,6 +411,7 @@ export const environment = {
   //file upload
   saveFile: `${COMMON_API}kmfilemanager/addFile`,
   viewFileData: `${TM_API}common/getKMFile`,
+  downloadFileUrl: `${TM_API}common/downloadFile`,
 
   /*Doctor signature download */
   downloadSignUrl: `${COMMON_API}signature1/`,
