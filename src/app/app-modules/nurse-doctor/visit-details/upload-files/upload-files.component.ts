@@ -316,8 +316,8 @@ export class UploadFilesComponent implements OnInit, DoCheck, OnChanges {
           fileID: result,
         };
         this.labService.viewFileContent(fileID).subscribe((res: any) => {
-          if (res && res.data && res.data.statusCode === 200) {
-            const fileContent = res.data.data?.response?.replace(/^(https?:\/\/)+/, '$1');
+          if (res && res.statusCode === 200) {
+            const fileContent = res.data?.response;
             const a = document.createElement('a');
             a.href = fileContent;
             a.target = '_blank';
