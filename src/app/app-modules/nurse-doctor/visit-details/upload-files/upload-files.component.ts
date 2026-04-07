@@ -316,9 +316,8 @@ export class UploadFilesComponent implements OnInit, DoCheck, OnChanges {
           fileID: result,
         };
         this.labService.viewFileContent(fileID).subscribe((res: any) => {
-          if (res && res.data && res.data.statusCode === 200) {
-            const fileContent = res.data.data?.response;
-            const byteCharacters = atob(fileContent);
+          if (res && res.statusCode === 200 && res.data) {
+            const byteCharacters = atob(res.data.fileContent);
             const byteNumbers = new Array(byteCharacters.length);
             for (let i = 0; i < byteCharacters.length; i++) {
               byteNumbers[i] = byteCharacters.charCodeAt(i);
@@ -326,7 +325,7 @@ export class UploadFilesComponent implements OnInit, DoCheck, OnChanges {
             const blob = new Blob([new Uint8Array(byteNumbers)]);
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = 'download';
+            a.download = res.data.fileName || 'download';
             a.click();
             URL.revokeObjectURL(a.href);
           }
