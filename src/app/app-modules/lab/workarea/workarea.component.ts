@@ -1027,22 +1027,7 @@ export class WorkareaComponent
           if (res && res.statusCode === 200) {
             const fileContent = res.data?.response;
             if (fileContent) {
-              const byteCharacters = atob(fileContent);
-              const byteNumbers = new Array(byteCharacters.length);
-              for (let i = 0; i < byteCharacters.length; i++) {
-                byteNumbers[i] = byteCharacters.charCodeAt(i);
-              }
-              const byteArray = new Uint8Array(byteNumbers);
-              const blob = new Blob([byteArray], {
-                type: 'application/octet-stream',
-              });
-              const fileURL = URL.createObjectURL(blob);
-              const a = document.createElement('a');
-              a.href = fileURL;
-              a.target = '_blank';
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
+              window.open(fileContent, '_blank');
             }
           }
         });
