@@ -162,7 +162,7 @@ export class AppHeaderComponent implements OnInit {
   logout() {
     this.auth.logout().subscribe((res) => {
       this.router
-        .navigate(['/feedback'], { queryParams: { sl: 'TM' } })
+        .navigate(['/login'], { queryParams: { sl: 'TM' } })
         .then((result) => {
           if (result) {
             this.changeLanguage('English');

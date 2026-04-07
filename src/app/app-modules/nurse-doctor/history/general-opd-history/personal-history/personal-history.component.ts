@@ -235,6 +235,11 @@ export class GeneralPersonalHistoryComponent
       this.personalHistoryData !== null &&
       this.personalHistoryData !== undefined
     ) {
+      if (this.personalHistoryData.riskySexualPracticesStatus !== null &&
+          this.personalHistoryData.riskySexualPracticesStatus !== undefined) {
+        this.personalHistoryData.riskySexualPracticesStatus =
+          this.personalHistoryData.riskySexualPracticesStatus == '1' ? true : false;
+      }
       this.generalPersonalHistoryForm.patchValue(this.personalHistoryData);
     }
 
