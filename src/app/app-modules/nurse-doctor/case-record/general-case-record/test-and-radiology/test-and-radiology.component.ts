@@ -379,12 +379,15 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
                   },
                 );
 
-                for (
-                  let i = 0, j = this.radiologyResults.length;
-                  i < radiologyResponse.length;
-                  i++, j++
-                ) {
-                  this.radiologyResults[j] = radiologyResponse[i];
+                const existingProcedureIDs = new Set(
+                  this.radiologyResults.map((r: any) => r.procedureID),
+                );
+                for (let i = 0; i < radiologyResponse.length; i++) {
+                  if (
+                    !existingProcedureIDs.has(radiologyResponse[i].procedureID)
+                  ) {
+                    this.radiologyResults.push(radiologyResponse[i]);
+                  }
                 }
 
                 this.archivedResults = res.data.ArchivedVisitcodeForLabResult;
