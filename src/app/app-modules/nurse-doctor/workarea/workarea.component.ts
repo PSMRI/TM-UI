@@ -2688,6 +2688,13 @@ export class WorkareaComponent
       }
     }
 
+    if (form.controls['prescription']) {
+      const drugForm = <FormGroup>form.controls['prescription'];
+      if (drugForm.value.incompletePrescription) {
+        required.push(this.current_language_set?.Prescription?.prescriptionIncomplete || 'Please complete or clear the prescription before submitting');
+      }
+    }
+
     if (required.length) {
       this.confirmationService.notify(
         this.current_language_set.alerts.info.belowFields,

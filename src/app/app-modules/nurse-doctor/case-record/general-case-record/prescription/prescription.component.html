@@ -47,7 +47,7 @@
           (selectionChange)="getFormValueChanged()"
           #form="ngModel"
         >
-          <mat-option [value]="null">--</mat-option>
+          <mat-option [value]="null">None</mat-option>
           <mat-option
             *ngFor="let item of drugFormMaster"
             [value]="item.itemFormName"

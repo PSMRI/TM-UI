@@ -343,6 +343,7 @@ export class PrescriptionComponent implements OnInit, OnDestroy, DoCheck {
 
   clearCurrentDetails() {
     this.tempDrugName = null;
+    this.currentPrescription.drugID = null;
     this.currentPrescription.dose = null;
     this.currentPrescription.frequency = null;
     this.currentPrescription.duration = null;

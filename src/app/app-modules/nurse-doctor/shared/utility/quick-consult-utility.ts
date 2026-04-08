@@ -61,6 +61,7 @@ export class QuickConsultUtils {
   createDrugPrescriptionForm() {
     return this.fb.group({
       prescribedDrugs: this.fb.array([]),
+      incompletePrescription: false,
     });
   }
 
