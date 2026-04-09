@@ -501,4 +501,6 @@ export const environment = {
   requestOtpForLogin: `${FHIR_API}abhaLogin/abhaLoginRequestOtp`,
   verifyOtpForLogin: `${FHIR_API}abhaLogin/verifyAbhaLogin`,
   printPngCard: `${FHIR_API}abhaCreation/printAbhaCard`,
+  getUserId: `${COMMON_API}user/userName/`,
+  checkUsersignExistUrl: `${ADMIN_API}signature1/signexist/`,
 };
