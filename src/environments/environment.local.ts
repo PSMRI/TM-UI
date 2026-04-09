@@ -519,8 +519,9 @@ export const environment = {
   printPngCard: `${FHIR_API}abhaCreation/printAbhaCard`,
   //adding this missing env to resolve an error from common-ui
   printWebLoginPhrCard: `${FHIR_API}abhaLogin/printWebLoginPhrCard`,
+  getUserId: `${COMMON_API}user/userName/`,
+  checkUsersignExistUrl: `${ADMIN_API}signature1/signexist/`,
   siteKey: siteKey,
   captchaChallengeURL: captchaChallengeURL,
   enableCaptcha: enableCaptcha,
-
 };
