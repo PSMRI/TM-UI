@@ -73,7 +73,7 @@ export class NcdScreeningDiagnosisComponent
     private idrsScoreService: IdrsscoreService,
     private nurseService: NurseService,
     readonly sessionstorage: SessionStorageService,
-    private masterdataService: MasterdataService
+    private masterdataService: MasterdataService,
   ) {}
 
   ngOnInit() {
@@ -327,7 +327,7 @@ export class NcdScreeningDiagnosisComponent
     this.idrsScoreService.finalDiagnosisHypertensionConfirm(hyperConfirmation);
   }
 
-   onDiagnosisInputKeyup(value: string, index: number) {
+  onDiagnosisInputKeyup(value: string, index: number) {
     if (value.length >= 3) {
       this.masterdataService
         .searchDiagnosisBasedOnPageNo(value, index)
@@ -346,7 +346,7 @@ export class NcdScreeningDiagnosisComponent
   onDiagnosisSelected(selected: any, index: number) {
     // this.patientQuickConsultForm.get(['provisionalDiagnosisList', index])?.setValue(selected);
     const diagnosisFormArray = this.generalDiagnosisForm.get(
-      'provisionalDiagnosisList'
+      'provisionalDiagnosisList',
     ) as FormArray;
     const diagnosisFormGroup = diagnosisFormArray.at(index) as FormGroup;
 

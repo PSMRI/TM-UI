@@ -700,7 +700,7 @@ export class NurseService {
     const d = new Date(date);
 
     const utcDate = new Date(
-      Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0)
+      Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0),
     );
     return utcDate.toISOString();
   }
@@ -714,13 +714,13 @@ export class NurseService {
     );
     if (detailedANC.lmpDate) {
       detailedANC.lmpDate = this.normalizeToUTCMidnight(
-        new Date(detailedANC.lmpDate)
+        new Date(detailedANC.lmpDate),
       );
     }
 
     if (detailedANC.expDelDt) {
       detailedANC.expDelDt = this.normalizeToUTCMidnight(
-        new Date(detailedANC.expDelDt)
+        new Date(detailedANC.expDelDt),
       );
     }
 
@@ -742,24 +742,24 @@ export class NurseService {
 
   postANCImmunizationForm(patientANCImmunizationForm: any, benVisitID: any) {
     const immunizationFormValue = JSON.parse(
-      JSON.stringify(patientANCImmunizationForm)
+      JSON.stringify(patientANCImmunizationForm),
     );
 
     if (immunizationFormValue.dateReceivedForTT_1) {
       immunizationFormValue.dateReceivedForTT_1 = this.normalizeToUTCMidnight(
-        new Date(immunizationFormValue.dateReceivedForTT_1)
+        new Date(immunizationFormValue.dateReceivedForTT_1),
       );
     }
 
     if (immunizationFormValue.dateReceivedForTT_2) {
       immunizationFormValue.dateReceivedForTT_2 = this.normalizeToUTCMidnight(
-        new Date(immunizationFormValue.dateReceivedForTT_2)
+        new Date(immunizationFormValue.dateReceivedForTT_2),
       );
     }
 
     if (immunizationFormValue.dateReceivedForTT_3) {
       immunizationFormValue.dateReceivedForTT_3 = this.normalizeToUTCMidnight(
-        new Date(immunizationFormValue.dateReceivedForTT_3)
+        new Date(immunizationFormValue.dateReceivedForTT_3),
       );
     }
 
