@@ -128,6 +128,10 @@ export const environment = {
   submitBeneficiaryIdentityUrl: `${TM_API}registrar/registrarBeneficaryRegistrationNew`,
   updateBeneficiaryIdentityUrl: `${TM_API}registrar/update/BeneficiaryUpdate`,
 
+  elasticSearchUrl: '',
+  advanceElasticSearchUrl: '',
+  getUserId: `${COMMON_API}user/userName/`,
+  checkUsersignExistUrl: `${ADMIN_API}signature1/signexist/`,
   registrarMasterDataUrl: `${TM_API}registrar/registrarMasterData`,
   quickSearchUrl: `${TM_API}registrar/quickSearch`,
   identityQuickSearchUrl: `${TM_API}registrar/quickSearchNew`,
