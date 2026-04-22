@@ -321,6 +321,7 @@ export class UploadFilesComponent implements OnInit, DoCheck, OnChanges {
             if (fileContent) {
               window.open(fileContent, '_blank');
             }
+
           }
         });
       }
