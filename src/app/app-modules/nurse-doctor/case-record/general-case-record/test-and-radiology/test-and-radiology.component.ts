@@ -379,12 +379,15 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
                   },
                 );
 
-                for (
-                  let i = 0, j = this.radiologyResults.length;
-                  i < radiologyResponse.length;
-                  i++, j++
-                ) {
-                  this.radiologyResults[j] = radiologyResponse[i];
+                const existingProcedureIDs = new Set(
+                  this.radiologyResults.map((r: any) => r.procedureID),
+                );
+                for (let i = 0; i < radiologyResponse.length; i++) {
+                  if (
+                    !existingProcedureIDs.has(radiologyResponse[i].procedureID)
+                  ) {
+                    this.radiologyResults.push(radiologyResponse[i]);
+                  }
                 }
 
                 this.archivedResults = res.data.ArchivedVisitcodeForLabResult;
@@ -507,12 +510,9 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
           (res: any) => {
             if (res.statusCode === 200) {
               const fileContent = res.data.response;
-              const a = document.createElement('a');
-              a.href = fileContent;
-              a.target = '_blank';
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
+              if (fileContent) {
+                window.open(fileContent, '_blank');
+              }
             }
           },
           (err) => {

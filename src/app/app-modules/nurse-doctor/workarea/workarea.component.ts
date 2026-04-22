@@ -2123,7 +2123,13 @@ export class WorkareaComponent
       }
     }
 
-  
+    if (caseRecordForm && caseRecordForm.controls['drugPrescriptionForm']) {
+      const drugForm = <FormGroup>caseRecordForm.controls['drugPrescriptionForm'];
+      if (drugForm.value.incompletePrescription) {
+        required.push(this.current_language_set?.Prescription?.prescriptionIncomplete || 'Please complete or clear the prescription before submitting');
+      }
+    }
+
     if (required.length) {
       this.confirmationService.notify(
         this.current_language_set.alerts.info.belowFields,
@@ -2679,6 +2685,13 @@ export class WorkareaComponent
         if (referForm.controls['referralReason'].errors) {
           required.push(this.current_language_set.Referdetails.referralReason);
         }
+      }
+    }
+
+    if (form.controls['prescription']) {
+      const drugForm = <FormGroup>form.controls['prescription'];
+      if (drugForm.value.incompletePrescription) {
+        required.push(this.current_language_set?.Prescription?.prescriptionIncomplete || 'Please complete or clear the prescription before submitting');
       }
     }
 

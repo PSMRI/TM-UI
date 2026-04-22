@@ -325,7 +325,14 @@ export class QuickConsultComponent
 
   getFormValueChanged() {
     this.clearCurrentDetails();
-    this.getFormDetails();
+    if (this.tempform) {
+      this.getFormDetails();
+      this.drugPrescriptionForm.patchValue({ incompletePrescription: true });
+    } else {
+      this.currentPrescription.formID = null;
+      this.currentPrescription.formName = null;
+      this.drugPrescriptionForm.patchValue({ incompletePrescription: false });
+    }
   }
   getFormDetails() {
     this.currentPrescription['formID'] = this.tempform.itemFormID;
@@ -487,10 +494,25 @@ export class QuickConsultComponent
     this.isStockAvalable = '';
   }
 
+  canAddPrescription(): boolean {
+    if (!this.tempform) return false;
+    if (!this.currentPrescription.drugID) return false;
+    if (!this.currentPrescription.dose) return false;
+    if (!this.currentPrescription.frequency) return false;
+    if (!this.currentPrescription.duration) return false;
+    if (!this.currentPrescription.unit) return false;
+    if (this.currentPrescription.formID &&
+        this.currentPrescription.formID !== 1 &&
+        this.currentPrescription.formID !== 2 &&
+        !this.currentPrescription.qtyPrescribed) return false;
+    return true;
+  }
+
   submitForUpload() {
     this.addMedicine();
     this.tempform = null;
     this.clearCurrentDetails();
+    this.drugPrescriptionForm.patchValue({ incompletePrescription: false });
   }
 
   masterDataSubscription: any;

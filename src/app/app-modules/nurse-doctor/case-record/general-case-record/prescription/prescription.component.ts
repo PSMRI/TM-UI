@@ -194,7 +194,13 @@ export class PrescriptionComponent implements OnInit, OnDestroy, DoCheck {
 
   getFormValueChanged() {
     this.clearCurrentDetails();
-    this.getFormDetails();
+    if (this.currentPrescription.formName) {
+      this.getFormDetails();
+      this.drugPrescriptionForm.patchValue({ incompletePrescription: true });
+    } else {
+      this.currentPrescription.formID = null;
+      this.drugPrescriptionForm.patchValue({ incompletePrescription: false });
+    }
   }
   getFormDetails() {
     this.drugFormMaster.filter((item: any) => {
@@ -337,6 +343,7 @@ export class PrescriptionComponent implements OnInit, OnDestroy, DoCheck {
 
   clearCurrentDetails() {
     this.tempDrugName = null;
+    this.currentPrescription.drugID = null;
     this.currentPrescription.dose = null;
     this.currentPrescription.frequency = null;
     this.currentPrescription.duration = null;
@@ -362,6 +369,21 @@ export class PrescriptionComponent implements OnInit, OnDestroy, DoCheck {
 
     this.prescriptionForm.form.markAsUntouched();
     this.isStockAvalable = '';
+    this.drugPrescriptionForm.patchValue({ incompletePrescription: false });
+  }
+
+  canAddPrescription(): boolean {
+    if (!this.currentPrescription.formName) return false;
+    if (!this.currentPrescription.drugID) return false;
+    if (!this.currentPrescription.dose) return false;
+    if (!this.currentPrescription.frequency) return false;
+    if (!this.currentPrescription.duration) return false;
+    if (!this.currentPrescription.unit) return false;
+    if (this.currentPrescription.formID &&
+        this.currentPrescription.formID !== 1 &&
+        this.currentPrescription.formID !== 2 &&
+        !this.currentPrescription.qtyPrescribed) return false;
+    return true;
   }
 
   submitForUpload() {

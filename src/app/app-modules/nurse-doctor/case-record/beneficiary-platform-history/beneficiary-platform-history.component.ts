@@ -28,10 +28,10 @@ import { CaseSheetComponent } from '../../case-sheet/case-sheet.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
 import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
-import { environment } from 'src/environments/environment';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-beneficiary-platform-history',
@@ -106,6 +106,7 @@ export class BeneficiaryPlatformHistoryComponent implements OnInit, DoCheck {
     private confirmationService: ConfirmationService,
     readonly sessionstorage: SessionStorageService,
     private dialog: MatDialog,
+    private router: Router,
   ) {}
 
   ngOnInit() {
@@ -257,10 +258,9 @@ export class BeneficiaryPlatformHistoryComponent implements OnInit, DoCheck {
             visit.benVisitID,
           );
           if (print) {
-            const url = environment.newTaburl;
-            window.open(
-              url + '#/nurse-doctor/print/' + serviceType + '/' + 'previous',
-            );
+            this.router.navigate([
+              '/nurse-doctor/print/' + serviceType + '/' + 'previous',
+            ]);
           } else {
             this.dialog.open(CaseSheetComponent, {
               disableClose: true,

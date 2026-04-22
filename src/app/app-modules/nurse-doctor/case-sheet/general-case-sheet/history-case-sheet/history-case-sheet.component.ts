@@ -67,7 +67,9 @@ export class HistoryCaseSheetComponent implements OnInit, OnChanges, DoCheck {
   ) {}
 
   ngOnInit() {
-    this.visitCategory = this.sessionstorage.getItem('caseSheetVisitCategory');
+    this.visitCategory = this.previous
+      ? this.sessionstorage.getItem('previousCaseSheetVisitCategory')
+      : this.sessionstorage.getItem('caseSheetVisitCategory');
     this.assignSelectedLanguage();
   }
 

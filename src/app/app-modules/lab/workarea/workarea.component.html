@@ -418,7 +418,7 @@
                                   autocomplete="off"
                                   matInput
                                   [formControl]="
-                                    procedure.value.compDetails.remarks
+                                    $any(procedure.get('compDetails'))?.get('remarks')
                                   "
                                   allowText="alphanumericspace"
                                   maxLength="300"
