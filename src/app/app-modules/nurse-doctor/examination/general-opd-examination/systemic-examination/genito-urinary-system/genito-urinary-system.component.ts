@@ -29,6 +29,8 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
   selector: 'app-nurse-genito-urinary-system',
   templateUrl: './genito-urinary-system.component.html',
   styleUrls: ['./genito-urinary-system.component.css'],
+
+  standalone: false,
 })
 export class GenitoUrinarySystemComponent implements OnInit, DoCheck {
   @Input()

@@ -80,6 +80,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
       },
     },
   ],
+
+  standalone: false,
 })
 export class PncDiagnosisComponent
   implements OnInit, OnChanges, OnDestroy, DoCheck
@@ -102,7 +104,7 @@ export class PncDiagnosisComponent
     private doctorService: DoctorService,
     public httpServiceService: HttpServiceService,
     readonly sessionstorage: SessionStorageService,
-    private masterdataService: MasterdataService
+    private masterdataService: MasterdataService,
   ) {}
 
   beneficiaryAge: any;
@@ -282,9 +284,7 @@ export class PncDiagnosisComponent
         if (res && res.statusCode === 200 && res.data && res.data.diagnosis) {
           this.generalDiagnosisForm.patchValue(res.data.diagnosis);
           if (res.data.diagnosis) {
-            this.patchDiagnosisDetails(
-              res.data.diagnosis
-            );
+            this.patchDiagnosisDetails(res.data.diagnosis);
           }
         }
       });
@@ -297,7 +297,10 @@ export class PncDiagnosisComponent
     this.handleDiagnosisData(diagnosis);
   }
   handleDiagnosisData(diagnosis: any) {
-        console.log("provisionalDiagnosisDataList dia", diagnosis.provisionalDiagnosisList);
+    console.log(
+      'provisionalDiagnosisDataList dia',
+      diagnosis.provisionalDiagnosisList,
+    );
 
     if (
       diagnosis.provisionalDiagnosisList &&
@@ -318,8 +321,7 @@ export class PncDiagnosisComponent
       'provisionalDiagnosisList'
     ] as FormArray;
 
-    console.log("provisionalDiagnosisDataList", provisionalDiagnosisDataList);
-    
+    console.log('provisionalDiagnosisDataList', provisionalDiagnosisDataList);
 
     for (let i = 0; i < provisionalDiagnosisDataList.length; i++) {
       provisionalDiagnosisList.at(i).patchValue({
@@ -333,14 +335,14 @@ export class PncDiagnosisComponent
       ].disable();
       if (provisionalDiagnosisList.length < provisionalDiagnosisDataList.length)
         this.addProvisionalDiagnosis();
-     }
+    }
   }
 
   handleConfirmatoryDiagnosisData(confirmatoryDiagnosisDataList: any) {
     const confirmatoryDiagnosisList = this.generalDiagnosisForm.controls[
       'confirmatoryDiagnosisList'
     ] as FormArray;
-        console.log("confirmatoryDiagnosisDataList", confirmatoryDiagnosisDataList);
+    console.log('confirmatoryDiagnosisDataList', confirmatoryDiagnosisDataList);
 
     for (let i = 0; i < confirmatoryDiagnosisDataList.length; i++) {
       confirmatoryDiagnosisList.at(i).patchValue({
@@ -352,7 +354,9 @@ export class PncDiagnosisComponent
       (<FormGroup>confirmatoryDiagnosisList.at(i)).controls[
         'viewConfirmatoryDiagnosisProvided'
       ].disable();
-      if (confirmatoryDiagnosisList.length < confirmatoryDiagnosisDataList.length)
+      if (
+        confirmatoryDiagnosisList.length < confirmatoryDiagnosisDataList.length
+      )
         this.addConfirmatoryDiagnosis();
     }
   }
@@ -450,7 +454,7 @@ export class PncDiagnosisComponent
   onDiagnosisSelected(selected: any, index: number) {
     // this.patientQuickConsultForm.get(['provisionalDiagnosisList', index])?.setValue(selected);
     const diagnosisFormArray = this.generalDiagnosisForm.get(
-      'provisionalDiagnosisList'
+      'provisionalDiagnosisList',
     ) as FormArray;
     const diagnosisFormGroup = diagnosisFormArray.at(index) as FormGroup;
 

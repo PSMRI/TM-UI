@@ -12,6 +12,8 @@ import { SetLanguageComponent } from '../../core/components/set-language.compone
   selector: 'app-generate-abha',
   templateUrl: './generate-abha.component.html',
   styleUrls: ['./generate-abha.component.css'],
+
+  standalone: false,
 })
 export class GenerateAbhaComponent implements OnInit {
   utils = new RegistrationUtils(this.fb);
@@ -127,6 +129,8 @@ export class GenerateAbhaComponent implements OnInit {
   selector: 'app-auth-method',
   templateUrl: './auth-method.html',
   styleUrls: ['./generate-abha.component.css'],
+
+  standalone: false,
 })
 export class authMethodComponent implements OnInit {
   authOption = false;

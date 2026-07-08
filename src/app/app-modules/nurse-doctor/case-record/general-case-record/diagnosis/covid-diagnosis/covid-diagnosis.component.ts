@@ -32,6 +32,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   selector: 'app-covid-diagnosis',
   templateUrl: './covid-diagnosis.component.html',
   styleUrls: ['./covid-diagnosis.component.css'],
+
+  standalone: false,
 })
 export class CovidDiagnosisComponent implements OnInit, OnChanges, DoCheck {
   utils = new GeneralUtils(this.fb, this.sessionstorage);

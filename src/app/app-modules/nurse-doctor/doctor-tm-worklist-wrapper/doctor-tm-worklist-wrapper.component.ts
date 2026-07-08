@@ -28,6 +28,8 @@ import { SetLanguageComponent } from '../../core/components/set-language.compone
   selector: 'app-doctor-tm-worklist-wrapper',
   templateUrl: './doctor-tm-worklist-wrapper.component.html',
   styleUrls: ['./doctor-tm-worklist-wrapper.component.css'],
+
+  standalone: false,
 })
 export class DoctorTmWorklistWrapperComponent implements OnInit, DoCheck {
   app: any;

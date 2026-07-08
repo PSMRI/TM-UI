@@ -29,6 +29,8 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
   selector: 'app-examination-case-sheet',
   templateUrl: './examination-case-sheet.component.html',
   styleUrls: ['./examination-case-sheet.component.css'],
+
+  standalone: false,
 })
 export class ExaminationCaseSheetComponent
   implements OnInit, OnChanges, DoCheck

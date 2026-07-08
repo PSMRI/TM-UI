@@ -32,6 +32,8 @@ import { SetLanguageComponent } from '../../core/components/set-language.compone
   selector: 'app-generate-mobile-otp-generation',
   templateUrl: './generate-mobile-otp-generation.component.html',
   styleUrls: ['./generate-mobile-otp-generation.component.css'],
+
+  standalone: false,
 })
 export class GenerateMobileOtpGenerationComponent implements OnInit, DoCheck {
   generateMobileOTPForm!: FormGroup;

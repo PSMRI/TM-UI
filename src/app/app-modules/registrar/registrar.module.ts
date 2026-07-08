@@ -75,7 +75,7 @@ import { SharedModule } from '../core/components/shared/shared.module';
     MatTableModule,
     RegistrarRoutingModule,
     ReactiveFormsModule,
-    BsDatepickerModule.forRoot(),
+    BsDatepickerModule,
     SharedModule,
   ],
   providers: [RegistrarService],

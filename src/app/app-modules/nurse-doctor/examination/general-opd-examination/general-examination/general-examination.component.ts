@@ -30,6 +30,8 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
   selector: 'app-nurse-general-examination',
   templateUrl: './general-examination.component.html',
   styleUrls: ['./general-examination.component.css'],
+
+  standalone: false,
 })
 export class GeneralExaminationComponent implements OnInit, OnChanges, DoCheck {
   @Input()

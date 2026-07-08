@@ -39,6 +39,8 @@ import { MasterdataService } from 'src/app/app-modules/nurse-doctor/shared/servi
   selector: 'app-diagnosis-search',
   templateUrl: './diagnosis-search.component.html',
   styleUrls: ['./diagnosis-search.component.css'],
+
+  standalone: false,
 })
 export class DiagnosisSearchComponent implements OnInit, DoCheck, OnChanges {
   searchTerm: any;

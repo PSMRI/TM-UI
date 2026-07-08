@@ -22,7 +22,10 @@
 
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from './material.module';
@@ -73,25 +76,16 @@ import { HealthIdDisplayModalComponent } from './components/health-id-display-mo
 import { HttpInterceptorService } from './services/http-interceptor.service';
 import { TelemedicineService } from './services/telemedicine.service';
 import { MyHealthIdDirective } from './directives/myHealthId/myHealthId.directive';
-import { NgChartsModule } from 'ng2-charts';
+import {
+  BaseChartDirective,
+  provideCharts,
+  withDefaultRegisterables,
+} from 'ng2-charts';
 import { MasterdataService } from '../nurse-doctor/shared/services';
 import { RegistrarService } from '../registrar/shared/services/registrar.service';
 import { SharedModule } from './components/shared/shared.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    MaterialModule,
-    HttpClientModule,
-    RouterModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgChartsModule,
-    WebcamModule,
-    MatTableModule,
-    SharedModule,
-    RouterModule,
-  ],
   declarations: [
     CommonDialogComponent,
     CameraDialogComponent,
@@ -149,7 +143,23 @@ import { SharedModule } from './components/shared/shared.module';
     WebcamModule,
     DiagnosisSearchComponent,
     DiagnosisSearchDirective,
-    NgChartsModule,
+    BaseChartDirective,
+  ],
+  imports: [
+    CommonModule,
+    MaterialModule,
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    BaseChartDirective,
+    WebcamModule,
+    MatTableModule,
+    SharedModule,
+    RouterModule,
+  ],
+  providers: [
+    provideHttpClient(withInterceptorsFromDi()),
+    provideCharts(withDefaultRegisterables()),
   ],
 })
 export class CoreModule {

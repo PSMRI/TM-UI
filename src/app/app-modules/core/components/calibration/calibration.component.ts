@@ -35,6 +35,8 @@ import { MasterdataService } from 'src/app/app-modules/nurse-doctor/shared/servi
   selector: 'app-calibration',
   templateUrl: './calibration.component.html',
   styleUrls: ['./calibration.component.css'],
+
+  standalone: false,
 })
 export class CalibrationComponent implements OnInit, DoCheck {
   searchTerm: any;

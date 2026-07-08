@@ -39,6 +39,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   selector: 'app-ncd-care-diagnosis',
   templateUrl: './ncd-care-diagnosis.component.html',
   styleUrls: ['./ncd-care-diagnosis.component.css'],
+
+  standalone: false,
 })
 export class NcdCareDiagnosisComponent implements OnInit, DoCheck {
   utils = new GeneralUtils(this.fb, this.sessionstorage);
@@ -60,7 +62,6 @@ export class NcdCareDiagnosisComponent implements OnInit, DoCheck {
   attendantType: any;
   enableNCDCondition = false;
   suggestedDiagnosisList: any = [];
-
 
   constructor(
     private fb: FormBuilder,
@@ -290,7 +291,7 @@ export class NcdCareDiagnosisComponent implements OnInit, DoCheck {
   onDiagnosisSelected(selected: any, index: number) {
     // this.patientQuickConsultForm.get(['provisionalDiagnosisList', index])?.setValue(selected);
     const diagnosisFormArray = this.generalDiagnosisForm.get(
-      'provisionalDiagnosisList'
+      'provisionalDiagnosisList',
     ) as FormArray;
     const diagnosisFormGroup = diagnosisFormArray.at(index) as FormGroup;
 

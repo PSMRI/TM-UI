@@ -39,6 +39,8 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
   selector: 'app-nurse-obstetric-formula',
   templateUrl: './obstetric-formula.component.html',
   styleUrls: ['./obstetric-formula.component.css'],
+
+  standalone: false,
 })
 export class ObstetricFormulaComponent implements OnInit, OnChanges, DoCheck {
   @Input()

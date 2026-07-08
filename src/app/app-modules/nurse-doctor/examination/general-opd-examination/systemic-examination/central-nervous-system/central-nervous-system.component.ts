@@ -29,6 +29,8 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
   selector: 'app-nurse-central-nervous-system',
   templateUrl: './central-nervous-system.component.html',
   styleUrls: ['./central-nervous-system.component.css'],
+
+  standalone: false,
 })
 export class CentralNervousSystemComponent implements OnInit, DoCheck {
   @Input()

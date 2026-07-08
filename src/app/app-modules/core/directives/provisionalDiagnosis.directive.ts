@@ -34,6 +34,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
 
 @Directive({
   selector: '[appDiagnosisSearch]',
+
+  standalone: false,
 })
 export class DiagnosisSearchDirective {
   @Input()

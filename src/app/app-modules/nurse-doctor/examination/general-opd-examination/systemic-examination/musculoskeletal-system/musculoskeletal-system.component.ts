@@ -30,6 +30,8 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
   selector: 'app-nurse-musculoskeletal-system',
   templateUrl: './musculoskeletal-system.component.html',
   styleUrls: ['./musculoskeletal-system.component.css'],
+
+  standalone: false,
 })
 export class MusculoskeletalSystemComponent
   implements OnInit, OnDestroy, DoCheck

@@ -31,6 +31,8 @@ import { SetLanguageComponent } from '../../core/components/set-language.compone
   selector: 'app-quick-search',
   templateUrl: './quick-search.component.html',
   styleUrls: ['./quick-search.component.css'],
+
+  standalone: false,
 })
 export class QuickSearchComponent implements OnInit, DoCheck {
   currentLanguageSet: any;

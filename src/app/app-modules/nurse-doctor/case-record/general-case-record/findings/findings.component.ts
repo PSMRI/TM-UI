@@ -54,6 +54,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   selector: 'app-findings',
   templateUrl: './findings.component.html',
   styleUrls: ['./findings.component.css'],
+
+  standalone: false,
 })
 export class FindingsComponent implements OnInit, OnDestroy, DoCheck {
   @Input()
@@ -204,7 +206,7 @@ export class FindingsComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   doctorMasterDataSubscription: any;
-  getDoctorMasterData() {    
+  getDoctorMasterData() {
     this.doctorMasterDataSubscription =
       this.masterdataService.nurseMasterData$.subscribe((masterData) => {
         if (masterData) {
@@ -220,14 +222,13 @@ export class FindingsComponent implements OnInit, OnDestroy, DoCheck {
 
             const specialistFlagString =
               this.sessionstorage.getItem('specialist_flag');
-              
+
             if (
               this.sessionstorage.getItem('referredVisitCode') ===
                 'undefined' ||
               this.sessionstorage.getItem('referredVisitCode') === null ||
               this.sessionstorage.getItem('referredVisitCode') === ''
             ) {
-              
               this.getFindingDetails(
                 this.beneficiaryRegID,
                 this.visitID,

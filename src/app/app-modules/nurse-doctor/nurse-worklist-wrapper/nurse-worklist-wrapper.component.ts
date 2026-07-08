@@ -30,6 +30,8 @@ import { SetLanguageComponent } from '../../core/components/set-language.compone
   selector: 'app-nurse-worklist-wrapper',
   templateUrl: './nurse-worklist-wrapper.component.html',
   styleUrls: ['./nurse-worklist-wrapper.component.css'],
+
+  standalone: false,
 })
 export class NurseWorklistWrapperComponent implements OnInit, DoCheck {
   currentLanguageSet: any;

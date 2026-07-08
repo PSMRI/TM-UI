@@ -40,6 +40,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   selector: 'app-nurse-anc',
   templateUrl: './anc.component.html',
   styleUrls: ['./anc.component.css'],
+
+  standalone: false,
 })
 export class AncComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
   @Input()
@@ -197,7 +199,7 @@ export class AncComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
 
     const d = new Date(date);
     const utcDate = new Date(
-      Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0)
+      Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0),
     );
     return utcDate.toISOString();
   }

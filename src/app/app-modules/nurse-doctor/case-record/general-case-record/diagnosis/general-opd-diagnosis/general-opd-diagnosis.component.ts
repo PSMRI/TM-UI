@@ -42,6 +42,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   selector: 'app-general-opd-diagnosis',
   templateUrl: './general-opd-diagnosis.component.html',
   styleUrls: ['./general-opd-diagnosis.component.css'],
+
+  standalone: false,
 })
 export class GeneralOpdDiagnosisComponent
   implements OnInit, OnChanges, DoCheck
@@ -64,7 +66,7 @@ export class GeneralOpdDiagnosisComponent
     private doctorService: DoctorService,
     private confirmationService: ConfirmationService,
     readonly sessionstorage: SessionStorageService,
-    private masterdataService: MasterdataService
+    private masterdataService: MasterdataService,
   ) {}
 
   ngOnInit() {
@@ -275,7 +277,7 @@ export class GeneralOpdDiagnosisComponent
   onDiagnosisSelected(selected: any, index: number) {
     // this.patientQuickConsultForm.get(['provisionalDiagnosisList', index])?.setValue(selected);
     const diagnosisFormArray = this.generalDiagnosisForm.get(
-      'provisionalDiagnosisList'
+      'provisionalDiagnosisList',
     ) as FormArray;
     const diagnosisFormGroup = diagnosisFormArray.at(index) as FormGroup;
 

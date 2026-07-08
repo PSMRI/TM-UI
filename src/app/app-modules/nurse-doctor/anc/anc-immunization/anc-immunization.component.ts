@@ -72,6 +72,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
       },
     },
   ],
+
+  standalone: false,
 })
 export class AncImmunizationComponent
   implements OnInit, OnChanges, OnDestroy, DoCheck

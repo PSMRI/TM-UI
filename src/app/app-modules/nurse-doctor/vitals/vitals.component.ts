@@ -27,6 +27,8 @@ import { FormGroup } from '@angular/forms';
   selector: 'app-nurse-vitals',
   templateUrl: './vitals.component.html',
   styleUrls: ['./vitals.component.css'],
+
+  standalone: false,
 })
 export class VitalsComponent implements OnChanges {
   @Input()

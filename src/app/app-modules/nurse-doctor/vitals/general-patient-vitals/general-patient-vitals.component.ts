@@ -41,6 +41,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   selector: 'app-nurse-general-patient-vitals',
   templateUrl: './general-patient-vitals.component.html',
   styleUrls: ['./general-patient-vitals.component.css'],
+
+  standalone: false,
 })
 export class GeneralPatientVitalsComponent
   implements OnInit, OnChanges, OnDestroy

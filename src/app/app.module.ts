@@ -2,8 +2,9 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './app-modules/core/core.module';
 import {
   HttpClient,
-  HttpClientModule,
   HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
 } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { HttpInterceptorService } from './app-modules/core/services/http-interceptor.service';
@@ -47,12 +48,13 @@ import { CaptchaComponent } from './app-modules/captcha/captcha.component';
     ResetPasswordComponent,
     CaptchaComponent,
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  bootstrap: [AppComponent],
   imports: [
     BrowserModule,
     FormsModule,
     MatFormFieldModule,
     ReactiveFormsModule,
-    HttpClientModule,
     MaterialModule,
     AppRoutingModule,
     MatIconModule,
@@ -67,7 +69,6 @@ import { CaptchaComponent } from './app-modules/captcha/captcha.component';
     SharedModule,
     RegistrationModule,
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     HttpClient,
     ServicePointResolve,
@@ -79,7 +80,7 @@ import { CaptchaComponent } from './app-modules/captcha/captcha.component';
       multi: true,
     },
     RegistrarService,
+    provideHttpClient(withInterceptorsFromDi()),
   ],
-  bootstrap: [AppComponent],
 })
 export class AppModule {}

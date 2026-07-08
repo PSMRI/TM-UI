@@ -48,6 +48,8 @@ import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-la
   selector: 'app-register-personal-details',
   templateUrl: './register-personal-details.component.html',
   styleUrls: ['./register-personal-details.component.css'],
+
+  standalone: false,
 })
 export class RegisterPersonalDetailsComponent
   implements OnInit, DoCheck, OnDestroy, AfterViewChecked

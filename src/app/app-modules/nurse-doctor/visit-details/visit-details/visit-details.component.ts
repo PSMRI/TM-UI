@@ -39,6 +39,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   selector: 'app-patient-visit-details',
   templateUrl: './visit-details.component.html',
   styleUrls: ['./visit-details.component.css'],
+
+  standalone: false,
 })
 export class PatientVisitDetailsComponent
   implements OnInit, OnDestroy, OnChanges, DoCheck
