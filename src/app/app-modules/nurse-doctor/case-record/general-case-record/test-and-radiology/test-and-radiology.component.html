@@ -117,6 +117,26 @@
                 {{ component?.remarks }}
               </td>
             </tr>
+            <tr
+              *ngIf="
+                test?.procedureName &&
+                test?.procedureName.includes('ECG') &&
+                test?.abnormalFindingLabels &&
+                test?.abnormalFindingLabels.length > 0
+              "
+            >
+              <td
+                colspan="4"
+                style="
+                  background-color: #f9f3cd;
+                  font-weight: 500;
+                  padding: 8px;
+                "
+              >
+                <strong>ECG Abnormal Findings:</strong>
+                {{ test?.abnormalFindingLabels?.join(", ") }}
+              </td>
+            </tr>
           </ng-container>
         </tbody>
         <tfoot>
@@ -268,15 +288,16 @@
           <ng-container
             *ngFor="let radiologyReport of radiologyResults; let i = index"
           >
-            <tr>
-              <td [attr.rowspan]="radiologyReport?.componentList.length + 1">
-                {{ radiologyReport.procedureName }}
-              </td>
-            </tr>
             <tr *ngFor="let test of radiologyReport?.componentList">
               <td
                 style="
-                  width: 300px;
+                  vertical-align: middle;
+                "
+              >
+                {{ radiologyReport.procedureName }}
+              </td>
+              <td
+                style="
                   max-width: 120px;
                   word-break: normal;
                   vertical-align: middle;
@@ -491,6 +512,26 @@
                   "
                 >
                   {{ component?.remarks }}
+                </td>
+              </tr>
+              <tr
+                *ngIf="
+                  test?.procedureName &&
+                  test?.procedureName.includes('ECG') &&
+                  test?.abnormalFindingLabels &&
+                  test?.abnormalFindingLabels.length > 0
+                "
+              >
+                <td
+                  colspan="6"
+                  style="
+                    background-color: #f9f3cd;
+                    font-weight: 500;
+                    padding: 8px;
+                  "
+                >
+                  <strong>ECG Abnormal Findings:</strong>
+                  {{ test?.abnormalFindingLabels?.join(", ") }}
                 </td>
               </tr>
             </ng-container>

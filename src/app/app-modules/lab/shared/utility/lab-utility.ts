@@ -55,6 +55,7 @@ export class LabUtils {
       calibrationStatusAPI: null,
       calibrationEndAPI: null,
       compListDetails: this.fb.array([]),
+      ecgAbnormalFindings: this.fb.control([]),
     });
   }
 

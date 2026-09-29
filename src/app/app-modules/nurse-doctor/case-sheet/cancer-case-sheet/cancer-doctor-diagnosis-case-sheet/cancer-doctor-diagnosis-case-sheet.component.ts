@@ -200,11 +200,12 @@ export class CancerDoctorDiagnosisCaseSheetComponent
   }
   getHealthIDDetails() {
     const data = {
-      beneficiaryRegID: this.sessionstorage.getItem(
-        'caseSheetBeneficiaryRegID',
-      ),
+      beneficiaryRegID: this.previous
+        ? this.sessionstorage.getItem('previousCaseSheetBeneficiaryRegID')
+        : this.sessionstorage.getItem('caseSheetBeneficiaryRegID'),
       beneficiaryID: null,
     };
+    if (!data.beneficiaryRegID) return;
     this.registrarService.getHealthIdDetails(data).subscribe(
       (healthIDDetails: any) => {
         if (healthIDDetails.statusCode === 200) {
@@ -274,9 +275,10 @@ export class CancerDoctorDiagnosisCaseSheetComponent
   }
 
   getPreviousCovidVaccinationDetails(doseTypeList: any, vaccineTypeList: any) {
-    const beneficiaryRegID = this.sessionstorage.getItem(
-      'caseSheetBeneficiaryRegID',
-    );
+    const beneficiaryRegID = this.previous
+      ? this.sessionstorage.getItem('previousCaseSheetBeneficiaryRegID')
+      : this.sessionstorage.getItem('caseSheetBeneficiaryRegID');
+    if (!beneficiaryRegID) return;
     this.masterdataService
       .getPreviousCovidVaccinationDetails(beneficiaryRegID)
       .subscribe(

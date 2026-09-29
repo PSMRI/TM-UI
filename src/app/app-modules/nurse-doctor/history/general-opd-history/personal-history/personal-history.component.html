@@ -621,13 +621,13 @@
                 (change)="removeSnomedCode(allergy, i)"
                 [disabled]="!allergy.value.allergyType"
                 (keyup.enter)="
-                  searchComponents(allergy.value.snomedTerm, i, allergy)
+                  searchComponents(allergy.get('snomedTerm')?.value, i, allergy)
                 "
               />
               <mat-icon
                 class="search-btn cursorPointer"
                 matSuffix
-                (click)="searchComponents(allergy.value.snomedTerm, i, allergy)"
+                (click)="searchComponents(allergy.get('snomedTerm')?.value, i, allergy)"
                 [class.toolbar-icon-disabled]="componentFlag"
                 >search</mat-icon
               >

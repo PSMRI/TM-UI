@@ -1643,7 +1643,9 @@ export class DoctorService {
         riskySexualPracticesStatus:
           personalHistoryFormValue.riskySexualPracticesStatus !== undefined &&
           personalHistoryFormValue.riskySexualPracticesStatus !== null
-            ? +personalHistoryFormValue.riskySexualPracticesStatus
+            ? personalHistoryFormValue.riskySexualPracticesStatus
+              ? '1'
+              : '0'
             : null,
         tobaccoList: tobaccoList,
         alcoholList: alcoholList,

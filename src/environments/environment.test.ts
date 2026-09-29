@@ -59,11 +59,22 @@ const FHIR_API = `${FHIRIP}/fhirapi-v1.0/`;
 const mmuUICasesheet = `${tmUI_IP}tmui-v1.0`;
 const sessionStorageEncKey = '';
 
+const siteKey = '';
+const captchaChallengeURL = '';
+const enableCaptcha = false;
+
 export const environment = {
   production: true,
   isTMOffline: false,
   encKey: sessionStorageEncKey,
   app: `MMU`,
+   tracking: {
+    enabled: true,
+    trackingPlatform: 'matomo',
+    platform: 'matomo',
+    siteId: 3, // The new Site ID from Matomo
+    trackerUrl: 'https://matomo.piramalswasthya.org/',
+  },
   RBSTest: `RBS Test`,
   visualAcuityTest: `Visual Acuity Test`,
   haemoglobinTest: `Haemoglobin Test`,
@@ -495,10 +506,20 @@ export const environment = {
   getBenIdForhealthID: `${FHIR_API}healthID/getBenIdForhealthID`,
 
   /* Abha V3 APIs */
-  requestOtpForAbhaEnroll: `${FHIR_API}abhaCreation/requestOtpForAbhaEnrollment`,
+ requestOtpForAbhaEnroll: `${FHIR_API}abhaCreation/requestOtpForAbhaEnrollment`,
   abhaEnrollmentByAadhaar: `${FHIR_API}abhaCreation/abhaEnrollmentByAadhaar`,
   verifyMobileForAbhaAuth: `${FHIR_API}abhaCreation/verifyAuthByMobile`,
   requestOtpForLogin: `${FHIR_API}abhaLogin/abhaLoginRequestOtp`,
   verifyOtpForLogin: `${FHIR_API}abhaLogin/verifyAbhaLogin`,
   printPngCard: `${FHIR_API}abhaCreation/printAbhaCard`,
+  //adding this missing env to resolve an error from common-ui
+  printWebLoginPhrCard: `${FHIR_API}abhaLogin/printWebLoginPhrCard`,
+
+  siteKey: siteKey,
+  captchaChallengeURL: captchaChallengeURL,
+  enableCaptcha: enableCaptcha,
+  
+
+  getUserId: `${COMMON_API}user/userName/`,
+  checkUsersignExistUrl: `${ADMIN_API}signature1/signexist/`,
 };

@@ -215,10 +215,12 @@ export class GeneralPersonalHistoryComponent
           this.personalHistoryData = history.data.PersonalHistory;
           if (
             this.personalHistoryData &&
-            this.personalHistoryData.riskySexualPracticesStatus !== null
+            this.personalHistoryData.riskySexualPracticesStatus !== null &&
+            this.personalHistoryData.riskySexualPracticesStatus !== undefined
           ) {
             this.personalHistoryData.riskySexualPracticesStatus =
-              this.personalHistoryData.riskySexualPracticesStatus == '1'
+              this.personalHistoryData.riskySexualPracticesStatus == '1' ||
+              this.personalHistoryData.riskySexualPracticesStatus === true
                 ? true
                 : false;
           }
@@ -235,6 +237,11 @@ export class GeneralPersonalHistoryComponent
       this.personalHistoryData !== null &&
       this.personalHistoryData !== undefined
     ) {
+      if (this.personalHistoryData.riskySexualPracticesStatus !== null &&
+          this.personalHistoryData.riskySexualPracticesStatus !== undefined) {
+        this.personalHistoryData.riskySexualPracticesStatus =
+          this.personalHistoryData.riskySexualPracticesStatus == '1' ? true : false;
+      }
       this.generalPersonalHistoryForm.patchValue(this.personalHistoryData);
     }
 

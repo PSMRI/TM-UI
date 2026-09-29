@@ -330,7 +330,7 @@ export class NcdScreeningDiagnosisComponent
   onDiagnosisInputKeyup(value: string, index: number) {
     if (value.length >= 3) {
       this.masterdataService
-        .searchDiagnosisBasedOnPageNo(value, index)
+        .searchDiagnosisBasedOnPageNo(value, 0)
         .subscribe((results: any) => {
           this.suggestedDiagnosisList[index] = results?.data?.sctMaster;
         });

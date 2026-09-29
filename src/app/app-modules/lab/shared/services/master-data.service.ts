@@ -35,4 +35,8 @@ export class MasterDataService {
       visitCode: visitCode,
     });
   }
+
+  getEcgAbnormalFindings() {
+    return this.http.get(environment.getEcgAbnormalFindingsUrl);
+  }
 }

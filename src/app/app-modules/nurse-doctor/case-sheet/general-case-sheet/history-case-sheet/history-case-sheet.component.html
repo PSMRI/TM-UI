@@ -914,9 +914,9 @@
 
           <td>
             {{
-              personalHistory?.riskySexualPracticesStatus === undefined
+              personalHistory?.riskySexualPracticesStatus === undefined || personalHistory?.riskySexualPracticesStatus === null
                 ? null
-                : personalHistory?.riskySexualPracticesStatus
+                : personalHistory?.riskySexualPracticesStatus == '1' || personalHistory?.riskySexualPracticesStatus === true
                   ? "Yes"
                   : "No"
             }}
@@ -989,6 +989,7 @@
           >
             <td>{{ i + 1 }}</td>
             <td>{{ allergy.allergyType }}</td>
+            <td>{{ allergy.allergyName }}</td>
             <td>{{ allergy.allergicReactionType }}</td>
           </tr>
         </tbody>

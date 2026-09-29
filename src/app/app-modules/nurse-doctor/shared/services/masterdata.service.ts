@@ -197,4 +197,8 @@ export class MasterdataService {
     };
     return this.http.post(this.previousCovidVaccinationUrl, reqObj);
   }
+
+  getEcgAbnormalFindings() {
+    return this.http.get(environment.getEcgAbnormalFindingsUrl);
+  }
 }

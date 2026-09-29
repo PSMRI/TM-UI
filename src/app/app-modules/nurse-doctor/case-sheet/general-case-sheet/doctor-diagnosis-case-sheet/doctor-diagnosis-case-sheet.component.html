@@ -649,6 +649,11 @@
               <td>{{ report?.testResultUnit }}</td>
               <td>{{ report?.remarks }}</td>
             </tr>
+            <tr *ngIf="procedure?.procedureName && procedure?.procedureName.includes('ECG') && procedure?.abnormalFindingLabels && procedure?.abnormalFindingLabels.length > 0">
+              <td colspan="6" style="background-color: #f9f3cd; font-weight: 500; padding: 8px;">
+                <strong>ECG Abnormal Findings:</strong> {{ procedure?.abnormalFindingLabels?.join(', ') }}
+              </td>
+            </tr>
           </ng-container>
         </tbody>
       </table>

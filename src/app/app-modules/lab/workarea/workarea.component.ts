@@ -85,8 +85,7 @@ export class WorkareaComponent
   testName!: string;
   current_language_set: any;
   maxFileSize = 5;
-  ecgAbnormalities: any;
-  enableEcgAbnormal = false;
+  ecgAbnormalOptions: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -108,6 +107,7 @@ export class WorkareaComponent
     this.getTestRequirements();
     this.stepExpand = 0;
     this.testName = environment.RBSTest;
+    this.fetchEcgAbnormalFindings();
   }
   ngDoCheck() {
     this.assignSelectedLanguage();
@@ -116,6 +116,45 @@ export class WorkareaComponent
     const getLanguageJson = new SetLanguageComponent(this.httpServiceService);
     getLanguageJson.setLanguage();
     this.current_language_set = getLanguageJson.currentLanguageObject;
+  }
+
+  fetchEcgAbnormalFindings() {
+    this.masterdataService.getEcgAbnormalFindings().subscribe(
+      (res: any) => {
+        if (res.statusCode === 200 && res.data) {
+          this.ecgAbnormalOptions = res.data
+            .filter((item: any) => !item.deleted)
+            .sort((a: any, b: any) =>
+              a.findingName.localeCompare(b.findingName),
+            );
+        }
+      },
+      (error) => {
+        console.error('Error fetching ECG abnormal findings', error);
+      },
+    );
+  }
+
+  isEcgAbnormal(procedure: any): boolean {
+    const name = procedure?.value?.procedureName;
+    const comps = procedure?.value?.compListDetails;
+    if (!name || !Array.isArray(comps)) {
+      return false;
+    }
+    return (
+      name.includes('ECG') &&
+      comps.some((comp: any) => comp.compOptSelected === 'Abnormal')
+    );
+  }
+
+  isFieldRequired(procedure: any): boolean {
+    return (
+      (procedure.value.isMandatory === true &&
+        procedure.value.procedureName === this.testName &&
+        this.stripSelected === true) ||
+      (procedure.value.procedureName !== this.testName &&
+        procedure.value.isMandatory === true)
+    );
   }
 
   /**
@@ -220,7 +259,8 @@ export class WorkareaComponent
    * Patch Values for Lab Test Procedure
    */
   patchLabTestProcedureMasterData(test: any, index: any) {
-    this.labForm.at(index).patchValue({
+    const ctrl = this.labForm.at(index);
+    ctrl.patchValue({
       procedureType: test.procedureType,
       procedureName: test.procedureName,
       procedureID: test.procedureID,
@@ -232,6 +272,7 @@ export class WorkareaComponent
       calibrationStartAPI: test.calibrationStartAPI,
       calibrationStatusAPI: test.calibrationStatusAPI,
       calibrationEndAPI: test.calibrationEndAPI,
+      ecgAbnormalFindings: test.ecgAbnormalFindings || [],
     });
     this.patchLabTestComponentCommonMasterData(test.compListDetails, index);
   }
@@ -625,11 +666,12 @@ export class WorkareaComponent
         this.file !== undefined ? '.' + this.file.name.split('.')[1] : '',
       userID: this.sessionstorage.getItem('userID'),
       fileContent: fileContent !== undefined ? fileContent.split(',')[1] : '',
-      createdBy: this.sessionstorage.getItem('userName'),
       vanID: JSON.parse(
         this.sessionstorage.getItem('serviceLineDetails') ?? '{}',
       )?.vanID,
       isUploaded: false,
+      providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
+      createdBy: this.sessionstorage.getItem('userName'),
     };
 
     if (this.fileObj !== undefined) {
@@ -671,7 +713,7 @@ export class WorkareaComponent
   savedFileData: any;
   saveUploadDetails(procedureID: any) {
     if (this.fileObj !== undefined) {
-      if (this.savedFileData?.procedureID) {
+      if (this.savedFileData?.[procedureID]) {
         if (
           this.fileObj[procedureID].length >
           this.savedFileData[procedureID].length
@@ -708,7 +750,7 @@ export class WorkareaComponent
             'info',
           );
         }
-      } else if (this.fileObj?.procedureID?.length > 0) {
+      } else if (this.fileObj?.[procedureID]?.length > 0) {
         this.saveFileData(procedureID, this.fileObj[procedureID]);
       } else {
         this.confirmationService.alert(
@@ -764,6 +806,15 @@ export class WorkareaComponent
           }
 
           console.log('fileobj after upload', this.fileObj);
+          this.technicianForm.markAsDirty();
+          const radiologyControls = (this.technicianForm.get('radiologyForm') as FormArray)?.controls;
+          if (radiologyControls) {
+            radiologyControls.forEach((proc: any) => {
+              if (proc.value.procedureID?.toString() === procedureID?.toString()) {
+                proc.get('compDetails')?.get('inputValue')?.setValue('file uploaded');
+              }
+            });
+          }
           this.confirmationService.alert(
             this.current_language_set.alerts.info.successMsg,
             'success',
@@ -881,9 +932,9 @@ export class WorkareaComponent
               for (const key in this.savedFileData) {
                 this.technicianForm.value.radiologyForm.forEach(
                   (procedureDetails: any) => {
-                    if (key === procedureDetails.procedureID) {
+                    if (key == procedureDetails.procedureID) {
                       this.savedFileData[key].forEach((fileId: any) => {
-                        this.fileIDs.push(fileId.filePath);
+                        this.fileIDs.push(fileId.kmFileManagerID);
                       });
                       this.radiologyObj = {
                         procedureID: procedureDetails.procedureID,
@@ -973,9 +1024,11 @@ export class WorkareaComponent
           fileID: result,
         };
         this.labService.viewFileContent(fileID).subscribe((res: any) => {
-          if (res && res.data && res.data.statusCode === 200) {
-            const fileContent = res.data.data?.response;
-            location.href = fileContent;
+          if (res && res.statusCode === 200) {
+            const fileContent = res.data?.response;
+            if (fileContent) {
+              window.open(fileContent, '_blank');
+            }
           }
         });
       }
