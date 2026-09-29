@@ -68,8 +68,13 @@
           </div>
         </div>
         <div>
-          <div *ngIf="enableCaptcha" class="row" role="group" aria-labelledby="captcha-label">
-            <label id="captcha-label" class="sr-only">Security check</label>
+          <div
+            *ngIf="enableCaptcha"
+            class="row"
+            role="group"
+            aria-labelledby="captcha-label"
+          >
+            <span id="captcha-label" class="sr-only">Security check</span>
             <app-captcha
               #captchaCmp
               style="display: flex; justify-content: center"

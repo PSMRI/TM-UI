@@ -21,9 +21,8 @@ export class HttpServiceService {
 
   constructor(
     private _http: HttpClient,
-    private http: HttpClient
-  ) 
-  {
+    private http: HttpClient,
+  ) {
     const storedLang = localStorage.getItem('appLanguage');
     this.language = storedLang ? JSON.parse(storedLang) : null;
 

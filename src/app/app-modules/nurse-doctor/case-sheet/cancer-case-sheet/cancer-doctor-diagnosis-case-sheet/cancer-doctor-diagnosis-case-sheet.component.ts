@@ -177,7 +177,7 @@ export class CancerDoctorDiagnosisCaseSheetComponent
     return len > 0 ? new Array(len).join('0') + this : this;
   }
   downloadSign() {
-   const userId =
+    const userId =
       this.beneficiaryDetails?.tCSpecialistUserID ??
       this.sessionstorage.getItem('userID');
 
@@ -188,7 +188,7 @@ export class CancerDoctorDiagnosisCaseSheetComponent
       },
       (err: any) => {
         console.error('Error downloading signature:', err);
-      }
+      },
     );
   }
   showSign(blob: any) {

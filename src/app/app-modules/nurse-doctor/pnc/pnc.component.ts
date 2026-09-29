@@ -172,7 +172,7 @@ export class PncComponent implements OnInit, DoCheck, OnChanges, OnDestroy {
 
     const d = new Date(date);
     const utcDate = new Date(
-      Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0)
+      Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0),
     );
     return utcDate.toISOString();
   }
