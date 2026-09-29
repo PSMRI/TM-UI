@@ -37,11 +37,15 @@ export class DataManipulation {
     const labTestResults: any = [];
     labForm.forEach((element: any, i: any) => {
       if (element.prescriptionID || element.procedureID) {
-        labTestResults.push({
+        const procedureObj: any = {
           prescriptionID: element.prescriptionID,
           procedureID: element.procedureID,
           compList: this.labComponentRestruct(element.compListDetails),
-        });
+        };
+        if (element.ecgAbnormalFindings && element.ecgAbnormalFindings.length > 0) {
+          procedureObj.abnormalFindings = element.ecgAbnormalFindings;
+        }
+        labTestResults.push(procedureObj);
       }
     });
 

@@ -115,7 +115,9 @@ export class HttpInterceptorService implements HttpInterceptor {
     return (
       url === undefined ||
       url.includes('cti/getAgentState') ||
-      this.EXCLUDED_SPINNER_URLS.some((excludedUrl) => url.includes(excludedUrl))
+      this.EXCLUDED_SPINNER_URLS.some((excludedUrl) =>
+        url.includes(excludedUrl),
+      )
     );
   }
 
@@ -189,10 +191,7 @@ export class HttpInterceptorService implements HttpInterceptor {
       if (typeof error.error === 'string') {
         return error.error;
       }
-      if (
-        error.error.message &&
-        typeof error.error.message === 'string'
-      ) {
+      if (error.error.message && typeof error.error.message === 'string') {
         return error.error.message;
       }
       if (error.error.error && typeof error.error.error === 'string') {
@@ -233,7 +232,8 @@ export class HttpInterceptorService implements HttpInterceptor {
    */
   private handleNotFound(errorMessage: string): void {
     this.confirmationService.alert(
-      this.currentLanguageSet?.notFound || `Resource not found: ${errorMessage}`,
+      this.currentLanguageSet?.notFound ||
+        `Resource not found: ${errorMessage}`,
       'error',
     );
   }

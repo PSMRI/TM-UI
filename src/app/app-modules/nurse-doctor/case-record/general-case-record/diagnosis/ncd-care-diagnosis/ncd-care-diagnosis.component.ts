@@ -61,7 +61,6 @@ export class NcdCareDiagnosisComponent implements OnInit, DoCheck {
   enableNCDCondition = false;
   suggestedDiagnosisList: any = [];
 
-
   constructor(
     private fb: FormBuilder,
     private masterdataService: MasterdataService,
@@ -274,7 +273,7 @@ export class NcdCareDiagnosisComponent implements OnInit, DoCheck {
   onDiagnosisInputKeyup(value: string, index: number) {
     if (value.length >= 3) {
       this.masterdataService
-        .searchDiagnosisBasedOnPageNo(value, index)
+        .searchDiagnosisBasedOnPageNo(value, 0)
         .subscribe((results: any) => {
           this.suggestedDiagnosisList[index] = results?.data?.sctMaster;
         });
@@ -290,7 +289,7 @@ export class NcdCareDiagnosisComponent implements OnInit, DoCheck {
   onDiagnosisSelected(selected: any, index: number) {
     // this.patientQuickConsultForm.get(['provisionalDiagnosisList', index])?.setValue(selected);
     const diagnosisFormArray = this.generalDiagnosisForm.get(
-      'provisionalDiagnosisList'
+      'provisionalDiagnosisList',
     ) as FormArray;
     const diagnosisFormGroup = diagnosisFormArray.at(index) as FormGroup;
 

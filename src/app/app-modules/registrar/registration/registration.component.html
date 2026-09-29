@@ -135,6 +135,7 @@
       mat-raised-button
       color="primary"
       type="accent"
+      [disabled]="isSubmitting"
       (click)="postButtonCall()"
     >
       {{ currentLanguageSet?.common?.submit }}

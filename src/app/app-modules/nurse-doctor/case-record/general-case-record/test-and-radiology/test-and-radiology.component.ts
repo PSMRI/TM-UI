@@ -25,7 +25,7 @@ import { ViewTestReportComponent } from './view-test-report/view-test-report.com
 import { ViewRadiologyUploadedFilesComponent } from '../../../../lab/view-radiology-uploaded-files/view-radiology-uploaded-files.component';
 import { LabService } from '../../../../lab/shared/services';
 import { ConfirmationService } from '../../../../core/services/confirmation.service';
-import { DoctorService } from '../../../shared/services';
+import { DoctorService, MasterdataService } from '../../../shared/services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { SetLanguageComponent } from 'src/app/app-modules/core/components/set-language.component';
@@ -61,6 +61,7 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
     public sanitizer: DomSanitizer,
     private testInVitalsService: TestInVitalsService,
     readonly sessionstorage: SessionStorageService,
+    private masterdataService: MasterdataService,
   ) {}
 
   currentLabRowsPerPage = 5;
@@ -71,6 +72,7 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
   beneficiaryRegID: any;
   visitID: any;
   visitCategory: any;
+  ecgFindingsMap: { [key: number]: string } = {};
   ngOnInit() {
     this.beneficiaryRegID = this.sessionstorage.getItem('beneficiaryRegID');
     this.visitID = this.sessionstorage.getItem('visitID');
@@ -78,6 +80,7 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
     this.testInVitalsService.clearVitalsRBSValueInReports();
     this.testInVitalsService.clearVitalsRBSValueInReportsInUpdate();
     this.visitCategory = this.sessionstorage.getItem('visitCategory');
+    this.fetchEcgAbnormalFindings();
 
     this.testInVitalsService.vitalRBSTestResult$.subscribe((response) => {
       console.log('vital subscription response: ', response);
@@ -206,6 +209,39 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
     }
   }
 
+  fetchEcgAbnormalFindings() {
+    this.masterdataService.getEcgAbnormalFindings().subscribe(
+      (response: any) => {
+        if (response && response.data) {
+          response.data.forEach((finding: any) => {
+            this.ecgFindingsMap[finding.findingID] = finding.findingName;
+          });
+        }
+      },
+      (error: any) => {
+        console.error('Error fetching ECG abnormal findings:', error);
+      },
+    );
+  }
+
+  mapEcgFindingsToLabels(labResults: any[]) {
+    if (!labResults || labResults.length === 0) {
+      return;
+    }
+    labResults.forEach((procedure: any) => {
+      if (procedure.procedureName && procedure.procedureName.includes('ECG')) {
+        if (
+          procedure.abnormalFindings &&
+          procedure.abnormalFindings.length > 0
+        ) {
+          procedure.abnormalFindingLabels = procedure.abnormalFindings.map(
+            (id: number) => this.ecgFindingsMap[id] || `Unknown (${id})`,
+          );
+        }
+      }
+    });
+  }
+
   labResults: any = [];
   radiologyResults: any = [];
   archivedResults: any = [];
@@ -248,6 +284,7 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
             },
           );
           this.archivedResults = res.data.ArchivedVisitcodeForLabResult;
+          this.mapEcgFindingsToLabels(this.filteredLabResults);
           this.currentLabPageChanged({
             page: this.currentLabActivePage,
             itemsPerPage: this.currentLabRowsPerPage,
@@ -342,12 +379,15 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
                   },
                 );
 
-                for (
-                  let i = 0, j = this.radiologyResults.length;
-                  i < radiologyResponse.length;
-                  i++, j++
-                ) {
-                  this.radiologyResults[j] = radiologyResponse[i];
+                const existingProcedureIDs = new Set(
+                  this.radiologyResults.map((r: any) => r.procedureID),
+                );
+                for (let i = 0; i < radiologyResponse.length; i++) {
+                  if (
+                    !existingProcedureIDs.has(radiologyResponse[i].procedureID)
+                  ) {
+                    this.radiologyResults.push(radiologyResponse[i]);
+                  }
                 }
 
                 this.archivedResults = res.data.ArchivedVisitcodeForLabResult;
@@ -361,6 +401,7 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
                 ) {
                   this.archivedResults[j] = archivedResponse[i];
                 }
+                this.mapEcgFindingsToLabels(this.filteredLabResults);
 
                 this.currentLabPageChanged({
                   page: this.currentLabActivePage,
@@ -467,9 +508,11 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
         };
         this.labService.viewFileContent(fileID).subscribe(
           (res: any) => {
-            if (res.data.statusCode === 200) {
-              const fileContent = res.data.data.response;
-              location.href = fileContent;
+            if (res.statusCode === 200) {
+              const fileContent = res.data.response;
+              if (fileContent) {
+                window.open(fileContent, '_blank');
+              }
             }
           },
           (err) => {
@@ -497,6 +540,7 @@ export class TestAndRadiologyComponent implements OnInit, OnDestroy, DoCheck {
           this.archivedLabResults = response.data.filter((lab: any) => {
             return lab.procedureType === 'Laboratory';
           });
+          this.mapEcgFindingsToLabels(this.archivedLabResults);
           this.filteredArchivedLabResults = this.archivedLabResults;
           this.previousLabPageChanged({
             page: this.previousLabActivePage,

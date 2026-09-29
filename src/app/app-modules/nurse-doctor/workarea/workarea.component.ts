@@ -260,7 +260,7 @@ export class WorkareaComponent
     this.getVisitType();
     this.getPregnancyStatus();
 
-     this.doctorService
+    this.doctorService
       .checkUsersignatureExist(this.sessionstorage.getItem('userID'))
       .subscribe((res: any) => {
         if (res.statusCode === 200 && res.data !== null) {
@@ -1073,7 +1073,7 @@ export class WorkareaComponent
           temp,
           this.schedulerData,
           this.isSpecialist,
-          this.doctorSignatureFlag
+          this.doctorSignatureFlag,
         )
         .subscribe(
           (res: any) => {
@@ -1160,7 +1160,7 @@ export class WorkareaComponent
           .saveSpecialistCancerObservation(
             this.patientMedicalForm,
             otherDetails,
-            this.doctorSignatureFlag
+            this.doctorSignatureFlag,
           )
           .subscribe(
             (res: any) => {
@@ -1189,7 +1189,7 @@ export class WorkareaComponent
             visitCategory,
             otherDetails,
             this.schedulerData,
-            this.doctorSignatureFlag
+            this.doctorSignatureFlag,
           )
           .subscribe(
             (res: any) => {
@@ -1261,7 +1261,7 @@ export class WorkareaComponent
             visitCategory,
             otherDetails,
             this.schedulerData,
-            this.doctorSignatureFlag
+            this.doctorSignatureFlag,
           )
           .subscribe(
             (res: any) => {
@@ -1433,7 +1433,7 @@ export class WorkareaComponent
           this.patientMedicalForm,
           this.schedulerData,
           this.isSpecialist,
-          this.doctorSignatureFlag
+          this.doctorSignatureFlag,
         )
         .subscribe(
           (res: any) => {
@@ -1694,11 +1694,11 @@ export class WorkareaComponent
       );
 
       const diagForm3 = <FormGroup>diagForm2.controls[0];
-      if (diagForm3.controls['viewProvisionalDiagnosisProvided'].errors) {  
-          required.push(  
-            this.current_language_set.DiagnosisDetails.provisionaldiagnosis  
-          );  
-        }
+      if (diagForm3.controls['viewProvisionalDiagnosisProvided'].errors) {
+        required.push(
+          this.current_language_set.DiagnosisDetails.provisionaldiagnosis,
+        );
+      }
 
       if (!diagForm3.controls['viewProvisionalDiagnosisProvided'].errors) {
         diagForm2.value.filter((item: any) => {
@@ -2123,7 +2123,14 @@ export class WorkareaComponent
       }
     }
 
-  
+
+    if (caseRecordForm && caseRecordForm.controls['drugPrescriptionForm']) {
+      const drugForm = <FormGroup>caseRecordForm.controls['drugPrescriptionForm'];
+      if (drugForm.value.incompletePrescription) {
+        required.push(this.current_language_set?.Prescription?.prescriptionIncomplete || 'Please complete or clear the prescription before submitting');
+      }
+    }
+
     if (required.length) {
       this.confirmationService.notify(
         this.current_language_set.alerts.info.belowFields,
@@ -2233,7 +2240,7 @@ export class WorkareaComponent
       !this.schedulerData
     )
       required.push(this.current_language_set.nurseData.scheduleTM);
-    
+
     if (required.length) {
       this.confirmationService.notify(
         this.current_language_set.alerts.info.belowFields,
@@ -2682,6 +2689,13 @@ export class WorkareaComponent
       }
     }
 
+    if (form.controls['prescription']) {
+      const drugForm = <FormGroup>form.controls['prescription'];
+      if (drugForm.value.incompletePrescription) {
+        required.push(this.current_language_set?.Prescription?.prescriptionIncomplete || 'Please complete or clear the prescription before submitting');
+      }
+    }
+
     if (required.length) {
       this.confirmationService.notify(
         this.current_language_set.alerts.info.belowFields,
@@ -2764,8 +2778,7 @@ export class WorkareaComponent
           { quickConsultation: patientQuickConsultFormValue },
           this.schedulerData,
           this.isSpecialist,
-          this.doctorSignatureFlag
-
+          this.doctorSignatureFlag,
         )
         .subscribe(
           (res: any) => {
@@ -3204,7 +3217,7 @@ export class WorkareaComponent
           temp,
           this.schedulerData,
           this.isSpecialist,
-          this.doctorSignatureFlag
+          this.doctorSignatureFlag,
         )
         .subscribe(
           (res: any) => {
@@ -3434,7 +3447,7 @@ export class WorkareaComponent
           temp,
           this.schedulerData,
           this.isSpecialist,
-          this.doctorSignatureFlag
+          this.doctorSignatureFlag,
         )
         .subscribe(
           (res: any) => {
@@ -3479,7 +3492,7 @@ export class WorkareaComponent
           temp,
           this.schedulerData,
           this.isSpecialist,
-          this.doctorSignatureFlag
+          this.doctorSignatureFlag,
         )
         .subscribe(
           (res: any) => {

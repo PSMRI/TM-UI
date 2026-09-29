@@ -110,12 +110,12 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'feedback',
-    loadChildren: () =>
-      import('Common-UI/src/feedback/feedback.module').then(
-        (m) => m.FeedbackModule,
-      ),
-  },
+     path: 'feedback',
+     loadChildren: () =>
+       import('Common-UI/src/feedback/feedback.module').then(
+         (m) => m.FeedbackModule,
+       ),
+   },
 ];
 
 @NgModule({

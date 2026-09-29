@@ -41,6 +41,11 @@
           <td>{{ report?.testResultValue }}</td>
           <td>{{ report?.testResultUnit }}</td>
         </tr>
+        <tr *ngIf="testReport?.procedureName && testReport?.procedureName.includes('ECG') && testReport?.abnormalFindingLabels && testReport?.abnormalFindingLabels.length > 0">
+          <td colspan="3" style="background-color: #f9f3cd; font-weight: 500; padding: 8px;">
+            <strong>ECG Abnormal Findings:</strong> {{ testReport?.abnormalFindingLabels?.join(', ') }}
+          </td>
+        </tr>
       </tbody>
     </table>
     <div>

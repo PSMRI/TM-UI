@@ -102,6 +102,7 @@ export class RegistrationComponent
 
   country = { id: 1, Name: 'India' };
   disableGenerateOTP = false;
+  isSubmitting = false;
 
   constructor(
     private confirmationService: ConfirmationService,
@@ -754,6 +755,8 @@ export class RegistrationComponent
    * Post Form Button Called, Decide whether to Submit or Update
    */
   postButtonCall() {
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
     const valid = this.checkValids(this.beneficiaryRegistrationForm);
 
     // Need to revert back the health id change - 2024
@@ -764,6 +767,8 @@ export class RegistrationComponent
       } else if (!this.patientRevisit) {
         this.submitBeneficiaryDetails();
       }
+    } else {
+      this.isSubmitting = false;
     }
   }
   checkValidHealthID(type: any) {
@@ -884,12 +889,16 @@ export class RegistrationComponent
         }
         this.resetBeneficiaryForm();
         this.disableGenerateOTP = false;
+        this.isSubmitting = false;
       } else {
         this.confirmationService.alert(
           this.currentLanguageSet.alerts.info.issueInSavngData,
           'error',
         );
+        this.isSubmitting = false;
       }
+    }, () => {
+      this.isSubmitting = false;
     });
   }
 
@@ -910,42 +919,49 @@ export class RegistrationComponent
       this.beneficiaryRegistrationForm.value.personalDetailsForm,
     );
 
-    this.registrarService.updateBeneficiary(iEMRForm).subscribe((res: any) => {
-      if (res && res.statusCode === 200) {
-        this.confirmationService.alert(res.data.response, 'success');
-        const reqObj = {
-          beneficiaryRegID: null,
-          beneficiaryID: personalForm.beneficiaryID,
-          healthId: otherDetailsForm.controls['healthId'].value,
-          healthIdNumber: otherDetailsForm.controls['healthIdNumber'].value,
-          authenticationMode: otherDetailsForm.controls['healthIdMode'].value,
-          providerServiceMapId:
-            this.sessionstorage.getItem('providerServiceID'),
-          createdBy: this.sessionstorage.getItem('userName'),
-        };
+    this.registrarService.updateBeneficiary(iEMRForm).subscribe(
+      (res: any) => {
+        if (res && res.statusCode === 200) {
+          this.confirmationService.alert(res.data.response, 'success');
+          const reqObj = {
+            beneficiaryRegID: null,
+            beneficiaryID: personalForm.beneficiaryID,
+            healthId: otherDetailsForm.controls['healthId'].value,
+            healthIdNumber: otherDetailsForm.controls['healthIdNumber'].value,
+            authenticationMode: otherDetailsForm.controls['healthIdMode'].value,
+            providerServiceMapId:
+              this.sessionstorage.getItem('providerServiceID'),
+            createdBy: this.sessionstorage.getItem('userName'),
+          };
 
-        if (
-          (otherDetailsForm.controls['healthId'].value !== undefined &&
-            otherDetailsForm.controls['healthId'].value !== null) ||
-          (otherDetailsForm.controls['healthIdNumber'].value !== undefined &&
-            otherDetailsForm.controls['healthIdNumber'].value !== null)
-        ) {
-          this.registrarService.mapHealthId(reqObj).subscribe((res: any) => {
-            if (res.statusCode === 200) {
-              console.log('res', res);
-            } else {
-              this.confirmationService.alert(
-                this.currentLanguageSet.alerts.info.issueInSavngData,
-                'error',
-              );
-            }
-          });
+          if (
+            (otherDetailsForm.controls['healthId'].value !== undefined &&
+              otherDetailsForm.controls['healthId'].value !== null) ||
+            (otherDetailsForm.controls['healthIdNumber'].value !== undefined &&
+              otherDetailsForm.controls['healthIdNumber'].value !== null)
+          ) {
+            this.registrarService.mapHealthId(reqObj).subscribe((res: any) => {
+              if (res.statusCode === 200) {
+                console.log('res', res);
+              } else {
+                this.confirmationService.alert(
+                  this.currentLanguageSet.alerts.info.issueInSavngData,
+                  'error',
+                );
+              }
+            });
+          }
+          this.isSubmitting = false;
+          this.router.navigate(['/registrar/search/']);
+        } else {
+          this.isSubmitting = false;
+          this.confirmationService.alert(res.errorMessage, 'error');
         }
-        this.router.navigate(['/registrar/search/']);
-      } else {
-        this.confirmationService.alert(res.errorMessage, 'error');
-      }
-    });
+      },
+      () => {
+        this.isSubmitting = false;
+      },
+    );
   }
 
   /**

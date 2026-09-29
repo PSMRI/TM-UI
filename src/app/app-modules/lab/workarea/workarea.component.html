@@ -141,20 +141,7 @@
                                             (input)="checkNormalRange(i, j)"
                                             (blur)="checkRange(i, j)"
                                             [required]="
-                                              procedure.value.isMandatory ===
-                                                true &&
-                                              procedure.value.procedureName ===
-                                                testName &&
-                                              stripSelected === true
-                                                ? true
-                                                : false ||
-                                                    (procedure.value
-                                                      .procedureName !==
-                                                      testName &&
-                                                      procedure.value
-                                                        .isMandatory === true)
-                                                  ? true
-                                                  : false
+                                              isFieldRequired(procedure)
                                             "
                                           />
 
@@ -191,22 +178,7 @@
                                     >
                                       <div>
                                         <span
-                                          *ngIf="
-                                            procedure.value.isMandatory ===
-                                              true &&
-                                            procedure.value.procedureName ===
-                                              testName &&
-                                            stripSelected === true
-                                              ? true
-                                              : false ||
-                                                  (procedure.value
-                                                    .procedureName !==
-                                                    testName &&
-                                                    procedure.value
-                                                      .isMandatory === true)
-                                                ? true
-                                                : false
-                                          "
+                                          *ngIf="isFieldRequired(procedure)"
                                         >
                                           <p style="font-size: 12px">
                                             {{
@@ -220,20 +192,7 @@
                                           formControlName="compOptSelected"
                                           disableRipple="true"
                                           [required]="
-                                            procedure.value.isMandatory ===
-                                              true &&
-                                            procedure.value.procedureName ===
-                                              testName &&
-                                            stripSelected === true
-                                              ? true
-                                              : false ||
-                                                  (procedure.value
-                                                    .procedureName !==
-                                                    testName &&
-                                                    procedure.value
-                                                      .isMandatory === true)
-                                                ? true
-                                                : false
+                                            isFieldRequired(procedure)
                                           "
                                         >
                                           <mat-radio-button
@@ -248,38 +207,6 @@
                                             {{ radio.value.name }}
                                           </mat-radio-button>
                                         </mat-radio-group>
-                                        <div>
-                                          <mat-form-field
-                                            class=""
-                                            style="
-                                              margin-left: unset !important;
-                                              padding: unset;
-                                            "
-                                            *ngIf="
-                                              procedure.value.procedureName.includes(
-                                                'ECG'
-                                              ) && enableEcgAbnormal
-                                            "
-                                          >
-                                            <mat-select
-                                              multiple
-                                              class="p-t-12"
-                                              [style.width]="'100%'"
-                                              formControlName="ecgAbnormalities"
-                                              style="line-height: unset"
-                                              placeholder="ECG Abnormalities"
-                                              required
-                                            >
-                                              <mat-option
-                                                *ngFor="
-                                                  let option of ecgAbnormalities
-                                                "
-                                                [value]="option.ecgAbnormality"
-                                                >{{ option.ecgAbnormality }}
-                                              </mat-option>
-                                            </mat-select>
-                                          </mat-form-field>
-                                        </div>
                                       </div>
                                     </section>
                                     <section
@@ -307,20 +234,7 @@
                                                 ?.result
                                             }}"
                                             [required]="
-                                              procedure.value.isMandatory ===
-                                                true &&
-                                              procedure.value.procedureName ===
-                                                testName &&
-                                              stripSelected === true
-                                                ? true
-                                                : false ||
-                                                    (procedure.value
-                                                      .procedureName !==
-                                                      testName &&
-                                                      procedure.value
-                                                        .isMandatory === true)
-                                                  ? true
-                                                  : false
+                                              isFieldRequired(procedure)
                                             "
                                           >
                                             <mat-option
@@ -357,6 +271,26 @@
                               </ng-container>
                             </div>
                           </div>
+                        </div>
+                        <div
+                          [hidden]="!isEcgAbnormal(procedure)"
+                          style="margin-top: 16px"
+                        >
+                          <mat-form-field style="width: 100%">
+                            <mat-select
+                              multiple
+                              formControlName="ecgAbnormalFindings"
+                              placeholder="ECG Abnormalities"
+                              [required]="isEcgAbnormal(procedure)"
+                            >
+                              <mat-option
+                                *ngFor="let option of ecgAbnormalOptions"
+                                [value]="option.findingID"
+                              >
+                                {{ option.findingName }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
                         </div>
                       </mat-expansion-panel>
                     </ng-container>
@@ -484,7 +418,7 @@
                                   autocomplete="off"
                                   matInput
                                   [formControl]="
-                                    procedure.value.compDetails.remarks
+                                    $any(procedure.get('compDetails'))?.get('remarks')
                                   "
                                   allowText="alphanumericspace"
                                   maxLength="300"

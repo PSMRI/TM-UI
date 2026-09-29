@@ -64,7 +64,7 @@ export class GeneralOpdDiagnosisComponent
     private doctorService: DoctorService,
     private confirmationService: ConfirmationService,
     readonly sessionstorage: SessionStorageService,
-    private masterdataService: MasterdataService
+    private masterdataService: MasterdataService,
   ) {}
 
   ngOnInit() {
@@ -259,7 +259,7 @@ export class GeneralOpdDiagnosisComponent
   onDiagnosisInputKeyup(value: string, index: number) {
     if (value.length >= 3) {
       this.masterdataService
-        .searchDiagnosisBasedOnPageNo(value, index)
+        .searchDiagnosisBasedOnPageNo(value, 0)
         .subscribe((results: any) => {
           this.suggestedDiagnosisList[index] = results?.data?.sctMaster;
         });
@@ -275,7 +275,7 @@ export class GeneralOpdDiagnosisComponent
   onDiagnosisSelected(selected: any, index: number) {
     // this.patientQuickConsultForm.get(['provisionalDiagnosisList', index])?.setValue(selected);
     const diagnosisFormArray = this.generalDiagnosisForm.get(
-      'provisionalDiagnosisList'
+      'provisionalDiagnosisList',
     ) as FormArray;
     const diagnosisFormGroup = diagnosisFormArray.at(index) as FormGroup;
 

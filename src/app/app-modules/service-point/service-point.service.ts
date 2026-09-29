@@ -32,7 +32,7 @@ export class ServicePointService {
     readonly sessionstorage: SessionStorageService,
   ) {}
 
-  getServicePoints( serviceProviderId: string) {
+  getServicePoints(serviceProviderId: string) {
     return this.http.post(environment.servicePointUrl, {
       providerServiceMapID: serviceProviderId,
     });

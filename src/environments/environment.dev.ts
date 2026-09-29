@@ -157,6 +157,7 @@ export const environment = {
 
   getprescribedTestDataUrl: `${TM_API}labTechnician/get/prescribedProceduresList`,
   labSaveWork: `${TM_API}labTechnician/save/LabTestResult`,
+  getEcgAbnormalFindingsUrl: `${TM_API}master/ecgAbnormalFindings`,
 
   /**
    * Worklist Urls
@@ -521,4 +522,6 @@ export const environment = {
   siteKey: siteKey,
   captchaChallengeURL: captchaChallengeURL,
   enableCaptcha: enableCaptcha,
+  getUserId: `${COMMON_API}user/userName/`,
+  checkUsersignExistUrl: `${ADMIN_API}signature1/signexist/`,
 };

@@ -102,6 +102,7 @@ export class DoctorDiagnosisCaseSheetComponent
   referralReasonList = '';
   isCovidVaccinationStatusVisible = false;
   userName: any;
+  ecgFindingsMap: { [key: number]: string } = {};
 
   constructor(
     private doctorService: DoctorService,
@@ -114,17 +115,20 @@ export class DoctorDiagnosisCaseSheetComponent
   ) {}
 
   ngOnInit() {
-    this.visitCategory = this.sessionstorage.getItem('caseSheetVisitCategory');
+    this.visitCategory = this.previous
+      ? this.sessionstorage.getItem('previousCaseSheetVisitCategory')
+      : this.sessionstorage.getItem('caseSheetVisitCategory');
     this.fetchHRPPositive();
     this.getHealthIDDetails();
     this.assignSelectedLanguage();
     this.getAssessmentID();
+    this.fetchEcgAbnormalFindings();
   }
 
   ngDoCheck() {
     this.assignSelectedLanguage();
   }
-  
+
   assignSelectedLanguage() {
     const getLanguageJson = new SetLanguageComponent(this.httpServiceService);
     getLanguageJson.setLanguage();
@@ -132,7 +136,6 @@ export class DoctorDiagnosisCaseSheetComponent
   }
 
   ngOnChanges() {
-
     this.ncdScreeningCondition = null;
     if (this.casesheetData) {
       this.userName = this.casesheetData?.doctorData?.diagnosis?.createdBy;
@@ -274,6 +277,11 @@ export class DoctorDiagnosisCaseSheetComponent
         );
       }
 
+      // Map ECG findings IDs to labels
+      if (this.caseRecords && this.caseRecords.LabReport) {
+        this.mapEcgFindingsToLabels(this.caseRecords.LabReport);
+      }
+
       if (
         this.caseRecords.diagnosis.complicationOfCurrentPregnancy !== undefined
       ) {
@@ -359,7 +367,11 @@ export class DoctorDiagnosisCaseSheetComponent
         this.casesheetData &&
         this.casesheetData.doctorData.Refer &&
         this.casesheetData.doctorData.Refer.revisitDate &&
-        !moment(this.casesheetData.doctorData.Refer.revisitDate, 'DD/MM/YYYY', true).isValid()
+        !moment(
+          this.casesheetData.doctorData.Refer.revisitDate,
+          'DD/MM/YYYY',
+          true,
+        ).isValid()
       ) {
         const sDate = new Date(this.casesheetData.doctorData.Refer.revisitDate);
         this.casesheetData.doctorData.Refer.revisitDate = [
@@ -370,7 +382,6 @@ export class DoctorDiagnosisCaseSheetComponent
       }
 
       if (this.casesheetData?.BeneficiaryData?.doctorSignatureFlag) {
-        
         this.downloadSign();
       }
       this.getVaccinationTypeAndDoseMaster();
@@ -381,13 +392,12 @@ export class DoctorDiagnosisCaseSheetComponent
     const len = String(10).length - String(this).length + 1;
     return len > 0 ? new Array(len).join('0') + this : this;
   }
- 
-   downloadSign() {
 
+  downloadSign() {
     this.getUserId().subscribe((userId) => {
       const userIdToUse = this.beneficiaryDetails?.tCSpecialistUserID ?? userId;
-      console.log("User", userIdToUse);
-      
+      console.log('User', userIdToUse);
+
       this.doctorService.downloadSign(userIdToUse).subscribe(
         (response: any) => {
           const blob = new Blob([response], { type: response.type });
@@ -398,7 +408,6 @@ export class DoctorDiagnosisCaseSheetComponent
         },
       );
     });
-
   }
 
   getUserId(): Observable<any> {
@@ -416,10 +425,13 @@ export class DoctorDiagnosisCaseSheetComponent
   }
 
   fetchHRPPositive() {
-    const beneficiaryRegID = this.sessionstorage.getItem(
-      'caseSheetBeneficiaryRegID',
-    );
-    const visitCode = this.sessionstorage.getItem('visitCode');
+    const beneficiaryRegID = this.previous
+      ? this.sessionstorage.getItem('previousCaseSheetBeneficiaryRegID')
+      : this.sessionstorage.getItem('caseSheetBeneficiaryRegID');
+    const visitCode = this.previous
+      ? this.sessionstorage.getItem('previousCaseSheetVisitCode')
+      : this.sessionstorage.getItem('visitCode');
+    if (!beneficiaryRegID || !visitCode) return;
     this.doctorService
       .getHRPDetails(beneficiaryRegID, visitCode)
       .subscribe((res: any) => {
@@ -434,11 +446,12 @@ export class DoctorDiagnosisCaseSheetComponent
   }
   getHealthIDDetails() {
     const data = {
-      beneficiaryRegID: this.sessionstorage.getItem(
-        'caseSheetBeneficiaryRegID',
-      ),
+      beneficiaryRegID: this.previous
+        ? this.sessionstorage.getItem('previousCaseSheetBeneficiaryRegID')
+        : this.sessionstorage.getItem('caseSheetBeneficiaryRegID'),
       beneficiaryID: null,
     };
+    if (!data.beneficiaryRegID) return;
     this.registrarService.getHealthIdDetails(data).subscribe(
       (healthIDDetails: any) => {
         if (healthIDDetails.statusCode === 200) {
@@ -513,9 +526,10 @@ export class DoctorDiagnosisCaseSheetComponent
   }
 
   getPreviousCovidVaccinationDetails(doseTypeList: any, vaccineTypeList: any) {
-    const beneficiaryRegID = this.sessionstorage.getItem(
-      'caseSheetBeneficiaryRegID',
-    );
+    const beneficiaryRegID = this.previous
+      ? this.sessionstorage.getItem('previousCaseSheetBeneficiaryRegID')
+      : this.sessionstorage.getItem('caseSheetBeneficiaryRegID');
+    if (!beneficiaryRegID) return;
     this.masterdataService
       .getPreviousCovidVaccinationDetails(beneficiaryRegID)
       .subscribe(
@@ -551,8 +565,47 @@ export class DoctorDiagnosisCaseSheetComponent
       );
   }
 
+  fetchEcgAbnormalFindings() {
+    this.masterdataService.getEcgAbnormalFindings().subscribe(
+      (response: any) => {
+        if (response && response.data) {
+          response.data.forEach((finding: any) => {
+            this.ecgFindingsMap[finding.findingID] = finding.findingName;
+          });
+          if (this.caseRecords && this.caseRecords.LabReport) {
+            this.mapEcgFindingsToLabels(this.caseRecords.LabReport);
+          }
+        }
+      },
+      (error: any) => {
+        console.error('Error fetching ECG abnormal findings:', error);
+      },
+    );
+  }
+
+  mapEcgFindingsToLabels(labResults: any[]) {
+    if (!labResults || labResults.length === 0) {
+      return;
+    }
+    labResults.forEach((procedure: any) => {
+      if (procedure.procedureName && procedure.procedureName.includes('ECG')) {
+        if (
+          procedure.abnormalFindings &&
+          procedure.abnormalFindings.length > 0
+        ) {
+          procedure.abnormalFindingLabels = procedure.abnormalFindings.map(
+            (id: number) => this.ecgFindingsMap[id] || `Unknown (${id})`,
+          );
+        }
+      }
+    });
+  }
+
   getAssessmentID() {
-    const benRegID = this.sessionstorage.getItem('caseSheetBeneficiaryRegID');
+    const benRegID = this.previous
+      ? this.sessionstorage.getItem('previousCaseSheetBeneficiaryRegID')
+      : this.sessionstorage.getItem('caseSheetBeneficiaryRegID');
+    if (!benRegID) return;
     this.doctorService.getAssessment(benRegID).subscribe((res: any) => {
       if (res.statusCode === 200 && res.data !== null) {
         const lastElementIndex = res.data.length - 1;
