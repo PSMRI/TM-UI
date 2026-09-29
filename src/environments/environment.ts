@@ -58,7 +58,6 @@ const IOT_API = 'http://localhost:8085/ezdx-hub-connect-srv';
 const FHIR_API = `${FHIRIP}/fhirapi-v1.0/`;
 const mmuUICasesheet = `${tmUI_IP}tmui-v1.0`;
 const sessionStorageEncKey = '';
-
 const siteKey = '';
 const captchaChallengeURL = '';
 const enableCaptcha = false;
@@ -78,9 +77,11 @@ export const environment = {
   RBSTest: `RBS Test`,
   visualAcuityTest: `Visual Acuity Test`,
   haemoglobinTest: `Haemoglobin Test`,
-  abhaExtension: `@abdm`,
+  abhaExtension: `@sbx`,
   parentAPI: `${TM_API}`,
   isEnableES: false,
+  elasticSearchUrl: '',
+  advanceElasticSearchUrl: '',
   INVENTORY_URL: `${inventoryUI_IP}/inventory/#/redirin?`,
   fallbackUrl: `/pharmacist/redirfallback`,
   redirInUrl: `/pharmacist/redirin`,
@@ -101,9 +102,8 @@ export const environment = {
   getSubDistrictName: `${COMMON_API}location/taluks/`,
   getCountryName: `${TM_API}location/get/countryMaster`,
   getCityName: `${TM_API}location/get/countryCityMaster/`,
-  getNCDScreeningIDRSDetails: `${TM_API}NCD/getBenIdrsDetailsFrmNurse`,
-  updateNCDScreeningIDRSDetailsUrl: `${TM_API}NCD/update/idrsScreen`,
   saveDoctorNCDScreeningDetails: `${TM_API}NCD/save/doctorData`,
+
   /**
    * Login and Logout Urls
    */
@@ -139,9 +139,8 @@ export const environment = {
   /**
    * Master Data Urls
    */
-
+  previousVisitDataUrl: `${TM_API}common/getBenSymptomaticQuestionnaireDetails`,
   getDistrictListUrl: `${TM_API}location/get/districtMaster/`,
-  getDistrictTalukUrl: `${MMU_API}location/get/DistrictTalukMaster/`,
   getSubDistrictListUrl: `${TM_API}location/get/districtBlockMaster/`,
   getVillageListUrl: `${TM_API}location/get/villageMasterFromBlockID/`,
   demographicsCurrentMasterUrl: `${TM_API}location/getLocDetailsBasedOnSpIDAndPsmID`,
@@ -150,13 +149,14 @@ export const environment = {
   doctorMasterDataUrl: `${TM_API}master/doctor/masterData/`,
   snomedCTRecordURL: `${TM_API}snomed/getSnomedCTRecord`,
   getCalibrationStrips: `${ADMIN_API}/fetchCalibrationStrips`,
+  getDistrictTalukUrl: `${MMU_API}location/get/DistrictTalukMaster/`,
+
   /**
    * Lab Data Urls
    */
 
   getprescribedTestDataUrl: `${TM_API}labTechnician/get/prescribedProceduresList`,
   labSaveWork: `${TM_API}labTechnician/save/LabTestResult`,
-  getEcgAbnormalFindingsUrl: `${TM_API}master/ecgAbnormalFindings`,
 
   /**
    * Worklist Urls
@@ -173,7 +173,6 @@ export const environment = {
   radiologistWorklist: `${TM_API}common/getRadiologist-worklist-New/`,
   oncologistWorklist: `${TM_API}common/getOncologist-worklist-New/`,
   pharmacistWorklist: `${TM_API}common/getPharma-worklist-New/`,
-  mmuNurseWorklist: `${TM_API}common/getMmuNurseWorklistNew/`,
 
   // New API
   getBeneficiaryDetail: `${TM_API}registrar/get/benDetailsByRegIDForLeftPanelNew`,
@@ -202,11 +201,15 @@ export const environment = {
    */
   postNCDScreeningDetails: `${TM_API}NCD/save/nurseData`,
   // getNCDScreeningVisitDetails: `${TM_API}CS-cancerScreening/getBenDataFrmNurseToDocVisitDetailsScreen`,
-  updateNCDVitalsDetailsUrl: `${TM_API}NCD/update/vitalScreen`,
   getNCDScreeningVisitDetails: `${TM_API}NCD/getBenVisitDetailsFrmNurseNCDScreening`,
   getNCDScreeningDetails: `${TM_API}NCD/get/nurseData`,
   updateNCDScreeningDetails: `${TM_API}NCD/update/nurseData`,
+  getNCDScreeningIDRSDetails: `${TM_API}NCD/getBenIdrsDetailsFrmNurse`,
+  updateNCDVitalsDetailsUrl: `${TM_API}NCD/update/vitalScreen`,
   updateNCDScreeningHistoryDetailsUrl: `${TM_API}NCD/update/historyScreen`,
+  getNCDScreeningHistoryDetails: `${TM_API}NCD/getBenHistoryDetails`,
+  getNCDSceeriningVitalDetails: `${TM_API}NCD/getBenVitalDetailsFrmNurse`,
+  updateNCDScreeningIDRSDetailsUrl: `${TM_API}NCD/update/idrsScreen`,
 
   /**
    * GENERAL OPD QUICK CONSULT API URLs
@@ -290,6 +293,7 @@ export const environment = {
   getNCDCareVisitDetailsUrl: `${TM_API}NCDCare/getBenVisitDetailsFrmNurseNCDCare`,
   getNCDCareHistoryDetailsUrl: `${TM_API}NCDCare/getBenNCDCareHistoryDetails`,
   getNCDCareVitalDetailsUrl: `${TM_API}NCDCare/getBenVitalDetailsFrmNurseNCDCare`,
+  mmuNurseWorklist: `${TM_API}common/getMmuNurseWorklistNew/`,
 
   /**
    * Covid-19 API Urls
@@ -325,7 +329,7 @@ export const environment = {
   /*
    */
   getPreviousSignificiantFindingUrl: `${TM_API}common/getDoctorPreviousSignificantFindings`,
-  previousVisitDataUrl: `${TM_API}common/getBenSymptomaticQuestionnaireDetails`,
+
   getCancerScreeningDoctorDetails: `${TM_API}CS-cancerScreening/getBenCaseRecordFromDoctorCS`,
   getNCDScreeningDoctorDetails: `${TM_API}NCD/getBenCaseRecordFromDoctorNCDScreening`,
   getGeneralOPDQuickConsultDoctorDetails: `${TM_API}genOPD-QC-quickConsult/getBenCaseRecordFromDoctorQuickConsult`,
@@ -333,7 +337,7 @@ export const environment = {
   getGeneralOPDDoctorDetails: `${TM_API}generalOPD/getBenCaseRecordFromDoctorGeneralOPD`,
   getNCDCareDoctorDetails: `${TM_API}NCDCare/getBenCaseRecordFromDoctorNCDCare`,
   getPNCDoctorDetails: `${TM_API}PNC/getBenCaseRecordFromDoctorPNC`,
-  getNCDSceeriningVitalDetails: `${TM_API}NCD/getBenVitalDetailsFrmNurse`,
+
   updateCancerScreeningDoctorDetails: `${TM_API}CS-cancerScreening/update/doctorData`,
   updateNCDScreeningDoctorDetails: `${TM_API}/NCD/update/doctorData`,
   updateGeneralOPDQuickConsultDoctorDetails: `${TM_API}genOPD-QC-quickConsult/update/doctorData`,
@@ -341,7 +345,7 @@ export const environment = {
   updateGeneralOPDDoctorDetails: `${TM_API}generalOPD/update/doctorData`,
   updateNCDCareDoctorDetails: `${TM_API}NCDCare/update/doctorData`,
   updatePNCDoctorDetails: `${TM_API}PNC/update/doctorData`,
-  getNCDScreeningHistoryDetails: `${TM_API}NCD/getBenHistoryDetails`,
+
   getTMCasesheetDataUrl: `${TM_API}common/get/Case-sheet/printData`,
   getMMUCasesheetDataUrl: `${MMU_API}common/get/Case-sheet/printData`,
 
@@ -359,6 +363,9 @@ export const environment = {
   previousPerinatalHistory: `${TM_API}common/getBenPerinatalHistory`,
   previousDevelopmentHistory: `${TM_API}common/getBenDevelopmentHistory`,
   previousFeedingHistory: `${TM_API}common/getBenFeedingHistory`,
+  previousPhyscialactivityHistoryUrl: `${TM_API}common/getBenPhysicalHistory`,
+  previousDiabetesHistoryUrl: `${TM_API}common/getBenPreviousDiabetesHistoryDetails`,
+  previousReferredHistoryUrl: `${TM_API}common/getBenPreviousReferralHistoryDetails`,
   /* */
   archivedReportsUrl: `${TM_API}labTechnician/get/labResultForVisitcode`,
   ReportsBase64Url: `${TM_API}foetalMonitor/fetch/reportGraphBase64`,
@@ -368,9 +375,6 @@ export const environment = {
   previous104HistoryUrl: `${COMMON_API}beneficiary/get104BenMedHistory`,
   patientMCTSCallHistoryUrl: `${COMMON_API}mctsOutboundHistoryController/getMctsCallResponse`,
   drugDeleteUrl: `${TM_API}common/doctor/delete/prescribedMedicine`,
-  previousPhyscialactivityHistoryUrl: `${TM_API}common/getBenPhysicalHistory`,
-  previousDiabetesHistoryUrl: `${TM_API}common/getBenPreviousDiabetesHistoryDetails`,
-  previousReferredHistoryUrl: `${TM_API}common/getBenPreviousReferralHistoryDetails`,
   newTaburl: `${mmuUICasesheet}`,
 
   getDataSYNCGroupUrl: `${TM_API}dataSyncActivity/getSyncGroupDetails`,
@@ -415,6 +419,7 @@ export const environment = {
   startHemoglobinurl: '/api/v1/wbpoct_tests/hemoglobin',
   startBloodGlucoseurl: '/api/v1/wbpoct_tests/blood_glucose',
   startRBSurl: '/api/v1/wbpoct_tests/blood_glucose',
+
   //file upload
   saveFile: `${COMMON_API}kmfilemanager/addFile`,
   viewFileData: `${TM_API}common/getKMFile`,
@@ -453,6 +458,7 @@ export const environment = {
   getBenCBACDetails: `${COMMON_API}doortodoorapp/getSuspectedData_HRP_TB_NCD`,
 
   updateAmritIDInMongo: `${FHIR_API}higher/health/facility/update/bengenid`,
+
   /*Get patient higher health facility previous clinical records */
   higherHealthFacilityPreviousVisitDeatilsUrl: `${FHIR_API}higher/health/facility/get/clinical/data`,
   /*Calculate BMI for minors */
@@ -514,7 +520,4 @@ export const environment = {
   siteKey: siteKey,
   captchaChallengeURL: captchaChallengeURL,
   enableCaptcha: enableCaptcha,
-
-  getUserId: `${COMMON_API}user/userName/`,
-  checkUsersignExistUrl: `${ADMIN_API}signature1/signexist/`,
 };
