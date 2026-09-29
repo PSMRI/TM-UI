@@ -45,6 +45,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   selector: 'app-general-medication-history',
   templateUrl: './medication-history.component.html',
   styleUrls: ['./medication-history.component.css'],
+
+  standalone: false,
 })
 export class MedicationHistoryComponent implements OnInit, DoCheck, OnDestroy {
   @Input()

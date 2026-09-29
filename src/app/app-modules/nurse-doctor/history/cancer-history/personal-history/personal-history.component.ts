@@ -35,6 +35,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   selector: 'app-nurse-cancer-personal-history',
   templateUrl: './personal-history.component.html',
   styleUrls: ['./personal-history.component.css'],
+
+  standalone: false,
 })
 export class PersonalHistoryComponent implements OnInit, DoCheck, OnDestroy {
   @Input()

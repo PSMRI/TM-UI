@@ -30,6 +30,8 @@ import { SetLanguageComponent } from '../../core/components/set-language.compone
   selector: 'app-set-password-for-abha',
   templateUrl: './set-password-for-abha.component.html',
   styleUrls: ['./set-password-for-abha.component.css'],
+
+  standalone: false,
 })
 export class SetPasswordForAbhaComponent implements OnInit, DoCheck {
   confirmpwd: any;

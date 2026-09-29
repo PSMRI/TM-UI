@@ -29,6 +29,8 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
   selector: 'app-nurse-head-to-toe-examination',
   templateUrl: './head-to-toe-examination.component.html',
   styleUrls: ['./head-to-toe-examination.component.css'],
+
+  standalone: false,
 })
 export class HeadToToeExaminationComponent implements OnInit, DoCheck {
   @Input()

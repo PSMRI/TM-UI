@@ -29,6 +29,8 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
   selector: 'app-nurse-respiratory-system',
   templateUrl: './respiratory-system.component.html',
   styleUrls: ['./respiratory-system.component.css'],
+
+  standalone: false,
 })
 export class RespiratorySystemComponent implements OnInit, DoCheck {
   @Input()

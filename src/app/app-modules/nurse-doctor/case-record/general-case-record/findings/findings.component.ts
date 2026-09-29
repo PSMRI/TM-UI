@@ -54,6 +54,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   selector: 'app-findings',
   templateUrl: './findings.component.html',
   styleUrls: ['./findings.component.css'],
+
+  standalone: false,
 })
 export class FindingsComponent implements OnInit, OnDestroy, DoCheck {
   @Input()

@@ -55,6 +55,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   selector: 'app-patient-chief-complaints',
   templateUrl: './chief-complaints.component.html',
   styleUrls: ['./chief-complaints.component.css'],
+
+  standalone: false,
 })
 export class ChiefComplaintsComponent implements OnInit, DoCheck, OnDestroy {
   @Input()

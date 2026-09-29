@@ -32,6 +32,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   selector: 'app-previous-visit-details',
   templateUrl: './previous-visit-details.component.html',
   styleUrls: ['./previous-visit-details.component.css'],
+
+  standalone: false,
 })
 export class PreviousVisitDetailsComponent implements OnInit, DoCheck {
   lineChartOptions: any = {

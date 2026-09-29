@@ -55,6 +55,8 @@ interface Beneficary {
   selector: 'app-search-dialog',
   templateUrl: './search-dialog.component.html',
   styleUrls: ['./search-dialog.component.css'],
+
+  standalone: false,
 })
 export class SearchDialogComponent implements OnInit, DoCheck {
   // for ID Manpulation

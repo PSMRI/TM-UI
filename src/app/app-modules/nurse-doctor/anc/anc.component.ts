@@ -40,6 +40,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   selector: 'app-nurse-anc',
   templateUrl: './anc.component.html',
   styleUrls: ['./anc.component.css'],
+
+  standalone: false,
 })
 export class AncComponent implements OnInit, OnChanges, OnDestroy, DoCheck {
   @Input()

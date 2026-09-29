@@ -33,6 +33,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   selector: 'app-cancer-doctor-diagnosis-case-sheet',
   templateUrl: './cancer-doctor-diagnosis-case-sheet.component.html',
   styleUrls: ['./cancer-doctor-diagnosis-case-sheet.component.css'],
+
+  standalone: false,
 })
 export class CancerDoctorDiagnosisCaseSheetComponent
   implements OnInit, OnChanges, DoCheck

@@ -42,6 +42,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   selector: 'app-general-opd-diagnosis',
   templateUrl: './general-opd-diagnosis.component.html',
   styleUrls: ['./general-opd-diagnosis.component.css'],
+
+  standalone: false,
 })
 export class GeneralOpdDiagnosisComponent
   implements OnInit, OnChanges, DoCheck

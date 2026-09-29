@@ -29,6 +29,8 @@ import { HttpServiceService } from 'src/app/app-modules/core/services/http-servi
   selector: 'app-diagnosis',
   templateUrl: './diagnosis.component.html',
   styleUrls: ['./diagnosis.component.css'],
+
+  standalone: false,
 })
 export class DiagnosisComponent implements OnInit, DoCheck {
   @Input()

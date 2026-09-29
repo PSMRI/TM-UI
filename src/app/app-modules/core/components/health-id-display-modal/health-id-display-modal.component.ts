@@ -41,6 +41,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   templateUrl: './health-id-display-modal.component.html',
   styleUrls: ['./health-id-display-modal.component.css'],
   providers: [DatePipe],
+
+  standalone: false,
 })
 export class HealthIdDisplayModalComponent implements OnInit, DoCheck {
   chooseHealthID: any;

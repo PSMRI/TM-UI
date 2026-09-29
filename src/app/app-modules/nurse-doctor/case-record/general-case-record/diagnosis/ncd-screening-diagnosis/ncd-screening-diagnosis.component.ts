@@ -43,6 +43,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   selector: 'app-ncd-screening-diagnosis',
   templateUrl: './ncd-screening-diagnosis.component.html',
   styleUrls: ['./ncd-screening-diagnosis.component.css'],
+
+  standalone: false,
 })
 export class NcdScreeningDiagnosisComponent
   implements OnInit, OnChanges, DoCheck

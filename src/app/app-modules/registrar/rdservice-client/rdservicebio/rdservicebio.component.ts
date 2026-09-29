@@ -12,6 +12,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   selector: 'app-rdservicebio',
   templateUrl: './rdservicebio.component.html',
   styleUrls: ['./rdservicebio.component.css'],
+
+  standalone: false,
 })
 export class RdservicebioComponent implements OnInit {
   selectedValue: any;

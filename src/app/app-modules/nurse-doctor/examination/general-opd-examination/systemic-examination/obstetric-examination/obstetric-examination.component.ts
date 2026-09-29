@@ -40,6 +40,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   templateUrl: './obstetric-examination.component.html',
   styleUrls: ['./obstetric-examination.component.css'],
   providers: [DatePipe],
+
+  standalone: false,
 })
 export class ObstetricExaminationComponent
   implements OnInit, OnDestroy, DoCheck

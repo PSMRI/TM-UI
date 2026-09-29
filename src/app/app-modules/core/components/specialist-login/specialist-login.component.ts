@@ -31,6 +31,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
   selector: 'app-specialist-login',
   templateUrl: './specialist-login.component.html',
   styleUrls: ['./specialist-login.component.css'],
+
+  standalone: false,
 })
 export class SpecialistLoginComponent implements OnInit {
   specialistTMLoginForm!: FormGroup;
