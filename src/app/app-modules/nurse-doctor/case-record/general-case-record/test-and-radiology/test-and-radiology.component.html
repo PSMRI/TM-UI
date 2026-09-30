@@ -280,15 +280,16 @@
           <ng-container
             *ngFor="let radiologyReport of radiologyResults; let i = index"
           >
-            <tr>
-              <td [attr.rowspan]="radiologyReport?.componentList.length + 1">
-                {{ radiologyReport.procedureName }}
-              </td>
-            </tr>
             <tr *ngFor="let test of radiologyReport?.componentList">
               <td
                 style="
-                  width: 300px;
+                  vertical-align: middle;
+                "
+              >
+                {{ radiologyReport.procedureName }}
+              </td>
+              <td
+                style="
                   max-width: 120px;
                   word-break: normal;
                   vertical-align: middle;

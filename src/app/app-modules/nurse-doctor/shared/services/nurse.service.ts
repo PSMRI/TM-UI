@@ -1442,7 +1442,9 @@ export class NurseService {
         riskySexualPracticesStatus:
           personalHistoryForm.value.riskySexualPracticesStatus !== undefined &&
           personalHistoryForm.value.riskySexualPracticesStatus !== null
-            ? +personalHistoryForm.value.riskySexualPracticesStatus
+            ? personalHistoryForm.value.riskySexualPracticesStatus
+              ? '1'
+              : '0'
             : null,
         tobaccoList: tobaccoList,
         alcoholList: alcoholList,

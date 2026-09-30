@@ -65,9 +65,15 @@ export class ExaminationCaseSheetComponent
   ) {}
 
   ngOnInit() {
-    this.visitCategory = this.sessionstorage.getItem('caseSheetVisitCategory');
-    this.beneficiaryRegID = this.sessionstorage.getItem('beneficiaryRegID');
-    this.visitID = this.sessionstorage.getItem('visitID');
+    this.visitCategory = this.previous
+      ? this.sessionstorage.getItem('previousCaseSheetVisitCategory')
+      : this.sessionstorage.getItem('caseSheetVisitCategory');
+    this.beneficiaryRegID = this.previous
+      ? this.sessionstorage.getItem('previousCaseSheetBeneficiaryRegID')
+      : this.sessionstorage.getItem('beneficiaryRegID');
+    this.visitID = this.previous
+      ? this.sessionstorage.getItem('previousCaseSheetVisitID')
+      : this.sessionstorage.getItem('visitID');
     this.assignSelectedLanguage();
   }
 

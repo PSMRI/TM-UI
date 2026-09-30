@@ -666,11 +666,12 @@ export class WorkareaComponent
         this.file !== undefined ? '.' + this.file.name.split('.')[1] : '',
       userID: this.sessionstorage.getItem('userID'),
       fileContent: fileContent !== undefined ? fileContent.split(',')[1] : '',
-      createdBy: this.sessionstorage.getItem('userName'),
       vanID: JSON.parse(
         this.sessionstorage.getItem('serviceLineDetails') ?? '{}',
       )?.vanID,
       isUploaded: false,
+      providerServiceMapID: this.sessionstorage.getItem('providerServiceID'),
+      createdBy: this.sessionstorage.getItem('userName'),
     };
 
     if (this.fileObj !== undefined) {
@@ -712,7 +713,7 @@ export class WorkareaComponent
   savedFileData: any;
   saveUploadDetails(procedureID: any) {
     if (this.fileObj !== undefined) {
-      if (this.savedFileData?.procedureID) {
+      if (this.savedFileData?.[procedureID]) {
         if (
           this.fileObj[procedureID].length >
           this.savedFileData[procedureID].length
@@ -749,7 +750,7 @@ export class WorkareaComponent
             'info',
           );
         }
-      } else if (this.fileObj?.procedureID?.length > 0) {
+      } else if (this.fileObj?.[procedureID]?.length > 0) {
         this.saveFileData(procedureID, this.fileObj[procedureID]);
       } else {
         this.confirmationService.alert(
@@ -805,6 +806,15 @@ export class WorkareaComponent
           }
 
           console.log('fileobj after upload', this.fileObj);
+          this.technicianForm.markAsDirty();
+          const radiologyControls = (this.technicianForm.get('radiologyForm') as FormArray)?.controls;
+          if (radiologyControls) {
+            radiologyControls.forEach((proc: any) => {
+              if (proc.value.procedureID?.toString() === procedureID?.toString()) {
+                proc.get('compDetails')?.get('inputValue')?.setValue('file uploaded');
+              }
+            });
+          }
           this.confirmationService.alert(
             this.current_language_set.alerts.info.successMsg,
             'success',
@@ -922,9 +932,9 @@ export class WorkareaComponent
               for (const key in this.savedFileData) {
                 this.technicianForm.value.radiologyForm.forEach(
                   (procedureDetails: any) => {
-                    if (key === procedureDetails.procedureID) {
+                    if (key == procedureDetails.procedureID) {
                       this.savedFileData[key].forEach((fileId: any) => {
-                        this.fileIDs.push(fileId.filePath);
+                        this.fileIDs.push(fileId.kmFileManagerID);
                       });
                       this.radiologyObj = {
                         procedureID: procedureDetails.procedureID,

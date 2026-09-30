@@ -743,6 +743,7 @@ export class GeneralUtils {
       vanID: JSON.parse(serviceLineDetails).vanID,
       parkingPlaceID: JSON.parse(serviceLineDetails).parkingPlaceID,
       prescribedDrugs: this.fb.array([]),
+      incompletePrescription: false,
     });
   }
 

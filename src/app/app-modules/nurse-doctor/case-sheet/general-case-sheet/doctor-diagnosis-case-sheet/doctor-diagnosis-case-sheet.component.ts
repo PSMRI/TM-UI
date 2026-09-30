@@ -115,7 +115,9 @@ export class DoctorDiagnosisCaseSheetComponent
   ) {}
 
   ngOnInit() {
-    this.visitCategory = this.sessionstorage.getItem('caseSheetVisitCategory');
+    this.visitCategory = this.previous
+      ? this.sessionstorage.getItem('previousCaseSheetVisitCategory')
+      : this.sessionstorage.getItem('caseSheetVisitCategory');
     this.fetchHRPPositive();
     this.getHealthIDDetails();
     this.assignSelectedLanguage();
@@ -423,10 +425,13 @@ export class DoctorDiagnosisCaseSheetComponent
   }
 
   fetchHRPPositive() {
-    const beneficiaryRegID = this.sessionstorage.getItem(
-      'caseSheetBeneficiaryRegID',
-    );
-    const visitCode = this.sessionstorage.getItem('visitCode');
+    const beneficiaryRegID = this.previous
+      ? this.sessionstorage.getItem('previousCaseSheetBeneficiaryRegID')
+      : this.sessionstorage.getItem('caseSheetBeneficiaryRegID');
+    const visitCode = this.previous
+      ? this.sessionstorage.getItem('previousCaseSheetVisitCode')
+      : this.sessionstorage.getItem('visitCode');
+    if (!beneficiaryRegID || !visitCode) return;
     this.doctorService
       .getHRPDetails(beneficiaryRegID, visitCode)
       .subscribe((res: any) => {
@@ -441,11 +446,12 @@ export class DoctorDiagnosisCaseSheetComponent
   }
   getHealthIDDetails() {
     const data = {
-      beneficiaryRegID: this.sessionstorage.getItem(
-        'caseSheetBeneficiaryRegID',
-      ),
+      beneficiaryRegID: this.previous
+        ? this.sessionstorage.getItem('previousCaseSheetBeneficiaryRegID')
+        : this.sessionstorage.getItem('caseSheetBeneficiaryRegID'),
       beneficiaryID: null,
     };
+    if (!data.beneficiaryRegID) return;
     this.registrarService.getHealthIdDetails(data).subscribe(
       (healthIDDetails: any) => {
         if (healthIDDetails.statusCode === 200) {
@@ -520,9 +526,10 @@ export class DoctorDiagnosisCaseSheetComponent
   }
 
   getPreviousCovidVaccinationDetails(doseTypeList: any, vaccineTypeList: any) {
-    const beneficiaryRegID = this.sessionstorage.getItem(
-      'caseSheetBeneficiaryRegID',
-    );
+    const beneficiaryRegID = this.previous
+      ? this.sessionstorage.getItem('previousCaseSheetBeneficiaryRegID')
+      : this.sessionstorage.getItem('caseSheetBeneficiaryRegID');
+    if (!beneficiaryRegID) return;
     this.masterdataService
       .getPreviousCovidVaccinationDetails(beneficiaryRegID)
       .subscribe(
@@ -595,7 +602,10 @@ export class DoctorDiagnosisCaseSheetComponent
   }
 
   getAssessmentID() {
-    const benRegID = this.sessionstorage.getItem('caseSheetBeneficiaryRegID');
+    const benRegID = this.previous
+      ? this.sessionstorage.getItem('previousCaseSheetBeneficiaryRegID')
+      : this.sessionstorage.getItem('caseSheetBeneficiaryRegID');
+    if (!benRegID) return;
     this.doctorService.getAssessment(benRegID).subscribe((res: any) => {
       if (res.statusCode === 200 && res.data !== null) {
         const lastElementIndex = res.data.length - 1;
