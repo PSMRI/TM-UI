@@ -1,5 +1,5 @@
 /*
- * AMRIT � Accessible Medical Records via Integrated Technology
+ * AMRIT – Accessible Medical Records via Integrated Technology
  * Integrated EHR (Electronic Health Records) Solution
  *
  * Copyright (C) "Piramal Swasthya Management and Research Institute"
@@ -19,28 +19,48 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, FormGroup } from '@angular/forms';
 
 import { GeneralCaseRecordComponent } from './general-case-record.component';
+import {
+  COMMON_TEST_IMPORTS,
+  LANGUAGE_EN,
+  NO_ERRORS_SCHEMA,
+  commonTestProviders,
+} from 'src/testing/test-utils';
 
 describe('GeneralCaseRecordComponent', () => {
   let component: GeneralCaseRecordComponent;
   let fixture: ComponentFixture<GeneralCaseRecordComponent>;
+  let form: FormGroup;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [...COMMON_TEST_IMPORTS],
       declarations: [GeneralCaseRecordComponent],
-    }).compileComponents();
-  }));
+      providers: [...commonTestProviders()],
+      schemas: [NO_ERRORS_SCHEMA],
+    })
+      .overrideTemplate(GeneralCaseRecordComponent, '')
+      .compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(GeneralCaseRecordComponent);
     component = fixture.componentInstance;
+    form = new FormGroup({
+      generalFindingsForm: new FormGroup({ a: new FormControl() }),
+      generalDiagnosisForm: new FormGroup({ b: new FormControl() }),
+      generalDoctorInvestigationForm: new FormGroup({ c: new FormControl() }),
+      drugPrescriptionForm: new FormGroup({ d: new FormControl() }),
+      treatmentsOnSideEffectsForm: new FormGroup({ e: new FormControl() }),
+    });
+    component.generalCaseRecordForm = form;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create and set language', () => {
     expect(component).toBeTruthy();
+    expect(component.current_language_set).toEqual(LANGUAGE_EN);
   });
+
 });

@@ -1,5 +1,5 @@
 /*
- * AMRIT � Accessible Medical Records via Integrated Technology
+ * AMRIT – Accessible Medical Records via Integrated Technology
  * Integrated EHR (Electronic Health Records) Solution
  *
  * Copyright (C) "Piramal Swasthya Management and Research Institute"
@@ -19,77 +19,125 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-
-import {
-  async,
-  inject,
-  ComponentFixture,
-  TestBed,
-} from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  FormArray,
-} from '@angular/forms';
-import { NO_ERRORS_SCHEMA, DebugElement } from '@angular/core';
-import { MaterialModule } from '../../../../core/material.module';
-
-import { GeneralUtils } from '../../../shared/utility';
-
-import { ConfirmationService } from '../../../../core/services/confirmation.service';
-import {
-  DoctorService,
-  NurseService,
-  MasterdataService,
-} from '../../../shared/services';
-
-import { MasterdataServiceStub } from '../../../shared/mocks/masterdata-service-stub';
-import { DoctorServiceStub } from '../../../shared/mocks/doctor-service-stub';
-import { NurseServiceStub } from '../../../shared/mocks/nurse-service-stub';
-
-import * as data from '../../../shared/mocks/mock-data';
-import { Observable } from 'rxjs/Rx';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, FormGroup } from '@angular/forms';
+import { BehaviorSubject, of } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 
 import { DevelopmentHistoryComponent } from './development-history.component';
+import {
+  DoctorService,
+  MasterdataService,
+  NurseService,
+} from '../../../shared/services';
+import { ConfirmationService } from '../../../../core/services/confirmation.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
+import { PreviousDetailsComponent } from 'src/app/app-modules/core/components/previous-details/previous-details.component';
+import {
+  COMMON_TEST_IMPORTS,
+  LANGUAGE_EN,
+  NO_ERRORS_SCHEMA,
+  autoSpy,
+  commonTestProviders,
+  throwingObs,
+} from 'src/testing/test-utils';
 
 describe('DevelopmentHistoryComponent', () => {
   let component: DevelopmentHistoryComponent;
   let fixture: ComponentFixture<DevelopmentHistoryComponent>;
-  let debugElement: DebugElement;
-  let fb: FormBuilder;
+  let masterData$: BehaviorSubject<any>;
+  let history$: BehaviorSubject<any>;
+  let nurseService: any;
+  let confirmation: any;
+  let dialog: any;
+  let session: any;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, ReactiveFormsModule, MaterialModule],
-      schemas: [NO_ERRORS_SCHEMA],
+  beforeEach(async () => {
+    masterData$ = new BehaviorSubject<any>(null);
+    history$ = new BehaviorSubject<any>(null);
+    await TestBed.configureTestingModule({
+      imports: [...COMMON_TEST_IMPORTS],
       declarations: [DevelopmentHistoryComponent],
       providers: [
-        ConfirmationService,
-        { provide: MasterdataService, useClass: MasterdataServiceStub },
-        { provide: DoctorService, useClass: DoctorServiceStub },
-        { provide: NurseService, useClass: NurseServiceStub },
+        ...commonTestProviders({ session: { beneficiaryRegID: 'B1' } }),
+        {
+          provide: MasterdataService,
+          useValue: autoSpy(MasterdataService, {
+            nurseMasterData$: masterData$.asObservable(),
+          }),
+        },
+        { provide: NurseService, useValue: autoSpy(NurseService) },
+        {
+          provide: DoctorService,
+          useValue: autoSpy(DoctorService, {
+            populateHistoryResponse$: history$.asObservable(),
+          }),
+        },
       ],
-    }).compileComponents();
-  }));
+      schemas: [NO_ERRORS_SCHEMA],
+    })
+      .overrideTemplate(DevelopmentHistoryComponent, '')
+      .compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(DevelopmentHistoryComponent);
     component = fixture.componentInstance;
-    debugElement = fixture.debugElement;
-
-    fb = debugElement.injector.get(FormBuilder);
-    component.developmentHistoryForm = new GeneralUtils(
-      fb,
-    ).createDevelopmentHistoryForm();
-    window.console.log = () => {};
-
-    fixture.detectChanges();
+    component.developmentHistoryForm = new FormGroup({
+      grossMotorMilestones: new FormControl([]),
+      fineMotorMilestones: new FormControl([]),
+      socialMilestones: new FormControl([]),
+      languageMilestones: new FormControl([]),
+      developmentProblems: new FormControl(null),
+    });
+    nurseService = TestBed.inject(NurseService);
+    confirmation = TestBed.inject(ConfirmationService);
+    dialog = TestBed.inject(MatDialog);
+    session = TestBed.inject(SessionStorageService);
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('sets language on init and ignores empty master data', () => {
+    const spy = spyOn(component, 'getGeneralHistory');
+    fixture.detectChanges();
+    expect(component.currentLanguageSet).toEqual(LANGUAGE_EN);
+    expect(component.masterData).toBeUndefined();
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('stores master data and does not load history in edit mode', () => {
+    component.mode = 'edit';
+    const spy = spyOn(component, 'getGeneralHistory');
+    fixture.detectChanges();
+    masterData$.next({ a: 1 });
+    expect(component.masterData).toEqual({ a: 1 });
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('loads history in view mode', () => {
+    component.mode = 'view';
+    const spy = spyOn(component, 'getGeneralHistory');
+    fixture.detectChanges();
+    masterData$.next({ a: 1 });
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('loads history for specialist flag 100', () => {
+    session.setItem('specialistFlag', '100');
+    const spy = spyOn(component, 'getGeneralHistory');
+    fixture.detectChanges();
+    masterData$.next({ a: 1 });
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+
+
+
+
+
+  it('ngOnDestroy without subscriptions does not throw', () => {
+    expect(() => component.ngOnDestroy()).not.toThrow();
+  });
+
+  it('ngDoCheck assigns language', () => {
+    component.ngDoCheck();
+    expect(component.currentLanguageSet).toEqual(LANGUAGE_EN);
   });
 });

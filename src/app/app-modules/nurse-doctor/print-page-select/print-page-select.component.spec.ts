@@ -1,5 +1,5 @@
 /*
- * AMRIT � Accessible Medical Records via Integrated Technology
+ * AMRIT – Accessible Medical Records via Integrated Technology
  * Integrated EHR (Electronic Health Records) Solution
  *
  * Copyright (C) "Piramal Swasthya Management and Research Institute"
@@ -19,28 +19,91 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { of } from 'rxjs';
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import {
+  COMMON_TEST_IMPORTS,
+  LANGUAGE_EN,
+  NO_ERRORS_SCHEMA,
+  commonTestProviders,
+  createHttpServiceMock,
+  throwingObs,
+} from 'src/testing/test-utils';
+import { HttpServiceService } from '../../core/services/http-service.service';
 import { PrintPageSelectComponent } from './print-page-select.component';
 
 describe('PrintPageSelectComponent', () => {
   let component: PrintPageSelectComponent;
   let fixture: ComponentFixture<PrintPageSelectComponent>;
+  let http: any;
 
-  beforeEach(async(() => {
+  const allKeys = [
+    'caseSheetANC',
+    'caseSheetPNC',
+    'caseSheetHistory',
+    'caseSheetExamination',
+    'caseSheetPrescription',
+    'caseSheetDiagnosis',
+    'caseSheetInvestigations',
+    'caseSheetExtInvestigation',
+    'caseSheetCurrentVitals',
+    'caseSheetChiefComplaints',
+    'caseSheetClinicalObservations',
+    'caseSheetFindings',
+    'caseSheetCovidVaccinationDetails',
+    'caseSheetNCDScreeningDetails',
+    'caseSheetFamilyPlanning',
+    'caseSheetVisitDetails',
+    'caseSheetTreatmentOnSideEffects',
+    'caseSheetCounsellingProvided',
+    'caseSheetNeonatalAndInfant',
+    'caseSheetOralVitaminA',
+  ];
+  const selection = (value: boolean, over: any = {}) => {
+    const o: any = {};
+    allKeys.forEach((k) => (o[k] = value));
+    return { ...o, ...over };
+  };
+
+  const create = async (data: any) => {
+    http = createHttpServiceMock();
+    (http as any).getLanguage = jasmine
+      .createSpy('getLanguage')
+      .and.returnValue(of({ English: LANGUAGE_EN }));
     TestBed.configureTestingModule({
+      imports: [...COMMON_TEST_IMPORTS],
       declarations: [PrintPageSelectComponent],
-    }).compileComponents();
-  }));
-
-  beforeEach(() => {
+      providers: [
+        ...commonTestProviders(),
+        { provide: HttpServiceService, useValue: http },
+        { provide: MAT_DIALOG_DATA, useValue: data },
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
+    });
+    // Template uses [(ngModel)] on mat-checkbox (no value accessor without MatCheckboxModule).
+    TestBed.overrideTemplate(PrintPageSelectComponent, '');
+    await TestBed.compileComponents();
     fixture = TestBed.createComponent(PrintPageSelectComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+  };
+
+  beforeEach(() => sessionStorage.setItem('setLanguage', 'English'));
+  afterEach(() => sessionStorage.removeItem('setLanguage'));
+
+  describe('init', () => {
+
+
+
+
+    it('ngDoCheck assigns the language set', async () => {
+      await create(null);
+      component.ngDoCheck();
+      expect(component.currentLanguageSet).toEqual(LANGUAGE_EN);
+    });
+
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+
 });

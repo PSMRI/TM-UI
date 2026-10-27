@@ -1,5 +1,5 @@
 /*
- * AMRIT � Accessible Medical Records via Integrated Technology
+ * AMRIT – Accessible Medical Records via Integrated Technology
  * Integrated EHR (Electronic Health Records) Solution
  *
  * Copyright (C) "Piramal Swasthya Management and Research Institute"
@@ -19,155 +19,244 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, of } from 'rxjs';
 
+import { PatientVisitDetailsComponent } from './visit-details.component';
 import {
-  async,
-  inject,
-  ComponentFixture,
-  TestBed,
-} from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { MaterialModule } from '../../../core/material.module';
+  DoctorService,
+  MasterdataService,
+  NurseService,
+} from '../../shared/services';
+import { VisitDetailUtils } from '../../shared/utility/visit-detail-utility';
+import { BeneficiaryDetailsService } from 'src/app/app-modules/core/services/beneficiary-details.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
+import { AmritTrackingService } from 'Common-UI/src/tracking';
+import { MaterialModule } from 'src/app/app-modules/core/material.module';
+import {
+  COMMON_TEST_IMPORTS,
+  LANGUAGE_EN,
+  NO_ERRORS_SCHEMA,
+  autoSpy,
+  commonTestProviders,
+} from 'src/testing/test-utils';
 
-import { VisitDetailUtils } from '../../shared/utility';
+const CATS = [
+  'General OPD',
+  'ANC',
+  'PNC',
+  'NCD screening',
+  'NCD care',
+  'COVID-19 Screening',
+  'Cancer Screening',
+  'Synctest',
+  'FP & Contraceptive Services',
+  'Neonatal and Infant Health Care Services',
+  'Childhood & Adolescent Healthcare Services',
+  'General OPD (QC)',
+];
+const VISIT_MASTER = {
+  visitReasons: [{ visitReason: 'Screening' }],
+  visitCategories: CATS.map((c, i) => ({
+    visitCategoryID: i,
+    visitCategory: c,
+  })),
+};
+const SUB_CATS = [
+  'Newborn & Infant OPD care',
+  'Child & Adolescent OPD care',
+  'Reproductive Health OPD care',
+  'Elderly OPD Health care',
+  'Management of common communicable diseases and outpatient care for acute simple illnesses & minor ailments',
+  'Other',
+].map((name, id) => ({ id, name }));
+const NURSE_MASTER = {
+  subVisitCategories: SUB_CATS,
+  m_fpmethodfollowup: ['Pills', 'Other'],
+  m_FPSideEffects: ['Nausea', 'Other'],
+};
 
-import { ConfirmationService } from '../../../core/services/confirmation.service';
-import { DoctorService, MasterdataService } from '../../shared/services';
-import { BeneficiaryDetailsService } from '../../../core/services/beneficiary-details.service';
+const ADULT_F = {
+  age: '35 years - 0 months',
+  ageVal: 35,
+  genderName: 'Female',
+};
+const SENIOR_F = {
+  age: '65 years - 0 months',
+  ageVal: 65,
+  genderName: 'Female',
+};
+const CHILD_M = { age: '10 years - 3 months', ageVal: 10, genderName: 'Male' };
+const INFANT_F = { age: '0 years - 5 months', ageVal: 0, genderName: 'Female' };
 
-import { MasterdataServiceStub } from '../../shared/mocks/masterdata-service-stub';
-import { DoctorServiceStub } from '../../shared/mocks/doctor-service-stub';
-import { BeneficiaryDetailsServiceStub } from '../../../core/mocks/beneficiary-details-service-stub';
+describe('PatientVisitDetailsComponent', () => {
+  let component: PatientVisitDetailsComponent;
+  let fixture: ComponentFixture<PatientVisitDetailsComponent>;
+  let doctor: any;
+  let nurse: any;
+  let ncd: any;
+  let session: any;
+  let tracking: any;
+  let visitMaster$: BehaviorSubject<any>;
+  let nurseMaster$: BehaviorSubject<any>;
+  let ben$: BehaviorSubject<any>;
+  let routeParams: any;
+  let form: FormGroup;
 
-import * as data from '../../shared/mocks/mock-data';
-import { Observable } from 'rxjs/Rx';
-
-import { VisitDetailsComponent } from './visit-details.component';
-
-describe('VisitDetailsComponent', () => {
-  let component: VisitDetailsComponent;
-  let fixture: ComponentFixture<VisitDetailsComponent>;
-  let debugElement: any;
-  let fb: any;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, ReactiveFormsModule, MaterialModule],
-      declarations: [VisitDetailsComponent],
-      schemas: [NO_ERRORS_SCHEMA],
+  async function setup(
+    opts: {
+      session?: Record<string, any>;
+      beneficiary?: any;
+      mode?: string;
+    } = {},
+  ) {
+    visitMaster$ = new BehaviorSubject<any>(VISIT_MASTER);
+    nurseMaster$ = new BehaviorSubject<any>(NURSE_MASTER);
+    ben$ = new BehaviorSubject<any>(opts.beneficiary ?? ADULT_F);
+    routeParams = { attendant: 'nurse' };
+    await TestBed.configureTestingModule({
+      imports: [...COMMON_TEST_IMPORTS, MaterialModule],
+      declarations: [PatientVisitDetailsComponent],
       providers: [
-        { provide: MasterdataService, useClass: MasterdataServiceStub },
-        { provide: DoctorService, useClass: DoctorServiceStub },
+        ...commonTestProviders({
+          session: {
+            serviceLineDetails: JSON.stringify({
+              facilityID: 1,
+              parkingPlaceID: 2,
+            }),
+            visitID: 'V1',
+            beneficiaryRegID: 'B1',
+            visitCode: 'VC1',
+            ...(opts.session ?? {}),
+          },
+        }),
+        { provide: DoctorService, useValue: autoSpy(DoctorService) },
+        {
+          provide: NurseService,
+          useValue: autoSpy(NurseService, { mmuVisitData: true }),
+        },
+        {
+          provide: MasterdataService,
+          useValue: autoSpy(MasterdataService, {
+            visitDetailMasterData$: visitMaster$,
+            nurseMasterData$: nurseMaster$,
+          }),
+        },
         {
           provide: BeneficiaryDetailsService,
-          useClass: BeneficiaryDetailsServiceStub,
+          useValue: { beneficiaryDetails$: ben$, cbacData: ['c'] },
+        },
+        {
+          provide: ActivatedRoute,
+          useValue: { snapshot: { params: routeParams } },
         },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(VisitDetailsComponent);
+    fixture = TestBed.createComponent(PatientVisitDetailsComponent);
     component = fixture.componentInstance;
-    debugElement = fixture.debugElement;
+    component.mode = opts.mode as any;
+    session = TestBed.inject(SessionStorageService) as any;
+    form = new VisitDetailUtils(
+      new FormBuilder(),
+      session,
+    ).createPatientVisitDetails(false);
+    component.patientVisitDetailsForm = form;
+    doctor = TestBed.inject(DoctorService) as any;
+    nurse = TestBed.inject(NurseService) as any;
+    ncd = {} as any;
+    tracking = TestBed.inject(AmritTrackingService) as any;
+  }
 
-    fb = debugElement.injector.get(FormBuilder);
-    component.patientVisitDetailsForm = new VisitDetailUtils(
-      fb,
-    ).createPatientVisitDetails();
-    fixture.detectChanges();
+  const names = () =>
+    component.templateFilterVisitCategories.map((c: any) => c.visitCategory);
+
+  describe('init (non-view)', () => {
+    beforeEach(async () => {
+      await setup();
+      fixture.detectChanges();
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    it('ignores null visit master and null nurse master', () => {
+      component.templateVisitReasons = undefined;
+      visitMaster$.next(null);
+      nurseMaster$.next(null);
+      nurseMaster$.next({});
+      expect(component.templateVisitReasons).toBeUndefined();
+    });
+
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  describe('beneficiary-driven flags', () => {
+
+
+    it('ignores null beneficiary', async () => {
+      await setup({ beneficiary: null });
+      ben$.next(null);
+      component.getBenificiaryDetails();
+      expect(component.beneficiary).toBeUndefined();
+    });
   });
 
-  it('should call getVisitReasonAndCategory on Initialisation', () => {
-    spyOn(component, 'getVisitReasonAndCategory');
-    component.ngOnInit();
-    expect(component.getVisitReasonAndCategory).toHaveBeenCalled();
-  });
 
-  it('should call getBenificiaryDetails on Initialisation', () => {
-    spyOn(component, 'getBenificiaryDetails');
-    component.ngOnInit();
-    expect(component.getBenificiaryDetails).toHaveBeenCalled();
-  });
 
-  it('should show pregnancyStatus for female beneficiary', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.femaleBeneficiary);
-      component.patientVisitDetailsForm.patchValue({
-        visitReason: 'FollowUp',
-        visitCategory: 'General OPD',
+  describe('visit detail fetching', () => {
+    const KEYS: [string, string][] = [
+      ['General OPD (QC)', 'benVisitDetails'],
+      ['ANC', 'ANCNurseVisitDetail'],
+      ['General OPD', 'GOPDNurseVisitDetail'],
+      ['NCD screening', 'NCDScreeningNurseVisitDetail'],
+      ['NCD care', 'NCDCareNurseVisitDetail'],
+      ['PNC', 'PNCNurseVisitDetail'],
+      ['COVID-19 Screening', 'covid19NurseVisitDetail'],
+      ['Neonatal and Infant Health Care Services', 'neonatalNurseVisitDetail'],
+      ['Childhood & Adolescent Healthcare Services', 'cacNurseVisitDetail'],
+      ['FP & Contraceptive Services', 'FP_NurseVisitDetail'],
+    ];
+
+    function response(key: string) {
+      return of({
+        statusCode: 200,
+        data: {
+          [key]: {
+            fileIDs: [key],
+            visitReason: 'Follow Up',
+            visitCategory: 'X',
+            followUpForFpMethod: ['Other'],
+            sideEffects: ['Other'],
+          },
+        },
       });
+    }
+
+    KEYS.forEach(([cat, key]) => {
+
+    });
+
+    it('ignores non-200 responses', async () => {
+      await setup({ session: { visitCategory: 'ANC' } });
       fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('#pregnancyStatus'));
-      expect(component.beneficiary).toEqual(data.femaleBeneficiary);
-      expect(debugElement).toBeTruthy();
-    }),
-  ));
+      doctor.getVisitComplaintDetails.and.returnValue(of({ statusCode: 5000 }));
+      component.getVisitDetails('V', 'B');
+      component.getMMUVisitDetails('V', 'B');
+      expect(component.disableVisit).toBeFalse();
+      expect(doctor.fileIDs).toBeUndefined();
+    });
 
-  it('should not show pregnancyStatus for male beneficiary', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.maleBeneficiary);
-      component.patientVisitDetailsForm.patchValue({
-        visitReason: 'FollowUp',
-        visitCategory: 'General OPD',
-      });
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('#pregnancyStatus'));
-      expect(component.beneficiary).toEqual(data.maleBeneficiary);
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('should get Visit Reason and Category Master Data', inject(
-    [MasterdataService],
-    (masterdataService) => {
-      masterdataService.visitDetailMasterDataSource.next(
-        data.visitReasonAndCategory,
-      );
-      expect(component.templateNurseMasterData).toEqual(
-        data.visitReasonAndCategory,
-      );
-    },
-  ));
-
-  it('should get VisitDetails when mode is view', () => {
-    spyOn(component, 'getVisitDetails');
-    component.mode = new String('view');
-    component.ngOnChanges();
-    expect(component.getVisitDetails).toHaveBeenCalled();
   });
-
-  it('should patch visitDetails to form when mode is view', inject(
-    [DoctorService],
-    (doctorService) => {
-      localStorage.setItem('visitCategory', 'General OPD');
-      spyOn(doctorService, 'getVisitComplaintDetails').and.returnValue(
-        Observable.of(data.generalOPDVisitDetails),
-      );
-      spyOn(component, 'getVisitDetails').and.callThrough();
-      component.mode = new String('view');
-      component.ngOnChanges();
-      expect(doctorService.getVisitComplaintDetails).toHaveBeenCalled();
-      fixture.detectChanges();
-      expect(component.patientVisitDetailsForm.value.visitReason).toEqual(
-        data.generalOPDVisitDetails.data.GOPDNurseVisitDetail.visitReason,
-      );
-      expect(component.patientVisitDetailsForm.value.visitCategory).toEqual(
-        data.generalOPDVisitDetails.data.GOPDNurseVisitDetail.visitCategory,
-      );
-      expect(component.patientVisitDetailsForm.value.pregnancyStatus).toEqual(
-        data.generalOPDVisitDetails.data.GOPDNurseVisitDetail.pregnancyStatus,
-      );
-      expect(component.patientVisitDetailsForm.value.rCHID).toEqual(
-        data.generalOPDVisitDetails.data.GOPDNurseVisitDetail.rCHID,
-      );
-    },
-  ));
 });

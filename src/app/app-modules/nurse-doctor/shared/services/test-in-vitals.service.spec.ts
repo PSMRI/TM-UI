@@ -1,5 +1,5 @@
 /*
- * AMRIT � Accessible Medical Records via Integrated Technology
+ * AMRIT – Accessible Medical Records via Integrated Technology
  * Integrated EHR (Electronic Health Records) Solution
  *
  * Copyright (C) "Piramal Swasthya Management and Research Institute"
@@ -19,22 +19,49 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-
-import { TestBed, inject } from '@angular/core/testing';
-
+import { TestBed } from '@angular/core/testing';
 import { TestInVitalsService } from './test-in-vitals.service';
 
 describe('TestInVitalsService', () => {
+  let service: TestInVitalsService;
+
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [TestInVitalsService],
-    });
+    TestBed.configureTestingModule({ providers: [TestInVitalsService] });
+    service = TestBed.inject(TestInVitalsService);
   });
 
-  it('should be created', inject(
-    [TestInVitalsService],
-    (service: TestInVitalsService) => {
-      expect(service).toBeTruthy();
-    },
-  ));
+
+  it('setVitalsRBSValueInReports sets value and emits', () => {
+    let last: any;
+    service.vitalRBSTestResult$.subscribe((v) => (last = v));
+    service.setVitalsRBSValueInReports(120);
+    expect(service.vitalRBSTest).toBe(120);
+    expect(last).toBe(120);
+  });
+
+  it('clearVitalsRBSValueInReports resets to 0', () => {
+    let last: any;
+    service.vitalRBSTestResult$.subscribe((v) => (last = v));
+    service.setVitalsRBSValueInReports(120);
+    service.clearVitalsRBSValueInReports();
+    expect(service.vitalRBSTest).toBe(0);
+    expect(last).toBe(0);
+  });
+
+  it('setVitalsRBSValueInReportsInUpdate sets update value and emits', () => {
+    let last: any;
+    service.vitalRBSTestResultInUpdate$.subscribe((v) => (last = v));
+    service.setVitalsRBSValueInReportsInUpdate(99);
+    expect(service.vitalRBSTestUpdate).toBe(99);
+    expect(last).toBe(99);
+  });
+
+  it('clearVitalsRBSValueInReportsInUpdate resets update value to 0', () => {
+    let last: any;
+    service.vitalRBSTestResultInUpdate$.subscribe((v) => (last = v));
+    service.setVitalsRBSValueInReportsInUpdate(99);
+    service.clearVitalsRBSValueInReportsInUpdate();
+    expect(service.vitalRBSTestUpdate).toBe(0);
+    expect(last).toBe(0);
+  });
 });

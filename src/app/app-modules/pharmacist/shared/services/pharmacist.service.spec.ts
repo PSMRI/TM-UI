@@ -19,22 +19,48 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
+import { environment } from 'src/environments/environment';
 
 import { PharmacistService } from './pharmacist.service';
+import { createSessionStorageMock } from 'src/testing/test-utils';
 
 describe('PharmacistService', () => {
+  let service: PharmacistService;
+  let httpMock: HttpTestingController;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [PharmacistService],
+      imports: [HttpClientTestingModule],
+      providers: [
+        PharmacistService,
+        {
+          provide: SessionStorageService,
+          useValue: createSessionStorageMock({
+            providerServiceID: 4,
+            serviceID: 2,
+            serviceLineDetails: JSON.stringify({ vanID: 11 }),
+          }),
+        },
+      ],
     });
+    service = TestBed.inject(PharmacistService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
-  it('should be created', inject(
-    [PharmacistService],
-    (service: PharmacistService) => {
-      expect(service).toBeTruthy();
-    },
-  ));
+  afterEach(() => httpMock.verify());
+
+  it('getPharmacistWorklist GETs by provider, service and van', () => {
+    let result: any;
+    service.getPharmacistWorklist().subscribe((r) => (result = r));
+    const req = httpMock.expectOne(environment.pharmacistWorklist + '4/2/11');
+    expect(req.request.method).toBe('GET');
+    req.flush({ statusCode: 200 });
+    expect(result).toEqual({ statusCode: 200 });
+  });
 });

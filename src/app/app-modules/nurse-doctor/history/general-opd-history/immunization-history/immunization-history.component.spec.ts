@@ -1,5 +1,5 @@
 /*
- * AMRIT � Accessible Medical Records via Integrated Technology
+ * AMRIT – Accessible Medical Records via Integrated Technology
  * Integrated EHR (Electronic Health Records) Solution
  *
  * Copyright (C) "Piramal Swasthya Management and Research Institute"
@@ -19,77 +19,198 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-
-import {
-  async,
-  inject,
-  ComponentFixture,
-  TestBed,
-} from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  FormArray,
-} from '@angular/forms';
-import { NO_ERRORS_SCHEMA, DebugElement } from '@angular/core';
-import { MaterialModule } from '../../../../core/material.module';
-
-import { GeneralUtils } from '../../../shared/utility';
-
-import { ConfirmationService } from '../../../../core/services/confirmation.service';
-import { DoctorService, MasterdataService } from '../../../shared/services';
-import { BeneficiaryDetailsService } from '../../../../core/services/beneficiary-details.service';
-
-import { BeneficiaryDetailsServiceStub } from '../../../../core/mocks/beneficiary-details-service-stub';
-import { MasterdataServiceStub } from '../../../shared/mocks/masterdata-service-stub';
-import { DoctorServiceStub } from '../../../shared/mocks/doctor-service-stub';
-
-import * as data from '../../../shared/mocks/mock-data';
-import { Observable } from 'rxjs/Rx';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
 
 import { ImmunizationHistoryComponent } from './immunization-history.component';
+import { DoctorService, MasterdataService } from '../../../shared/services';
+import { BeneficiaryDetailsService } from '../../../../core/services/beneficiary-details.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
+import {
+  COMMON_TEST_IMPORTS,
+  LANGUAGE_EN,
+  NO_ERRORS_SCHEMA,
+  autoSpy,
+  commonTestProviders,
+} from 'src/testing/test-utils';
+
+const v = (
+  vaccinationTime: string,
+  vaccineName: string,
+  sctCode: any = null,
+) => ({
+  vaccinationTime,
+  vaccineName,
+  sctCode,
+  sctTerm: sctCode ? 'term-' + vaccineName : null,
+});
+const VACCINES = [
+  v('14 weeks', 'Pentavalent-3'),
+  v('14 weeks', 'Rota Vaccine-3'),
+  v('14 weeks', 'OPV-3'),
+  v('14 weeks', 'fIPV-2'),
+  v('14 weeks', 'PCV2'),
+  v('Birth', 'BCG', '111'),
+  v('Birth', 'OPV-0'),
+  v('Birth', 'HBV-0'),
+  v('6 weeks', 'Pentavalent-1'),
+  v('6 weeks', 'Rota Vaccine-1'),
+  v('6 weeks', 'OPV-1'),
+  v('6 weeks', 'fIPV-1'),
+  v('6 weeks', 'PCV1'),
+  v('10 weeks', 'Pentavalent-2'),
+  v('10 weeks', 'Rota Vaccine-2'),
+  v('10 weeks', 'OPV-2'),
+  v('9-12 months', 'MR-1'),
+  v('5-6 years', 'DPT Booster-2'),
+  v('16 years', 'TT'),
+];
 
 describe('ImmunizationHistoryComponent', () => {
   let component: ImmunizationHistoryComponent;
   let fixture: ComponentFixture<ImmunizationHistoryComponent>;
-  let debugElement: DebugElement;
-  let fb: FormBuilder;
+  let masterData$: BehaviorSubject<any>;
+  let history$: BehaviorSubject<any>;
+  let ben$: BehaviorSubject<any>;
+  let session: any;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, ReactiveFormsModule, MaterialModule],
-      schemas: [NO_ERRORS_SCHEMA],
+  const list = () =>
+    component.immunizationHistoryForm.get('immunizationList') as FormArray;
+  const group = (age: string) =>
+    list().controls.find(
+      (c) => c.value.defaultReceivingAge === age,
+    ) as FormGroup;
+  const vac = (age: string, name: string) =>
+    (group(age).get('vaccines') as FormArray).controls.find(
+      (c) => c.value.vaccine === name,
+    ) as FormGroup;
+
+  beforeEach(async () => {
+    masterData$ = new BehaviorSubject<any>(null);
+    history$ = new BehaviorSubject<any>(null);
+    ben$ = new BehaviorSubject<any>({ age: '1 years - 2 months' });
+    await TestBed.configureTestingModule({
+      imports: [...COMMON_TEST_IMPORTS],
       declarations: [ImmunizationHistoryComponent],
       providers: [
-        ConfirmationService,
-        { provide: MasterdataService, useClass: MasterdataServiceStub },
-        { provide: DoctorService, useClass: DoctorServiceStub },
+        ...commonTestProviders(),
+        {
+          provide: MasterdataService,
+          useValue: autoSpy(MasterdataService, {
+            nurseMasterData$: masterData$.asObservable(),
+          }),
+        },
+        {
+          provide: DoctorService,
+          useValue: autoSpy(DoctorService, {
+            populateHistoryResponse$: history$.asObservable(),
+          }),
+        },
         {
           provide: BeneficiaryDetailsService,
-          useClass: BeneficiaryDetailsServiceStub,
+          useValue: autoSpy(BeneficiaryDetailsService, {
+            beneficiaryDetails$: ben$.asObservable(),
+          }),
         },
       ],
-    }).compileComponents();
-  }));
+      schemas: [NO_ERRORS_SCHEMA],
+    })
+      .overrideTemplate(ImmunizationHistoryComponent, '')
+      .compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ImmunizationHistoryComponent);
     component = fixture.componentInstance;
-    debugElement = fixture.debugElement;
-
-    fb = debugElement.injector.get(FormBuilder);
-    component.immunizationHistoryForm = new GeneralUtils(
-      fb,
-    ).createImmunizationHistoryForm();
-    window.console.log = () => {};
-
-    fixture.detectChanges();
+    component.immunizationHistoryForm = TestBed.inject(FormBuilder).group({
+      immunizationList: new FormArray([]),
+    });
+    session = TestBed.inject(SessionStorageService);
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  const load = () => {
+    fixture.detectChanges();
+    masterData$.next({ childVaccinations: VACCINES });
+  };
+
+  describe('building the immunization list', () => {
+
+
+    it('uses the year part only when months are zero', () => {
+      ben$.next({ age: '2 years - 0 months' });
+      load();
+      expect(component.beneficiaryAge).toBe('2 years');
+    });
+
+
+
+    it('ignores master data without child vaccinations', () => {
+      fixture.detectChanges();
+      masterData$.next({});
+      expect(list().length).toBe(0);
+    });
+  });
+
+
+  describe('loading saved vaccine data', () => {
+    const savedHistory = () => ({
+      statusCode: 200,
+      data: {
+        ImmunizationHistory: {
+          immunizationList: [
+            { defaultReceivingAge: 'Birth', vaccines: [{ status: true }] },
+            {
+              defaultReceivingAge: '6 weeks',
+              vaccines: [
+                { status: true },
+                { status: false },
+                { status: true },
+                { status: true },
+                { status: true },
+              ],
+            },
+          ],
+        },
+      },
+    });
+
+
+    it('loads for specialist flag 100', () => {
+      session.setItem('specialistFlag', '100');
+      const spy = spyOn(component, 'loadVaccineData');
+      load();
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('ignores history without immunization list', () => {
+      component.mode = 'view';
+      load();
+      history$.next({ statusCode: 200, data: { ImmunizationHistory: {} } });
+      expect(vac('Birth', 'BCG').value.status).toBeFalse();
+    });
+  });
+
+
+
+  it('selectAll marks the list dirty', () => {
+    load();
+    component.selectAll(true, 0);
+    expect(list().dirty).toBeTrue();
+  });
+
+  it('ngOnDestroy unsubscribes', () => {
+    load();
+    const a = spyOn(component.nurseMasterDataSubscription, 'unsubscribe');
+    const b = spyOn(component.beneficiaryDetailSubscription, 'unsubscribe');
+    component.ngOnDestroy();
+    expect(a).toHaveBeenCalled();
+    expect(b).toHaveBeenCalled();
+    component.nurseMasterDataSubscription = null;
+    component.beneficiaryDetailSubscription = null;
+    expect(() => component.ngOnDestroy()).not.toThrow();
+  });
+
+  it('ngDoCheck refreshes language', () => {
+    component.ngDoCheck();
+    expect(component.currentLanguageSet).toEqual(LANGUAGE_EN);
   });
 });

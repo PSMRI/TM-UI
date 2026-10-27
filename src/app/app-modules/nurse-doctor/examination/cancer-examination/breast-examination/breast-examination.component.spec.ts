@@ -1,5 +1,5 @@
 /*
- * AMRIT � Accessible Medical Records via Integrated Technology
+ * AMRIT – Accessible Medical Records via Integrated Technology
  * Integrated EHR (Electronic Health Records) Solution
  *
  * Copyright (C) "Piramal Swasthya Management and Research Institute"
@@ -19,130 +19,143 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-
-import {
-  async,
-  inject,
-  ComponentFixture,
-  TestBed,
-} from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  FormArray,
-} from '@angular/forms';
-import { NO_ERRORS_SCHEMA, DebugElement } from '@angular/core';
-import { MaterialModule } from '../../../../core/material.module';
-
-import { CameraService } from '../../../../core/services/camera.service';
-import { BeneficiaryDetailsService } from '../../../../core/services/beneficiary-details.service';
-
-import { CameraServiceStub } from '../../../../core/mocks/camera-service-stub';
-import { BeneficiaryDetailsServiceStub } from '../../../../core/mocks/beneficiary-details-service-stub';
-
-import { CancerUtils } from '../../../shared/utility';
-
-import * as data from '../../../shared/mocks/mock-data';
-import { Observable } from 'rxjs/Rx';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, FormGroup } from '@angular/forms';
+import { BehaviorSubject, of } from 'rxjs';
 
 import { BreastExaminationComponent } from './breast-examination.component';
+import { CameraService } from '../../../../core/services/camera.service';
+import { BeneficiaryDetailsService } from '../../../../core/services/beneficiary-details.service';
+import {
+  COMMON_TEST_IMPORTS,
+  LANGUAGE_EN,
+  NO_ERRORS_SCHEMA,
+  autoSpy,
+  commonTestProviders,
+} from 'src/testing/test-utils';
 
 describe('BreastExaminationComponent', () => {
   let component: BreastExaminationComponent;
   let fixture: ComponentFixture<BreastExaminationComponent>;
-  let debugElement: any;
-  let fb: any;
+  let camera: any;
+  let benDetails$: BehaviorSubject<any>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, ReactiveFormsModule, MaterialModule],
+  beforeEach(async () => {
+    camera = autoSpy(CameraService);
+    benDetails$ = new BehaviorSubject<any>(null);
+
+    await TestBed.configureTestingModule({
+      imports: [...COMMON_TEST_IMPORTS],
       declarations: [BreastExaminationComponent],
-      schemas: [NO_ERRORS_SCHEMA],
       providers: [
-        { provide: CameraService, useClass: CameraServiceStub },
+        ...commonTestProviders(),
+        { provide: CameraService, useValue: camera },
         {
           provide: BeneficiaryDetailsService,
-          useClass: BeneficiaryDetailsServiceStub,
+          useValue: { beneficiaryDetails$: benDetails$.asObservable() },
         },
       ],
-    }).compileComponents();
-  }));
+      schemas: [NO_ERRORS_SCHEMA],
+    })
+      .overrideTemplate(BreastExaminationComponent, '')
+      .compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(BreastExaminationComponent);
     component = fixture.componentInstance;
-    debugElement = fixture.debugElement;
-
-    fb = debugElement.injector.get(FormBuilder);
-    component.breastExaminationForm = new CancerUtils(
-      fb,
-    ).createBreastExaminationForm();
+    component.breastExaminationForm = new FormGroup({
+      everBreastFed: new FormControl(null),
+      breastFeedingDurationGTE6months: new FormControl(true),
+      lumpInBreast: new FormControl(null),
+      lumpSize: new FormControl('2cm'),
+      lumpShape: new FormControl('round'),
+      lumpTexture: new FormControl('hard'),
+      image: new FormControl(null),
+    });
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('sets the language on init and on ngDoCheck', () => {
+    expect(component.current_language_set).toEqual(LANGUAGE_EN);
+    component.current_language_set = undefined;
+    component.ngDoCheck();
+    expect(component.current_language_set).toEqual(LANGUAGE_EN);
   });
 
-  it('should not show duration of breast feeding symptom', () => {
-    debugElement = fixture.debugElement.query(
-      By.css('#breastFeedingDurationGTE6months'),
-    );
-    expect(debugElement).toBeFalsy();
+  describe('beneficiary gender', () => {
+    it('stays false until details arrive or for male beneficiaries', () => {
+      expect(component.female).toBeFalse();
+      benDetails$.next({ genderName: 'Male' });
+      expect(component.female).toBeFalse();
+      benDetails$.next({});
+      expect(component.female).toBeFalse();
+    });
+
+    it('is true for female beneficiaries', () => {
+      benDetails$.next({ genderName: 'FEMALE' });
+      expect(component.female).toBeTrue();
+    });
+
+    it('is true for transgender beneficiaries', () => {
+      benDetails$.next({ genderName: 'Transgender' });
+      expect(component.female).toBeTrue();
+    });
   });
 
-  it('should not show duration of breast feeding symptom when ever breast fed a child is true', () => {
-    component.everBreastFed.patchValue({ everBreastFed: true });
-    fixture.detectChanges();
-    debugElement = fixture.debugElement.query(
-      By.css('#breastFeedingDurationGTE6months'),
-    );
-    expect(debugElement).toBeTruthy();
+  it('checkBreastFeed clears the feeding duration', () => {
+    component.checkBreastFeed();
+    expect(
+      component.breastExaminationForm.value.breastFeedingDurationGTE6months,
+    ).toBeNull();
   });
 
-  it('should not show lump size symptom', () => {
-    debugElement = fixture.debugElement.query(By.css('#lumpSize'));
-    expect(debugElement).toBeFalsy();
+  it('checkLump clears size, shape and texture', () => {
+    component.checkLump();
+    const value = component.breastExaminationForm.value;
+    expect(value.lumpSize).toBeNull();
+    expect(value.lumpShape).toBeNull();
+    expect(value.lumpTexture).toBeNull();
   });
 
-  it('should not show lump shape symptom', () => {
-    debugElement = fixture.debugElement.query(By.css('#lumpShape'));
-    expect(debugElement).toBeFalsy();
+  it('exposes form controls through getters', () => {
+    const form = component.breastExaminationForm;
+    expect(component.everBreastFed).toBe(form.get('everBreastFed'));
+    expect(component.lumpInBreast).toBe(form.get('lumpInBreast'));
   });
 
-  it('should not show lump texture symptom', () => {
-    debugElement = fixture.debugElement.query(By.css('#lumpTexture'));
-    expect(debugElement).toBeFalsy();
+  it('ngOnDestroy unsubscribes when a subscription is stored', () => {
+    expect(() => component.ngOnDestroy()).not.toThrow();
+    const unsubscribe = jasmine.createSpy('unsubscribe');
+    component.beneficiarySubs = { unsubscribe };
+    component.ngOnDestroy();
+    expect(unsubscribe).toHaveBeenCalled();
   });
 
-  it('should show lump size symptom when any lump in breast is true', () => {
-    component.breastExaminationForm.patchValue({ lumpInBreast: true });
-    fixture.detectChanges();
-    debugElement = fixture.debugElement.query(By.css('#lumpSize'));
-    expect(debugElement).toBeTruthy();
-  });
+  describe('annotateImage', () => {
+    beforeEach(() => {
+      (component as any).breastsImage = {
+        nativeElement: { attributes: { src: { nodeValue: 'breast.png' } } },
+      };
+    });
 
-  it('should show lump shape symptom when any lump in breast is true', () => {
-    component.breastExaminationForm.patchValue({ lumpInBreast: true });
-    fixture.detectChanges();
-    debugElement = fixture.debugElement.query(By.css('#lumpShape'));
-    expect(debugElement).toBeTruthy();
-  });
+    it('stores the annotated points with image ID 2', () => {
+      camera.annotate.and.returnValue(of({ markers: [3] }));
+      component.annotateImage();
+      expect(camera.annotate).toHaveBeenCalledWith(
+        'breast.png',
+        null,
+        LANGUAGE_EN,
+      );
+      expect(component.breastExaminationForm.value.image).toEqual({
+        markers: [3],
+        imageID: 2,
+      });
+      expect(component.breastExaminationForm.dirty).toBeTrue();
+    });
 
-  it('should show lump texture symptom when any lump in breast is true', () => {
-    component.breastExaminationForm.patchValue({ lumpInBreast: true });
-    fixture.detectChanges();
-    debugElement = fixture.debugElement.query(By.css('#lumpTexture'));
-    expect(debugElement).toBeTruthy();
-  });
-
-  it('should call annotateImage when image is clicked', () => {
-    spyOn(component, 'annotateImage');
-    debugElement = fixture.debugElement.query(By.css('#annotateBreastImg'));
-    debugElement.triggerEventHandler('click', null);
-    expect(component.annotateImage).toHaveBeenCalled();
+    it('ignores a cancelled annotation', () => {
+      camera.annotate.and.returnValue(of(null));
+      component.annotateImage();
+      expect(component.breastExaminationForm.dirty).toBeFalse();
+    });
   });
 });

@@ -19,26 +19,48 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SpinnerComponent } from './spinner.component';
+import { SpinnerService } from '../../services/spinner.service';
 
 describe('SpinnerComponent', () => {
   let component: SpinnerComponent;
   let fixture: ComponentFixture<SpinnerComponent>;
+  let spinner: SpinnerService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [SpinnerComponent],
-    }).compileComponents();
+      providers: [SpinnerService],
+    })
+      .overrideTemplate(SpinnerComponent, '')
+      .compileComponents();
 
+    spyOn(console, 'log');
+    spinner = TestBed.inject(SpinnerService);
     fixture = TestBed.createComponent(SpinnerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('follows the spinner state', () => {
+    expect(component.visible).toBeFalse();
+    spinner.show();
+    expect(component.visible).toBeTrue();
+    spinner.hide();
+    expect(component.visible).toBeFalse();
+  });
+
+  it('logs the role on changes', () => {
+    component.role = 'nurse';
+    component.ngOnChanges();
+    expect(console.log).toHaveBeenCalledWith('I am groot', 'nurse');
+  });
+
+  it('stops listening on destroy', () => {
+    fixture.destroy();
+    spinner.show();
+    expect(component.visible).toBeFalse();
   });
 });

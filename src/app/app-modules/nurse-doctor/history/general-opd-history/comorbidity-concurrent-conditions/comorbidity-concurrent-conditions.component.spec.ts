@@ -1,5 +1,5 @@
 /*
- * AMRIT � Accessible Medical Records via Integrated Technology
+ * AMRIT – Accessible Medical Records via Integrated Technology
  * Integrated EHR (Electronic Health Records) Solution
  *
  * Copyright (C) "Piramal Swasthya Management and Research Institute"
@@ -19,130 +19,308 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-
-import {
-  async,
-  inject,
-  ComponentFixture,
-  TestBed,
-} from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  FormArray,
-} from '@angular/forms';
-import { NO_ERRORS_SCHEMA, DebugElement } from '@angular/core';
-import { MaterialModule } from '../../../../core/material.module';
-
-import { GeneralUtils } from '../../../shared/utility';
-
-import { ConfirmationService } from '../../../../core/services/confirmation.service';
-import {
-  DoctorService,
-  NurseService,
-  MasterdataService,
-} from '../../../shared/services';
-import { BeneficiaryDetailsService } from '../../../../core/services/beneficiary-details.service';
-
-import { MasterdataServiceStub } from '../../../shared/mocks/masterdata-service-stub';
-import { DoctorServiceStub } from '../../../shared/mocks/doctor-service-stub';
-import { BeneficiaryDetailsServiceStub } from '../../../../core/mocks/beneficiary-details-service-stub';
-import { NurseServiceStub } from '../../../shared/mocks/nurse-service-stub';
-
-import * as data from '../../../shared/mocks/mock-data';
-import { Observable } from 'rxjs/Rx';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormArray, FormGroup } from '@angular/forms';
+import { BehaviorSubject, Subject, of } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 
 import { ComorbidityConcurrentConditionsComponent } from './comorbidity-concurrent-conditions.component';
+import {
+  DoctorService,
+  MasterdataService,
+  NurseService,
+} from '../../../shared/services';
+import { ConfirmationService } from '../../../../core/services/confirmation.service';
+import { BeneficiaryDetailsService } from '../../../../core/services/beneficiary-details.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
+import { AmritTrackingService } from 'Common-UI/src/tracking';
+import { PreviousDetailsComponent } from 'src/app/app-modules/core/components/previous-details/previous-details.component';
+import {
+  COMMON_TEST_IMPORTS,
+  LANGUAGE_EN,
+  NO_ERRORS_SCHEMA,
+  autoSpy,
+  commonTestProviders,
+  throwingObs,
+} from 'src/testing/test-utils';
+
+const makeConditions = () => [
+  { comorbidCondition: 'Diabetes' },
+  { comorbidCondition: 'Asthma' },
+  { comorbidCondition: 'None' },
+  { comorbidCondition: 'Other' },
+  { comorbidCondition: 'Nil' },
+];
 
 describe('ComorbidityConcurrentConditionsComponent', () => {
   let component: ComorbidityConcurrentConditionsComponent;
   let fixture: ComponentFixture<ComorbidityConcurrentConditionsComponent>;
-  let debugElement: DebugElement;
-  let fb: FormBuilder;
+  let masterData$: BehaviorSubject<any>;
+  let history$: BehaviorSubject<any>;
+  let beneficiary$: BehaviorSubject<any>;
+  let listen$: Subject<any>;
+  let nurseService: any;
+  let hrp: any;
+  let confirmation: any;
+  let dialog: any;
+  let session: any;
+  let tracking: any;
+  let C: any[];
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, ReactiveFormsModule, MaterialModule],
-      schemas: [NO_ERRORS_SCHEMA],
+  const list = () =>
+    component.comorbidityConcurrentConditionsForm.controls[
+      'comorbidityConcurrentConditionsList'
+    ] as FormArray;
+
+  beforeEach(async () => {
+    C = makeConditions();
+    masterData$ = new BehaviorSubject<any>(null);
+    history$ = new BehaviorSubject<any>(null);
+    beneficiary$ = new BehaviorSubject<any>({ age: '30 years - 1 months' });
+    listen$ = new Subject<any>();
+    const nurse = autoSpy(NurseService);
+    (nurse.listen as any).and.returnValue(listen$.asObservable());
+    await TestBed.configureTestingModule({
+      imports: [...COMMON_TEST_IMPORTS],
       declarations: [ComorbidityConcurrentConditionsComponent],
       providers: [
-        ConfirmationService,
-        { provide: MasterdataService, useClass: MasterdataServiceStub },
-        { provide: DoctorService, useClass: DoctorServiceStub },
+        ...commonTestProviders({ session: { beneficiaryRegID: 'B1' } }),
+        {
+          provide: MasterdataService,
+          useValue: autoSpy(MasterdataService, {
+            nurseMasterData$: masterData$.asObservable(),
+          }),
+        },
+        { provide: NurseService, useValue: nurse },
+        {
+          provide: DoctorService,
+          useValue: autoSpy(DoctorService, {
+            populateHistoryResponse$: history$.asObservable(),
+          }),
+        },
         {
           provide: BeneficiaryDetailsService,
-          useClass: BeneficiaryDetailsServiceStub,
+          useValue: autoSpy(BeneficiaryDetailsService, {
+            beneficiaryDetails$: beneficiary$.asObservable(),
+          }),
         },
-        { provide: NurseService, useClass: NurseServiceStub },
       ],
-    }).compileComponents();
-  }));
+      schemas: [NO_ERRORS_SCHEMA],
+    })
+      .overrideTemplate(ComorbidityConcurrentConditionsComponent, '')
+      .compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ComorbidityConcurrentConditionsComponent);
     component = fixture.componentInstance;
-    debugElement = fixture.debugElement;
+    component.comorbidityConcurrentConditionsForm = new FormGroup({
+      comorbidityConcurrentConditionsList: new FormArray<any>([]),
+    });
+    nurseService = TestBed.inject(NurseService);
+    hrp = {} as any;
+    confirmation = TestBed.inject(ConfirmationService);
+    dialog = TestBed.inject(MatDialog);
+    session = TestBed.inject(SessionStorageService);
+    tracking = TestBed.inject(AmritTrackingService);
+  });
 
-    fb = debugElement.injector.get(FormBuilder);
-    component.comorbidityConcurrentConditionsForm = new GeneralUtils(
-      fb,
-    ).createComorbidityConcurrentConditionsForm();
-    window.console.log = () => {};
 
+  describe('comorbid filter listener', () => {
+    it('sets status true for COVID-19 screening with comorbid flag', () => {
+      session.setItem('setComorbid', 'true');
+      session.setItem('visiCategoryANC', 'COVID-19 Screening');
+      listen$.next('x');
+      expect(component.ComorbidStatus).toBe('true');
+    });
+
+    it('sets status false otherwise', () => {
+      component.ComorbidStatus = 'true';
+      session.setItem('setComorbid', 'true');
+      session.setItem('visiCategoryANC', 'ANC');
+      listen$.next('x');
+      expect(component.ComorbidStatus).toBe('false');
+    });
+  });
+
+  it('adds a row when master data arrives (edit mode)', () => {
+    const spy = spyOn(component, 'getGeneralHistory');
     fixture.detectChanges();
+    masterData$.next({ comorbidConditions: C });
+    expect(component.comorbidityMasterData).toBe(C);
+    expect(list().length).toBe(1);
+    expect(component.comorbiditySelectList[0].length).toBe(5);
+    expect(spy).not.toHaveBeenCalled();
+    expect(component.getcomorbidityConcurrentConditions()?.length).toBe(1);
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('loads history in view mode', () => {
+    component.mode = 'view';
+    const spy = spyOn(component, 'getGeneralHistory');
+    fixture.detectChanges();
+    masterData$.next({ comorbidConditions: C });
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  it('should call getBeneficiaryDetails on Initialisation', inject(
-    [BeneficiaryDetailsService],
-    (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.femaleBeneficiary);
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      expect(component.getBeneficiaryDetails).toHaveBeenCalled();
-      expect(component.beneficiary).toEqual(data.femaleBeneficiary);
-    },
-  ));
+  it('loads history for specialist flag 100', () => {
+    session.setItem('specialistFlag', '100');
+    const spy = spyOn(component, 'getGeneralHistory');
+    fixture.detectChanges();
+    masterData$.next({ comorbidConditions: C });
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
 
-  it('should call getMasterData on Initialisation', inject(
-    [MasterdataService],
-    (masterdataService) => {
-      masterdataService.nurseMasterDataSource.next(
-        data.generalOPDNurseMasterdata.data,
+  it('getcomorbidityConcurrentConditions returns null without FormArray', () => {
+    component.comorbidityConcurrentConditionsForm = new FormGroup({});
+    expect(component.getcomorbidityConcurrentConditions()).toBeNull();
+  });
+
+
+  describe('addComorbidityConcurrentConditions', () => {
+    beforeEach(() => (component.comorbidityFilteredMasterData = C));
+
+    it('excludes None and selected conditions for later rows', () => {
+      component.addComorbidityConcurrentConditions();
+      list().at(0).patchValue({ comorbidConditions: C[0] });
+      component.addComorbidityConcurrentConditions();
+      expect(
+        component.comorbiditySelectList[1].map((c: any) => c.comorbidCondition),
+      ).toEqual(['Asthma', 'Other', 'Nil']);
+    });
+
+    it('keeps Other available', () => {
+      component.addComorbidityConcurrentConditions();
+      list().at(0).patchValue({ comorbidConditions: C[3] });
+      component.addComorbidityConcurrentConditions();
+      expect(component.comorbiditySelectList[1]).toContain(C[3]);
+    });
+
+    it('adds no options without master data', () => {
+      component.comorbidityFilteredMasterData = null;
+      component.addComorbidityConcurrentConditions();
+      expect(component.comorbiditySelectList.length).toBe(0);
+      expect(list().length).toBe(1);
+    });
+  });
+
+
+  describe('filterComorbidityConcurrentConditionsType', () => {
+    beforeEach(() => {
+      component.comorbidityFilteredMasterData = C;
+      component.addComorbidityConcurrentConditions();
+      component.addComorbidityConcurrentConditions();
+    });
+
+
+    it('restores previously selected value to other rows; Other keeps text', () => {
+      const row = list().at(0);
+      component.filterComorbidityConcurrentConditionsType(C[0], 0, row);
+      row.patchValue({ otherComorbidCondition: 'custom' });
+      component.filterComorbidityConcurrentConditionsType(C[3], 0, row);
+      expect(row.value.otherComorbidCondition).toBe('custom');
+      expect(component.comorbiditySelectList[1]).toContain(C[0]);
+      expect(component.comorbiditySelectList[1]).toContain(C[3]);
+    });
+
+    it('None removes other rows and disables fields', () => {
+      component.addComorbidityConcurrentConditions();
+      component.filterComorbidityConcurrentConditionsType(
+        C[1],
+        2,
+        list().at(2),
       );
-      spyOn(component, 'getMasterData');
-      component.ngOnInit();
-      expect(component.getMasterData).toHaveBeenCalled();
-      expect(component.comorbidityMasterData).toEqual(
-        data.generalOPDNurseMasterdata.data.comorbidConditions,
+      const row = list().at(0);
+      component.filterComorbidityConcurrentConditionsType(C[2], 0, row);
+      expect(list().length).toBe(1);
+      expect(component.comorbiditySelectList.length).toBe(1);
+      expect(component.comorbiditySelectList[0]).toContain(C[1]);
+      expect(row.get('timePeriodAgo')?.disabled).toBeTrue();
+      expect(row.get('isForHistory')?.disabled).toBeTrue();
+    });
+
+    it('Nil disables fields', () => {
+      const row = list().at(0);
+      row.get('timePeriodAgo')?.enable();
+      component.filterComorbidityConcurrentConditionsType(C[4], 0, row);
+      expect(row.get('timePeriodAgo')?.disabled).toBeTrue();
+      expect(row.get('timePeriodUnit')?.disabled).toBeTrue();
+    });
+  });
+
+
+
+  describe('validateDuration', () => {
+    let row: any;
+    beforeEach(() => {
+      fixture.detectChanges();
+      component.addComorbidityConcurrentConditions();
+      row = list().at(0);
+      row.get('timePeriodAgo').enable();
+      row.get('timePeriodUnit').enable();
+    });
+
+    it('accepts duration within age', () => {
+      row.patchValue({ timePeriodAgo: 2, timePeriodUnit: 'Years' });
+      component.validateDuration(row);
+      expect(confirmation.alert).not.toHaveBeenCalled();
+      expect(row.value.timePeriodAgo).toBe(2);
+    });
+
+    it('alerts and clears duration greater than age', () => {
+      row.patchValue({ timePeriodAgo: 40, timePeriodUnit: 'Years' });
+      component.validateDuration(row);
+      expect(confirmation.alert).toHaveBeenCalledWith(
+        LANGUAGE_EN.alerts.info.durationGreaterThanAge,
       );
-    },
-  ));
+      expect(row.get('timePeriodAgo').value).toBeNull();
+      expect(row.get('timePeriodUnit').value).toBeNull();
+    });
 
-  // it('should intialise comorbidity FormArray with comorbidity FormGroup on Initialisation', inject([MasterdataService], (masterdataService) => {
-  //   masterdataService.nurseMasterDataSource.next(data.generalOPDNurseMasterdata.data);
-  //   spyOn(component, 'getMasterData').and.callThrough();
-  //   spyOn(component, 'addComorbidityConcurrentConditions');
-  //   component.ngOnInit();
-  //   expect(component.getMasterData).toHaveBeenCalled();
-  //   expect(component.addComorbidityConcurrentConditions).toHaveBeenCalled();
-  //   expect((<FormArray>component.comorbidityConcurrentConditionsForm.controls.comorbidityConcurrentConditionsList).controls.length).toBe(1);
-  // }));
+    it('enables unit when only duration given', () => {
+      row.get('timePeriodUnit').disable();
+      row.patchValue({ timePeriodAgo: 3 });
+      component.validateDuration(row);
+      expect(row.get('timePeriodUnit').enabled).toBeTrue();
+    });
 
-  // it('should call getGeneralHistory when mode is view', async(inject([MasterdataService], (masterdataService) => {
-  //   masterdataService.nurseMasterDataSource.next(data.generalOPDNurseMasterdata.data);
-  //   spyOn(component, 'getMasterData').and.callThrough();
-  //   spyOn(component, 'getGeneralHistory');
-  //   component.mode = "view";
-  //   fixture.detectChanges();
-  //   component.ngOnInit();
-  //   expect(component.getMasterData).toHaveBeenCalled();
-  //   expect(component.getGeneralHistory).toHaveBeenCalled();
-  // })));
+    it('disables unit when no duration', () => {
+      row.patchValue({ timePeriodAgo: null, timePeriodUnit: 'Days' });
+      component.validateDuration(row);
+      expect(row.get('timePeriodUnit').disabled).toBeTrue();
+    });
+  });
+
+  it('sortComorbidityList sorts by condition', () => {
+    const l = [
+      { comorbidCondition: 'b' },
+      { comorbidCondition: 'a' },
+      { comorbidCondition: 'a' },
+    ];
+    component.sortComorbidityList(l);
+    expect(l.map((x) => x.comorbidCondition)).toEqual(['a', 'a', 'b']);
+  });
+
+  it('checkValidity is false only when all fields set', () => {
+    component.addComorbidityConcurrentConditions();
+    const row: any = list().at(0);
+    expect(component.checkValidity(row)).toBeTrue();
+    row.get('timePeriodAgo').enable();
+    row.get('timePeriodUnit').enable();
+    row.patchValue({
+      comorbidConditions: C[0],
+      timePeriodAgo: 1,
+      timePeriodUnit: 'Years',
+    });
+    expect(component.checkValidity(row)).toBeFalse();
+  });
+
+
+
+
+  it('ngOnDestroy without subscriptions does not throw', () => {
+    expect(() => component.ngOnDestroy()).not.toThrow();
+  });
+
+  it('ngDoCheck assigns language', () => {
+    component.ngDoCheck();
+    expect(component.currentLanguageSet).toEqual(LANGUAGE_EN);
+  });
 });
