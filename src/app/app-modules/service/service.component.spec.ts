@@ -20,27 +20,155 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  flush,
+  tick,
+} from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { of } from 'rxjs';
+import {
+  COMMON_TEST_IMPORTS,
+  LANGUAGE_EN,
+  NO_ERRORS_SCHEMA,
+  autoSpy,
+  commonTestProviders,
+  throwingObs,
+} from 'src/testing/test-utils';
+import { ConfirmationService } from 'src/app/app-modules/core/services/confirmation.service';
+import { TelemedicineService } from 'src/app/app-modules/core/services/telemedicine.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
+import { SetLanguageComponent } from '../core/components/set-language.component';
+import { ServicePointService } from '../service-point/service-point.service';
 import { ServiceComponent } from './service.component';
+
+const SERVICE = {
+  providerServiceID: 11,
+  serviceName: 'HWC',
+  serviceID: 9,
+  apimanClientKey: 'api-key',
+};
+
+function loginResponse(designation: any = 'Nurse', screens = ['Nurse']) {
+  return {
+    designation: designation ? { designationName: designation } : undefined,
+    previlegeObj: [
+      {
+        serviceName: 'HWC',
+        roles: [
+          {
+            serviceRoleScreenMappings: screens.map((s) => ({
+              screen: { screenName: s },
+            })),
+          },
+        ],
+      },
+    ],
+  };
+}
+
+const VAN = {
+  vanID: 5,
+  facilityID: 77,
+  vanNoAndType: 'Facility A',
+  servicePointID: 88,
+  servicePointName: 'SP 1',
+  vanSession: 3,
+};
+
+const DEMOGRAPHICS = {
+  stateMaster: [
+    { stateID: 1, stateName: 'Assam' },
+    { stateID: 2, stateName: 'Goa' },
+  ],
+  otherLoc: {
+    stateID: 2,
+    districtList: [
+      {
+        districtID: 10,
+        districtName: 'North',
+        blockId: 20,
+        blockName: 'Block',
+        districtBranchID: 30,
+        villageName: 'V-dist',
+        villageList: [{ districtBranchID: 31, villageName: 'Village' }],
+      },
+    ],
+  },
+};
 
 describe('ServiceComponent', () => {
   let component: ServiceComponent;
   let fixture: ComponentFixture<ServiceComponent>;
+  let sps: any;
+  let tele: any;
+  let confirm: any;
+  let session: any;
+  let router: Router;
+  let savedApiman: string | null;
 
-  beforeEach(async(() => {
+  function setup(sessionSeed: Record<string, any>) {
     TestBed.configureTestingModule({
+      imports: [...COMMON_TEST_IMPORTS],
       declarations: [ServiceComponent],
-    }).compileComponents();
-  }));
-
-  beforeEach(() => {
+      providers: [
+        ...commonTestProviders({ session: sessionSeed }),
+        { provide: ServicePointService, useValue: sps },
+        SetLanguageComponent,
+        { provide: TelemedicineService, useValue: tele },
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
+    });
     fixture = TestBed.createComponent(ServiceComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    confirm = TestBed.inject(ConfirmationService);
+    session = TestBed.inject(SessionStorageService);
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
+  }
+
+  beforeEach(() => {
+    savedApiman = sessionStorage.getItem('apimanClientKey');
+    sps = autoSpy(ServicePointService);
+    tele = autoSpy(TelemedicineService, {}, undefined);
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    if (savedApiman === null) sessionStorage.removeItem('apimanClientKey');
+    else sessionStorage.setItem('apimanClientKey', savedApiman);
   });
+
+
+
+
+
+
+  describe('routing', () => {
+    beforeEach(() => setup({}));
+
+    const cases: [string, string][] = [
+      ['Registrar', '/servicePoint'],
+      ['Nurse', '/servicePoint'],
+      ['Doctor', '/servicePoint'],
+      ['Lab Technician', '/servicePoint'],
+      ['TC Specialist', '/nurse-doctor/tcspecialist-worklist'],
+    ];
+    cases.forEach(([designation, url]) => {
+      it(`routes ${designation} to ${url}`, () => {
+        component.routeToDesignation(designation);
+        expect(router.navigate).toHaveBeenCalledWith([url]);
+      });
+    });
+
+    it('hands Supervisors over to telemedicine', () => {
+      component.routeToDesignation('Supervisor');
+      expect(tele.routeToTeleMedecine).toHaveBeenCalled();
+      expect(router.navigate).not.toHaveBeenCalled();
+    });
+  });
+
+
+
 });

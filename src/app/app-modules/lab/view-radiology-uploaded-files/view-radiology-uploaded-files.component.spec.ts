@@ -1,5 +1,5 @@
 /*
- * AMRIT � Accessible Medical Records via Integrated Technology
+ * AMRIT – Accessible Medical Records via Integrated Technology
  * Integrated EHR (Electronic Health Records) Solution
  *
  * Copyright (C) "Piramal Swasthya Management and Research Institute"
@@ -20,27 +20,50 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  COMMON_TEST_IMPORTS,
+  LANGUAGE_EN,
+  NO_ERRORS_SCHEMA,
+  commonTestProviders,
+} from 'src/testing/test-utils';
 import { ViewRadiologyUploadedFilesComponent } from './view-radiology-uploaded-files.component';
 
 describe('ViewRadiologyUploadedFilesComponent', () => {
   let component: ViewRadiologyUploadedFilesComponent;
   let fixture: ComponentFixture<ViewRadiologyUploadedFilesComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+  async function setup(data: any) {
+    await TestBed.configureTestingModule({
+      imports: [...COMMON_TEST_IMPORTS],
       declarations: [ViewRadiologyUploadedFilesComponent],
+      providers: [
+        ...commonTestProviders(),
+        { provide: MAT_DIALOG_DATA, useValue: data },
+      ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
-  }));
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(ViewRadiologyUploadedFilesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  }
+
+
+  it('keeps empty list without filesDetails', async () => {
+    await setup({});
+    expect(component.fileIds).toEqual([]);
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('keeps empty list with null input', async () => {
+    await setup(null);
+    expect(component.fileIds).toEqual([]);
   });
+
+  it('openFileContent closes dialog with file id', async () => {
+    await setup({});
+    component.openFileContent(9);
+    expect((TestBed.inject(MatDialogRef) as any).close).toHaveBeenCalledWith(9);
+  });
+
 });

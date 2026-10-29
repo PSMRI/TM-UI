@@ -19,22 +19,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 import { TmLogoutComponent } from './tm-logout.component';
+import {
+  COMMON_TEST_IMPORTS,
+  NO_ERRORS_SCHEMA,
+  commonTestProviders,
+} from 'src/testing/test-utils';
 
 describe('TmLogoutComponent', () => {
   let component: TmLogoutComponent;
   let fixture: ComponentFixture<TmLogoutComponent>;
+  let router: Router;
+  let storage: any;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [...COMMON_TEST_IMPORTS],
       declarations: [TmLogoutComponent],
-    }).compileComponents();
-  }));
+      providers: [...commonTestProviders({ session: { userID: 1 } })],
+      schemas: [NO_ERRORS_SCHEMA],
+    })
+      .overrideTemplate(TmLogoutComponent, '')
+      .compileComponents();
 
-  beforeEach(() => {
+    router = TestBed.inject(Router);
+    spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
+    storage = TestBed.inject(SessionStorageService);
+    spyOn(sessionStorage, 'clear');
     fixture = TestBed.createComponent(TmLogoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -42,5 +57,15 @@ describe('TmLogoutComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('clears both browser and app session storage on init', () => {
+    expect(sessionStorage.clear).toHaveBeenCalled();
+    expect(storage.clear).toHaveBeenCalled();
+    expect(storage.store.size).toBe(0);
+  });
+
+  it('redirects to login on init', () => {
+    expect(router.navigate).toHaveBeenCalledWith(['/login']);
   });
 });

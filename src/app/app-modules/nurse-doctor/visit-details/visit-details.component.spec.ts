@@ -1,5 +1,5 @@
 /*
- * AMRIT � Accessible Medical Records via Integrated Technology
+ * AMRIT – Accessible Medical Records via Integrated Technology
  * Integrated EHR (Electronic Health Records) Solution
  *
  * Copyright (C) "Piramal Swasthya Management and Research Institute"
@@ -19,89 +19,135 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { MaterialModule } from '../../core/material.module';
-
-import { VisitDetailUtils } from '../shared/utility';
-
-import { ConfirmationService } from '../../core/services/confirmation.service';
-import { DoctorService } from '../shared/services';
-import { DoctorServiceStub } from '../shared/mocks/doctor-service-stub';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, FormGroup } from '@angular/forms';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
 
 import { VisitDetailsComponent } from './visit-details.component';
+import {
+  COMMON_TEST_IMPORTS,
+  LANGUAGE_EN,
+  NO_ERRORS_SCHEMA,
+  commonTestProviders,
+} from 'src/testing/test-utils';
 
 describe('VisitDetailsComponent', () => {
   let component: VisitDetailsComponent;
   let fixture: ComponentFixture<VisitDetailsComponent>;
-  let debugElement;
-  let fb;
+  let storage: any;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [BrowserAnimationsModule, ReactiveFormsModule, MaterialModule],
+  const SUB_FORMS = [
+    'covidVaccineStatusForm',
+    'patientChiefComplaintsForm',
+    'patientAdherenceForm',
+    'patientInvestigationsForm',
+    'patientCovidForm',
+    'patientFileUploadDetailsForm',
+    'patientDiseaseForm',
+  ];
+
+  async function setup(session: Record<string, any> = {}, mode?: string) {
+    await TestBed.configureTestingModule({
+      imports: [...COMMON_TEST_IMPORTS],
       declarations: [VisitDetailsComponent],
-      providers: [
-        ConfirmationService,
-        { provide: DoctorService, useClass: DoctorServiceStub },
-      ],
+      providers: [...commonTestProviders({ session })],
       schemas: [NO_ERRORS_SCHEMA],
-    }).compileComponents();
-  }));
+    })
+      .overrideTemplate(VisitDetailsComponent, '')
+      .compileComponents();
 
-  beforeEach(() => {
+    storage = TestBed.inject(SessionStorageService);
     fixture = TestBed.createComponent(VisitDetailsComponent);
     component = fixture.componentInstance;
-    debugElement = fixture.debugElement;
-
-    fb = debugElement.injector.get(FormBuilder);
-    component.patientVisitForm = new VisitDetailUtils(
-      fb,
-    ).createPatientVisitForm();
-
+    const controls: Record<string, FormGroup> = {
+      patientVisitDetailsForm: new FormGroup({
+        visitCategory: new FormControl(null),
+      }),
+    };
+    SUB_FORMS.forEach((name) => (controls[name] = new FormGroup({})));
+    component.patientVisitDataForm = new FormGroup(controls);
+    component.mode = mode as any;
     fixture.detectChanges();
-  });
+  }
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  const selectCategory = (category: string | null) =>
+    component.patientVisitDataForm
+      .get('patientVisitDetailsForm.visitCategory')
+      ?.setValue(category);
 
-  it('should show Visit Details', () => {
-    fixture.detectChanges();
-    const de = fixture.debugElement.query(By.css('patient-visit-details'));
-    expect(de.nativeElement).toBeTruthy();
-  });
+  describe('init', () => {
+    beforeEach(() => setup());
 
-  it('should not show Chief Complaints', () => {
-    fixture.detectChanges();
-    const de = fixture.debugElement.query(By.css('patient-chief-complaints'));
-    expect(de).not.toBeTruthy();
-  });
-
-  it('should show Chief Complaints after selected visit category is General OPD', () => {
-    component.patientVisitForm.controls['patientVisitDetailsForm'].patchValue({
-      visitCategory: 'General OPD',
+    it('extracts the sub-forms and sets the language', () => {
+      expect(component.current_language_set).toEqual(LANGUAGE_EN);
+      expect(component.patientVisitDetailsForm).toBe(
+        component.patientVisitDataForm.get(
+          'patientVisitDetailsForm',
+        ) as FormGroup,
+      );
+      SUB_FORMS.forEach((name) =>
+        expect((component as any)[name])
+          .withContext(name)
+          .toBe(component.patientVisitDataForm.get(name)),
+      );
+      component.current_language_set = undefined;
+      component.ngDoCheck();
+      expect(component.current_language_set).toEqual(LANGUAGE_EN);
     });
-    fixture.detectChanges();
-    const de = fixture.debugElement.query(By.css('patient-chief-complaints'));
-    expect(de.nativeElement).toBeTruthy();
-  });
 
-  it('should call conditionCheck when  visit category is selected', () => {
-    spyOn(component, 'conditionCheck');
-    component.patientVisitForm.controls['patientVisitDetailsForm'].patchValue({
-      visitCategory: 'General OPD',
+    it('ignores an empty category', () => {
+      selectCategory(null);
+      expect(component.visitCategory).toBeUndefined();
     });
-    expect(component.conditionCheck).toHaveBeenCalled();
+
+    it('enables NCD screening and file selection', () => {
+      selectCategory('NCD screening');
+      expect(component.visitCategory).toBe('NCD screening');
+      expect(component.showNcdScreeningVisit).toBeTrue();
+      expect(component.enableFileSelection).toBeTrue();
+      expect(storage.getItem('visiCategoryANC')).toBe('NCD screening');
+    });
+
+    const flags: [string, keyof VisitDetailsComponent][] = [
+      ['ANC', 'showANCVisit'],
+      ['NCD care', 'showNCDCare'],
+      ['PNC', 'showPNC'],
+      ['General OPD', 'showPNC'],
+      ['COVID-19 Screening', 'showCOVID'],
+    ];
+    flags.forEach(([category, flag]) => {
+      it(`shows ${String(flag)} for ${category}`, () => {
+        selectCategory(category);
+        expect(component[flag]).toBeTrue();
+      });
+    });
+
+    it('resets every tab before applying a new category', () => {
+      selectCategory('ANC');
+      selectCategory('Cancer Screening');
+      expect(component.showANCVisit).toBeFalse();
+      expect(component.hideAll).toBeFalse();
+      selectCategory('General OPD (QC)');
+      selectCategory('Other');
+      expect(component.showPNC).toBeFalse();
+    });
   });
 
-  it('should call getVisitCategory On Initialisation', () => {
-    spyOn(component, 'getVisitCategory');
-    component.ngOnInit();
-    expect(component.getVisitCategory).toHaveBeenCalled();
+  it('keeps previous tabs in view mode', async () => {
+    await setup({}, 'view');
+    selectCategory('ANC');
+    selectCategory('NCD care');
+    expect(component.showANCVisit).toBeTrue();
+    expect(component.showNCDCare).toBeTrue();
+  });
+
+  it('copies the specialist visit category for flag 100', async () => {
+    await setup({ specialistFlag: '100', visitCat: 'ANC' });
+    expect(storage.getItem('visitCategory')).toBe('ANC');
+  });
+
+  it('does not copy the category for other flags', async () => {
+    await setup({ specialistFlag: '1', visitCat: 'ANC' });
+    expect(storage.getItem('visitCategory')).toBeNull();
   });
 });

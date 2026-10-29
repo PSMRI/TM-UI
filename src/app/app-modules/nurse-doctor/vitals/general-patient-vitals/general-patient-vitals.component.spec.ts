@@ -1,5 +1,5 @@
 /*
- * AMRIT � Accessible Medical Records via Integrated Technology
+ * AMRIT – Accessible Medical Records via Integrated Technology
  * Integrated EHR (Electronic Health Records) Solution
  *
  * Copyright (C) "Piramal Swasthya Management and Research Institute"
@@ -19,2102 +19,302 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-
-import {
-  async,
-  ComponentFixture,
-  tick,
-  inject,
-  fakeAsync,
-  TestBed,
-} from '@angular/core/testing';
-import {
-  FormsModule,
-  FormGroup,
-  ReactiveFormsModule,
-  FormBuilder,
-} from '@angular/forms';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from '../../../core/material.module';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { BehaviorSubject, EMPTY, of } from 'rxjs';
 
 import { GeneralPatientVitalsComponent } from './general-patient-vitals.component';
-import { GeneralUtils } from '../../shared/utility';
-
-import { ConfirmationService } from '../../../core/services/confirmation.service';
-import { BeneficiaryDetailsService } from '../../../core/services/beneficiary-details.service';
-import { NurseService, DoctorService } from '../../shared/services';
-
-import { DoctorServiceStub } from '../../shared/mocks/doctor-service-stub';
-import { NurseServiceStub } from '../../shared/mocks/nurse-service-stub';
-import { BeneficiaryDetailsServiceStub } from '../../../core/mocks/beneficiary-details-service-stub';
-
-import * as data from '../../shared/mocks/mock-data';
-import { Observable } from 'rxjs/Observable';
-
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { AudioRecordingService } from '../../shared/services/audio-recording.service';
+import { DoctorService, NurseService } from '../../shared/services';
+import { IdrsscoreService } from '../../shared/services/idrsscore.service';
+import { TestInVitalsService } from '../../shared/services/test-in-vitals.service';
+import { GeneralUtils } from '../../shared/utility/general-utility';
+import { BeneficiaryDetailsService } from 'src/app/app-modules/core/services/beneficiary-details.service';
+import { ConfirmationService } from 'src/app/app-modules/core/services/confirmation.service';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
+import { AmritTrackingService } from 'Common-UI/src/tracking';
+import { IotcomponentComponent } from 'src/app/app-modules/core/components/iotcomponent/iotcomponent.component';
+import { MmuRbsDetailsComponent } from 'src/app/app-modules/core/components/mmu-rbs-details/mmu-rbs-details.component';
+import { environment } from 'src/environments/environment';
+import { MaterialModule } from 'src/app/app-modules/core/material.module';
+import {
+  COMMON_TEST_IMPORTS,
+  LANGUAGE_EN,
+  NO_ERRORS_SCHEMA,
+  autoSpy,
+  commonTestProviders,
+  createDialogRefMock,
+  throwingObs,
+} from 'src/testing/test-utils';
 
 describe('GeneralPatientVitalsComponent', () => {
   let component: GeneralPatientVitalsComponent;
   let fixture: ComponentFixture<GeneralPatientVitalsComponent>;
-  let beneficiaryDetailsService: any;
-  let nurseService: NurseService;
-  let doctorService: DoctorService;
-  let confirmationService: ConfirmationService;
-  let fb;
-  let debugElement: DebugElement;
-  let el: HTMLElement;
-  let spy: any;
+  let doctor: any;
+  let nurse: any;
+  let idrs: any;
+  let hrp: any;
+  let testInVitals: any;
+  let ncd: any;
+  let benService: any;
+  let confirm: any;
+  let dialog: any;
+  let tracking: any;
+  let session: any;
+  let form: FormGroup;
+  let ben$: BehaviorSubject<any>;
+  let ncdTemp$: BehaviorSubject<any>;
+  let rbsInv$: BehaviorSubject<any>;
+  let diabetes$: BehaviorSubject<any>;
+  let enablingIdrs$: BehaviorSubject<any>;
+  let screeningDiseases$: BehaviorSubject<any>;
+  let routeParams: any;
+  const RECHECK = LANGUAGE_EN.alerts.info.recheckValue;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+  const ADULT_M = {
+    ageVal: 30,
+    age: '30 years - 0 months',
+    genderName: 'Male',
+  };
+  const ADULT_F = {
+    ageVal: 30,
+    age: '30 years - 0 months',
+    genderName: 'Female',
+  };
+  const TEEN_F = {
+    ageVal: 10,
+    age: '10 years - 2 months',
+    genderName: 'Female',
+  };
+
+  let audio: any;
+
+  async function setup(
+    opts: {
+      session?: Record<string, any>;
+      attendant?: string;
+      ben?: any;
+      visitCategory?: string;
+      mode?: string;
+    } = {},
+  ) {
+    ben$ = new BehaviorSubject<any>(
+      opts.ben === undefined ? ADULT_M : opts.ben,
+    );
+    ncdTemp$ = new BehaviorSubject<any>(undefined);
+    rbsInv$ = new BehaviorSubject<any>(undefined);
+    diabetes$ = new BehaviorSubject<any>(0);
+    enablingIdrs$ = new BehaviorSubject<any>(false);
+    screeningDiseases$ = new BehaviorSubject<any>(false);
+    routeParams = { attendant: opts.attendant ?? 'doctor' };
+    audio = autoSpy(AudioRecordingService);
+    audio.getRecordedTime.and.returnValue(of('00:05'));
+    audio.getRecordedBlob.and.returnValue(EMPTY);
+    await TestBed.configureTestingModule({
+      imports: [...COMMON_TEST_IMPORTS, MaterialModule],
       declarations: [GeneralPatientVitalsComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      imports: [
-        ReactiveFormsModule,
-        FormsModule,
-        MaterialModule,
-        NoopAnimationsModule,
-      ],
       providers: [
-        ConfirmationService,
+        ...commonTestProviders({
+          session: {
+            serviceLineDetails: JSON.stringify({
+              facilityID: 1,
+              parkingPlaceID: 2,
+            }),
+            visitID: 'V1',
+            beneficiaryRegID: 'B1',
+            visitCode: 'VC1',
+            ...(opts.session ?? {}),
+          },
+        }),
+        { provide: DoctorService, useValue: autoSpy(DoctorService) },
+        {
+          provide: AudioRecordingService,
+          useValue: audio,
+        },
+        {
+          provide: NurseService,
+          useValue: autoSpy(NurseService, {
+            ncdTemp$,
+            rbsSelectedInInvestigation$: rbsInv$,
+            rbsTestResultFromDoctorFetch: null,
+            enableLAssessment$: new BehaviorSubject<any>(false),
+            isAssessmentDone: true,
+          }),
+        },
+        {
+          provide: IdrsscoreService,
+          useValue: autoSpy(IdrsscoreService, {
+            diabetesSelectedFlag$: diabetes$,
+          }),
+        },
+        {
+          provide: TestInVitalsService,
+          useValue: autoSpy(TestInVitalsService),
+        },
         {
           provide: BeneficiaryDetailsService,
-          useClass: BeneficiaryDetailsServiceStub,
+          useValue: {
+            beneficiaryDetails$: ben$,
+            setHRPPositive: jasmine.createSpy('setHRPPositive'),
+            resetHRPPositive: jasmine.createSpy('resetHRPPositive'),
+          },
         },
-        { provide: DoctorService, useClass: DoctorServiceStub },
+        {
+          provide: ActivatedRoute,
+          useValue: { snapshot: { params: routeParams } },
+        },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
-  }));
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(GeneralPatientVitalsComponent);
     component = fixture.componentInstance;
-    debugElement = fixture.debugElement;
-
-    fb = debugElement.injector.get(FormBuilder);
-    // beneficiaryDetailsService = TestBed.get(BeneficiaryDetailsService);
-    // doctorService = TestBed.get(DoctorService);
-    // confirmationService = TestBed.get(ConfirmationService);
-    component.patientVitalsForm = new GeneralUtils(
-      fb,
+    session = TestBed.inject(SessionStorageService) as any;
+    form = new GeneralUtils(
+      new FormBuilder(),
+      session,
     ).createGeneralVitalDetailsForm();
-
-    fixture.detectChanges();
-  });
-
-  it('should create Vitals Component', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should initialize Vital Component', () => {
-    component.ngOnInit();
-    expect(component).toBeTruthy();
-  });
-
-  it('should get beneficiary details', () => {
-    spyOn(component, 'getBeneficiaryDetails');
-    component.ngOnInit();
-    expect(component.getBeneficiaryDetails).toHaveBeenCalled();
-  });
-
-  it('should call getBeneficiaryDetails on Initialisation', inject(
-    [BeneficiaryDetailsService],
-    (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.femaleBeneficiary);
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      expect(component.getBeneficiaryDetails).toHaveBeenCalled();
-    },
-  ));
-
-  it('should get age of a beneficiary', inject(
-    [BeneficiaryDetailsService],
-    (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.femaleBeneficiary);
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-    },
-  ));
-
-  it('should get check female gender', inject(
-    [BeneficiaryDetailsService],
-    (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.femaleBeneficiary);
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      expect(component.female).toEqual(true);
-    },
-  ));
-
-  it('should get check female gender', inject(
-    [BeneficiaryDetailsService],
-    (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.maleBeneficiary);
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      expect(component.female).not.toEqual(true);
-    },
-  ));
-
-  it('should excute on changes', () => {
-    component.ngOnChanges();
-    expect(component).toBeTruthy();
-  });
-
-  it('should check for visitCategory General OPD and hideForANCAndQC to true and showGlucoseQC to false', () => {
-    component.visitCategory = new String('General OPD');
-    component.ngOnChanges();
-    expect(component.hideForANCAndQC).toEqual(true);
-    expect(component.showGlucoseQC).toEqual(false);
-  });
-
-  it('should not show mid upper arm circumference', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.femaleBeneficiary);
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('General OPD');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(true);
-      expect(component.showGlucoseQC).toEqual(false);
-      expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-      debugElement = fixture.debugElement.query(
-        By.css('#midUpperArmCircumference_MUAC_cm'),
-      );
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('should not show head circumference', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.femaleBeneficiary);
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('General OPD');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(true);
-      expect(component.showGlucoseQC).toEqual(false);
-      expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-      debugElement = fixture.debugElement.query(
-        By.css('#headCircumference_cm'),
-      );
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('should show head circumference', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('General OPD');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(true);
-      expect(component.showGlucoseQC).toEqual(false);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#headCircumference_cm'),
-      );
-      expect(debugElement).toBeTruthy();
-    }),
-  ));
-
-  it('should show mid upper arm circumference', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('General OPD');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(true);
-      expect(component.showGlucoseQC).toEqual(false);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#midUpperArmCircumference_MUAC_cm'),
-      );
-      expect(debugElement).toBeTruthy();
-    }),
-  ));
-
-  it('should not show mid upper arm circumference for ANC', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('ANC');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(false);
-      expect(component.showGlucoseQC).toEqual(false);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#midUpperArmCircumference_MUAC_cm'),
-      );
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('should not show head circumference for ANC', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('ANC');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(false);
-      expect(component.showGlucoseQC).toEqual(false);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#headCircumference_cm'),
-      );
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('should not show waistCircumference_cm for ANC', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('ANC');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(false);
-      expect(component.showGlucoseQC).toEqual(false);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#waistCircumference_cm'),
-      );
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('should not show hipCircumference_cm for ANC', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('ANC');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(false);
-      expect(component.showGlucoseQC).toEqual(false);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('#hipCircumference_cm'));
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('should not show waistHipRatio for ANC', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('ANC');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(false);
-      expect(component.showGlucoseQC).toEqual(false);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('#waistHipRatio'));
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('should not show mid upper arm circumference for GOPD (QC)', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('General OPD (QC)');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(false);
-      expect(component.showGlucoseQC).toEqual(true);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#midUpperArmCircumference_MUAC_cm'),
-      );
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('should not show head circumference for GOPD (QC)', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('General OPD (QC)');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(false);
-      expect(component.showGlucoseQC).toEqual(true);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#headCircumference_cm'),
-      );
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('should not show waistCircumference_cm for GOPD (QC)', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('General OPD (QC)');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(false);
-      expect(component.showGlucoseQC).toEqual(true);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#waistCircumference_cm'),
-      );
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('should not show hipCircumference_cm for GOPD (QC)', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('General OPD (QC)');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(false);
-      expect(component.showGlucoseQC).toEqual(true);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('#hipCircumference_cm'));
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('should not show waistHipRatio for GOPD (QC)', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('General OPD (QC)');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(false);
-      expect(component.showGlucoseQC).toEqual(true);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('#waistHipRatio'));
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('should show bloodGlucose_Fasting for GOPD (QC)', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('General OPD (QC)');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(false);
-      expect(component.showGlucoseQC).toEqual(true);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#bloodGlucose_Fasting'),
-      );
-      expect(debugElement).toBeTruthy();
-    }),
-  ));
-
-  it('should show bloodGlucose_Random for GOPD (QC)', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('General OPD (QC)');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(false);
-      expect(component.showGlucoseQC).toEqual(true);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('#bloodGlucose_Random'));
-      expect(debugElement).toBeTruthy();
-    }),
-  ));
-
-  it('should show bloodGlucose_2hr_PP for GOPD (QC)', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('General OPD (QC)');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(false);
-      expect(component.showGlucoseQC).toEqual(true);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('#bloodGlucose_2hr_PP'));
-      expect(debugElement).toBeTruthy();
-    }),
-  ));
-
-  it('should show bloodGlucose_Fasting for ANC', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('ANC');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(false);
-      expect(component.showGlucoseQC).toEqual(false);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#bloodGlucose_Fasting'),
-      );
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('should show bloodGlucose_Random for ANC', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('ANC');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(false);
-      expect(component.showGlucoseQC).toEqual(false);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('#bloodGlucose_Random'));
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('should show bloodGlucose_2hr_PP for ANC', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('ANC');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(false);
-      expect(component.showGlucoseQC).toEqual(false);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('#bloodGlucose_2hr_PP'));
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('should hide  bloodGlucose_Fasting for General OPD', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('General OPD');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(true);
-      expect(component.showGlucoseQC).toEqual(false);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#bloodGlucose_Fasting'),
-      );
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('should show bloodGlucose_Random for General OPD', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('General OPD');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(true);
-      expect(component.showGlucoseQC).toEqual(false);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('#bloodGlucose_Random'));
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('should show bloodGlucose_2hr_PP for General OPD', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(
-        data.femaleChildBeneficiary_2,
-      );
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      component.visitCategory = new String('General OPD');
-      component.ngOnChanges();
-      expect(component.hideForANCAndQC).toEqual(true);
-      expect(component.showGlucoseQC).toEqual(false);
-      expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('#bloodGlucose_2hr_PP'));
-      expect(debugElement).not.toBeTruthy();
-    }),
-  ));
-
-  it('Check normal value of height', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleChildBeneficiary_2,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-        fixture.detectChanges();
-        spyOn(component, 'checkHeight');
-        component.patientVitalsForm.patchValue({ height_cm: '50' });
-        debugElement = fixture.debugElement.query(By.css('#height_cm'));
-        debugElement.nativeElement.value = '50';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.height_cm).toEqual('50');
-        fixture.detectChanges();
-        expect(component.checkHeight).toHaveBeenCalled();
-        // spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkHeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).not.toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check Abnormal value of height', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleChildBeneficiary_2,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-        fixture.detectChanges();
-        spyOn(component, 'checkHeight').and.callThrough();
-        component.patientVitalsForm.patchValue({ height_cm: 210 });
-        debugElement = fixture.debugElement.query(By.css('#height_cm'));
-        debugElement.nativeElement.value = '210';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.height_cm).toEqual(debugElement.nativeElement.value);
-        fixture.detectChanges();
-        expect(component.checkHeight).toHaveBeenCalled();
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkHeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check Abnormal value of weight_Kg', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleChildBeneficiary_2,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-        fixture.detectChanges();
-        spyOn(component, 'checkWeight').and.callThrough();
-        component.patientVitalsForm.patchValue({ weight_Kg: '210' });
-        debugElement = fixture.debugElement.query(By.css('#weight_Kg'));
-        debugElement.nativeElement.value = '210';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.weight_Kg).toEqual(debugElement.nativeElement.value);
-        fixture.detectChanges();
-        expect(component.checkWeight).toHaveBeenCalled();
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check Normal value of weight_Kg', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleChildBeneficiary_2,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-        fixture.detectChanges();
-        spyOn(component, 'checkWeight').and.callThrough();
-        component.patientVitalsForm.patchValue({ weight_Kg: '50' });
-        debugElement = fixture.debugElement.query(By.css('#weight_Kg'));
-        debugElement.nativeElement.value = '50';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.weight_Kg).toEqual(debugElement.nativeElement.value);
-        fixture.detectChanges();
-        expect(component.checkWeight).toHaveBeenCalled();
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check hip of female patient hipCircumference_cm', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleBeneficiary,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkHip').and.callThrough();
-        component.patientVitalsForm.patchValue({ hipCircumference_cm: '90' });
-        debugElement = fixture.debugElement.query(
-          By.css('#hipCircumference_cm'),
-        );
-        debugElement.nativeElement.value = '90';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.hipCircumference_cm).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkHip).toHaveBeenCalled();
-        // fixture.detectChanges();
-        console.log(component.female);
-        console.log(component.normalHip);
-        fixture.detectChanges();
-        expect(component.female).toEqual(true);
-        expect(component.normalHip).toEqual(false);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check hip of female patient hipCircumference_cm normal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleBeneficiary,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-        fixture.detectChanges();
-        spyOn(component, 'checkHip').and.callThrough();
-        component.patientVitalsForm.patchValue({ hipCircumference_cm: '100' });
-        debugElement = fixture.debugElement.query(
-          By.css('#hipCircumference_cm'),
-        );
-        debugElement.nativeElement.value = '100';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.hipCircumference_cm).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkHip).toHaveBeenCalled();
-        fixture.detectChanges;
-        expect(component.female).toEqual(true);
-        console.log(component.female);
-        console.log(component.normalHip);
-        expect(component.normalHip).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check hip of male patient hipCircumference_cm normal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(data.maleBeneficiary);
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(data.maleBeneficiary.ageVal);
-        expect(component.female).toEqual(false);
-        fixture.detectChanges();
-        spyOn(component, 'checkHip').and.callThrough();
-        component.patientVitalsForm.patchValue({ hipCircumference_cm: '100' });
-        debugElement = fixture.debugElement.query(
-          By.css('#hipCircumference_cm'),
-        );
-        debugElement.nativeElement.value = '100';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.hipCircumference_cm).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkHip).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        console.log(component.normalHip);
-        expect(component.female).toEqual(false);
-        expect(component.normalHip).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check hip of male patient hipCircumference_cm abnormal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(data.maleBeneficiary);
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(data.maleBeneficiary.ageVal);
-        expect(component.female).toEqual(false);
-        fixture.detectChanges();
-        spyOn(component, 'checkHip').and.callThrough();
-        component.patientVitalsForm.patchValue({ hipCircumference_cm: '90' });
-        debugElement = fixture.debugElement.query(
-          By.css('#hipCircumference_cm'),
-        );
-        debugElement.nativeElement.value = '90';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.hipCircumference_cm).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkHip).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        console.log(component.normalHip);
-        expect(component.female).toEqual(false);
-        expect(component.normalHip).toEqual(false);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check headCircumference_cm for child Abnormal ', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleChildBeneficiary_2,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkHeadCircumference').and.callThrough();
-        component.patientVitalsForm.patchValue({ headCircumference_cm: '20' });
-        debugElement = fixture.debugElement.query(
-          By.css('#headCircumference_cm'),
-        );
-        debugElement.nativeElement.value = '20';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.headCircumference_cm).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkHeadCircumference).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check midUpperArmCircumference_MUAC_cm for child Abnormal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleChildBeneficiaryage_6,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(
-          data.femaleChildBeneficiaryage_6.ageVal,
-        );
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkMidUpperArmCircumference').and.callThrough();
-        component.patientVitalsForm.patchValue({
-          midUpperArmCircumference_MUAC_cm: '4',
-        });
-        debugElement = fixture.debugElement.query(
-          By.css('#midUpperArmCircumference_MUAC_cm'),
-        );
-        debugElement.nativeElement.value = '4';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.midUpperArmCircumference_MUAC_cm).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkMidUpperArmCircumference).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check headCircumference_cm for child Normal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleChildBeneficiary_2,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(data.femaleChildBeneficiary_2.ageVal);
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkHeadCircumference').and.callThrough();
-        component.patientVitalsForm.patchValue({ headCircumference_cm: '23' });
-        debugElement = fixture.debugElement.query(
-          By.css('#headCircumference_cm'),
-        );
-        debugElement.nativeElement.value = '23';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.headCircumference_cm).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkHeadCircumference).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check midUpperArmCircumference_MUAC_cm for child Normal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleChildBeneficiaryage_6,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(
-          data.femaleChildBeneficiaryage_6.ageVal,
-        );
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkMidUpperArmCircumference').and.callThrough();
-        component.patientVitalsForm.patchValue({
-          midUpperArmCircumference_MUAC_cm: '7',
-        });
-        debugElement = fixture.debugElement.query(
-          By.css('#midUpperArmCircumference_MUAC_cm'),
-        );
-        debugElement.nativeElement.value = '7';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.midUpperArmCircumference_MUAC_cm).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkMidUpperArmCircumference).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check midUpperArmCircumference_MUAC_cm for child Normal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleChildBeneficiaryage_6,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(
-          data.femaleChildBeneficiaryage_6.ageVal,
-        );
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkMidUpperArmCircumference').and.callThrough();
-        component.patientVitalsForm.patchValue({
-          midUpperArmCircumference_MUAC_cm: '7',
-        });
-        debugElement = fixture.debugElement.query(
-          By.css('#midUpperArmCircumference_MUAC_cm'),
-        );
-        debugElement.nativeElement.value = '7';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.midUpperArmCircumference_MUAC_cm).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkMidUpperArmCircumference).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check temperature for child Abnormal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleChildBeneficiaryage_6,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(
-          data.femaleChildBeneficiaryage_6.ageVal,
-        );
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkTemperature').and.callThrough();
-        component.patientVitalsForm.patchValue({ temperature: '7' });
-        debugElement = fixture.debugElement.query(By.css('#temperature'));
-        debugElement.nativeElement.value = '7';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.temperature).toEqual(debugElement.nativeElement.value);
-        fixture.detectChanges();
-        expect(component.checkTemperature).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check temperature for child Normal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleChildBeneficiaryage_6,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(
-          data.femaleChildBeneficiaryage_6.ageVal,
-        );
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkTemperature').and.callThrough();
-        component.patientVitalsForm.patchValue({ temperature: '97' });
-        debugElement = fixture.debugElement.query(By.css('#temperature'));
-        debugElement.nativeElement.value = '97';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.temperature).toEqual(debugElement.nativeElement.value);
-        fixture.detectChanges();
-        expect(component.checkTemperature).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check pulseRate Abnormal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleBeneficiary,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkPulseRate').and.callThrough();
-        component.patientVitalsForm.patchValue({ pulseRate: '7' });
-        debugElement = fixture.debugElement.query(By.css('#pulseRate'));
-        debugElement.nativeElement.value = '7';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.pulseRate).toEqual(debugElement.nativeElement.value);
-        fixture.detectChanges();
-        expect(component.checkPulseRate).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check pulseRate Normal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleBeneficiary,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkPulseRate').and.callThrough();
-        component.patientVitalsForm.patchValue({ pulseRate: '97' });
-        debugElement = fixture.debugElement.query(By.css('#pulseRate'));
-        debugElement.nativeElement.value = '97';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.pulseRate).toEqual(debugElement.nativeElement.value);
-        fixture.detectChanges();
-        expect(component.checkPulseRate).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check respiratoryRate Normal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleBeneficiary,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkRespiratoryRate').and.callThrough();
-        component.patientVitalsForm.patchValue({ respiratoryRate: '97' });
-        debugElement = fixture.debugElement.query(By.css('#respiratoryRate'));
-        debugElement.nativeElement.value = '97';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.respiratoryRate).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkRespiratoryRate).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check respiratoryRate Abnormal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleBeneficiary,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkRespiratoryRate').and.callThrough();
-        component.patientVitalsForm.patchValue({ respiratoryRate: '7' });
-        debugElement = fixture.debugElement.query(By.css('#respiratoryRate'));
-        debugElement.nativeElement.value = '7';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.respiratoryRate).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkRespiratoryRate).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check systolicBP_1stReading Abnormal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleBeneficiary,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkSystolic').and.callThrough();
-        component.patientVitalsForm.patchValue({ systolicBP_1stReading: '7' });
-        debugElement = fixture.debugElement.query(
-          By.css('#systolicBP_1stReading'),
-        );
-        debugElement.nativeElement.value = '7';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.systolicBP_1stReading).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkSystolic).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check systolicBP_1stReading normal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleBeneficiary,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkSystolic').and.callThrough();
-        component.patientVitalsForm.patchValue({ systolicBP_1stReading: '97' });
-        debugElement = fixture.debugElement.query(
-          By.css('#systolicBP_1stReading'),
-        );
-        debugElement.nativeElement.value = '97';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.systolicBP_1stReading).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkSystolic).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check diastolicBP_1stReading normal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleBeneficiary,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkDiastolic').and.callThrough();
-        component.patientVitalsForm.patchValue({
-          diastolicBP_1stReading: '97',
-        });
-        debugElement = fixture.debugElement.query(
-          By.css('#diastolicBP_1stReading'),
-        );
-        debugElement.nativeElement.value = '97';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.diastolicBP_1stReading).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkDiastolic).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check diastolicBP_1stReading Abnormal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleBeneficiary,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(true);
-        expect(component.showGlucoseQC).toEqual(false);
-        expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkDiastolic').and.callThrough();
-        component.patientVitalsForm.patchValue({ diastolicBP_1stReading: '7' });
-        debugElement = fixture.debugElement.query(
-          By.css('#diastolicBP_1stReading'),
-        );
-        debugElement.nativeElement.value = '7';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.diastolicBP_1stReading).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkDiastolic).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check bloodGlucose_Fasting Abnormal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleBeneficiary,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD (QC)');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(false);
-        expect(component.showGlucoseQC).toEqual(true);
-        expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkBloodSugarFasting').and.callThrough();
-        component.patientVitalsForm.patchValue({ bloodGlucose_Fasting: '7' });
-        debugElement = fixture.debugElement.query(
-          By.css('#bloodGlucose_Fasting'),
-        );
-        debugElement.nativeElement.value = '7';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.bloodGlucose_Fasting).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkBloodSugarFasting).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check bloodGlucose_Random Abnormal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleBeneficiary,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD (QC)');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(false);
-        expect(component.showGlucoseQC).toEqual(true);
-        expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkBloodSugarRandom').and.callThrough();
-        component.patientVitalsForm.patchValue({ bloodGlucose_Random: '7' });
-        debugElement = fixture.debugElement.query(
-          By.css('#bloodGlucose_Random'),
-        );
-        debugElement.nativeElement.value = '7';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.bloodGlucose_Random).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkBloodSugarRandom).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check bloodGlucose_Random Abnormal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleBeneficiary,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD (QC)');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(false);
-        expect(component.showGlucoseQC).toEqual(true);
-        expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkBloodSugar2HrPostPrandial').and.callThrough();
-        component.patientVitalsForm.patchValue({ bloodGlucose_2hr_PP: '7' });
-        debugElement = fixture.debugElement.query(
-          By.css('#bloodGlucose_2hr_PP'),
-        );
-        debugElement.nativeElement.value = '7';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.bloodGlucose_2hr_PP).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkBloodSugar2HrPostPrandial).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check bloodGlucose_Fasting Normal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleBeneficiary,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD (QC)');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(false);
-        expect(component.showGlucoseQC).toEqual(true);
-        expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkBloodSugarFasting').and.callThrough();
-        component.patientVitalsForm.patchValue({ bloodGlucose_Fasting: '7' });
-        debugElement = fixture.debugElement.query(
-          By.css('#bloodGlucose_Fasting'),
-        );
-        debugElement.nativeElement.value = '7';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.bloodGlucose_Fasting).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkBloodSugarFasting).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check bloodGlucose_Random Normal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleBeneficiary,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD (QC)');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(false);
-        expect(component.showGlucoseQC).toEqual(true);
-        expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkBloodSugarRandom').and.callThrough();
-        component.patientVitalsForm.patchValue({ bloodGlucose_Random: '7' });
-        debugElement = fixture.debugElement.query(
-          By.css('#bloodGlucose_Random'),
-        );
-        debugElement.nativeElement.value = '7';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.bloodGlucose_Random).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkBloodSugarRandom).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('Check bloodGlucose_Random Normal', async(
-    inject(
-      [BeneficiaryDetailsService, ConfirmationService],
-      (beneficiaryDetailsService, confirmationService) => {
-        beneficiaryDetailsService.beneficiaryDetails.next(
-          data.femaleBeneficiary,
-        );
-        spyOn(component, 'getBeneficiaryDetails');
-        component.ngOnInit();
-        component.visitCategory = new String('General OPD (QC)');
-        component.ngOnChanges();
-        expect(component.hideForANCAndQC).toEqual(false);
-        expect(component.showGlucoseQC).toEqual(true);
-        expect(component.benAge).toEqual(data.femaleBeneficiary.ageVal);
-        expect(component.female).toEqual(true);
-        fixture.detectChanges();
-        spyOn(component, 'checkBloodSugar2HrPostPrandial').and.callThrough();
-        component.patientVitalsForm.patchValue({ bloodGlucose_2hr_PP: '7' });
-        debugElement = fixture.debugElement.query(
-          By.css('#bloodGlucose_2hr_PP'),
-        );
-        debugElement.nativeElement.value = '7';
-        const el = debugElement.nativeElement as HTMLElement;
-        el.dispatchEvent(new Event('input'));
-        el.dispatchEvent(new Event('change'));
-        fixture.detectChanges();
-        expect(component.bloodGlucose_2hr_PP).toEqual(
-          debugElement.nativeElement.value,
-        );
-        fixture.detectChanges();
-        expect(component.checkBloodSugar2HrPostPrandial).toHaveBeenCalled();
-        fixture.detectChanges;
-        console.log(component.female);
-        expect(component.female).toEqual(true);
-        //  spyOn(confirmationService, 'alert');
-        // spyOn(component, 'checkWeight').and.callThrough();
-        // fixture.detectChanges();
-        // expect(confirmationService.alert).toHaveBeenCalled();
-      },
-    ),
-  ));
-
-  it('should get check female gender', inject(
-    [BeneficiaryDetailsService],
-    (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.femaleBeneficiary);
-      spyOn(component, 'getBeneficiaryDetails');
-      component.ngOnInit();
-      expect(component.female).toEqual(true);
-    },
-  ));
-
-  it('should check for visitCategory  General OPD (QC) and hideForANCAndQC to false and showGlucoseQC to ture', () => {
-    component.visitCategory = new String('General OPD (QC)');
-    component.ngOnChanges();
-    expect(component.hideForANCAndQC).toEqual(false);
-    expect(component.showGlucoseQC).toEqual(true);
-  });
-
-  it('should check for visitCategory ANC and hideForANCAndQC to false and showGlucoseQC false', () => {
-    component.visitCategory = new String('ANC');
-    component.ngOnChanges();
-    expect(component.hideForANCAndQC).toEqual(false);
-    expect(component.showGlucoseQC).toEqual(false);
-
-    it('should get GeneralVitalsData when mode is view', () => {
-      spyOn(component, 'getGeneralVitalsData');
-      component.mode = new String('view');
-      component.ngOnChanges();
-      expect(component.getGeneralVitalsData).toHaveBeenCalled();
+    component.patientVitalsForm = form;
+    component.visitCategory = opts.visitCategory ?? 'General OPD';
+    component.mode = opts.mode as any;
+    doctor = TestBed.inject(DoctorService) as any;
+    nurse = TestBed.inject(NurseService) as any;
+    idrs = TestBed.inject(IdrsscoreService) as any;
+    hrp = {} as any;
+    testInVitals = TestBed.inject(TestInVitalsService) as any;
+    ncd = {} as any;
+    benService = TestBed.inject(BeneficiaryDetailsService) as any;
+    confirm = TestBed.inject(ConfirmationService) as any;
+    dialog = TestBed.inject(MatDialog) as any;
+    tracking = TestBed.inject(AmritTrackingService) as any;
+  }
+
+
+
+
+
+
+  describe('hip / waist', () => {
+
+
+    [
+      { ben: ADULT_M, waist: 85, score: 0 },
+      { ben: ADULT_M, waist: 95, score: 10 },
+      { ben: ADULT_M, waist: 105, score: 20 },
+      { ben: ADULT_F, waist: 75, score: 0 },
+      { ben: ADULT_F, waist: 85, score: 10 },
+      { ben: ADULT_F, waist: 95, score: 20 },
+    ].forEach((c) => {
+      it(`IDRS waist score ${c.ben.genderName} ${c.waist} -> ${c.score}`, async () => {
+        await setup({ ben: c.ben });
+        fixture.detectChanges();
+        component.checkIDRSForWaist(c.waist);
+        expect(component.IDRSWaistScore).toBe(c.score);
+        expect(idrs.setIDRSScoreWaist).toHaveBeenCalledWith(c.score);
+        expect(idrs.setIDRSScoreFlag).toHaveBeenCalled();
+        idrs.setIDRSScoreFlag.calls.reset();
+        component.IDRSWaistScore = undefined;
+        component.patchIDRSForWaist(c.waist);
+        expect(component.IDRSWaistScore).toBe(c.score);
+        expect(idrs.setIDRSScoreFlag).not.toHaveBeenCalled();
+      });
     });
 
-    it('should get GeneralVitalsData when mode is view and patch height_cm', async(
-      inject([DoctorService], (doctorService) => {
-        localStorage.setItem('visitID', '66');
-        localStorage.setItem('beneficiaryRegID', '7416');
-        localStorage.setItem('visitCategory', 'General OPD');
-        component.visitCategory = 'General OPD';
-        spyOn(doctorService, 'getGenericVitals').and.returnValue(
-          Observable.of(data.generalOPDVitalData.data),
-        );
-        spyOn(component, 'getGeneralVitalsData').and.callThrough();
-        component.mode = new String('view');
-        component.ngOnChanges();
-        expect(component.getGeneralVitalsData).toHaveBeenCalled();
-        expect(doctorService.getGenericVitals).toHaveBeenCalled();
-        fixture.detectChanges();
-        expect(component.patientVitalsForm.value.height_cm).toEqual(
-          data.generalOPDVitalData.data.benAnthropometryDetail.height_cm,
-        );
-      }),
-    ));
+  });
 
-    it('should get GeneralVitalsData when mode is view and patch weight_Kg', async(
-      inject([DoctorService], (doctorService) => {
-        localStorage.setItem('visitID', '66');
-        localStorage.setItem('beneficiaryRegID', '7416');
-        localStorage.setItem('visitCategory', 'General OPD');
-        component.visitCategory = 'General OPD';
-        spyOn(doctorService, 'getGenericVitals').and.returnValue(
-          Observable.of(data.generalOPDVitalData.data),
-        );
-        spyOn(component, 'getGeneralVitalsData').and.callThrough();
-        component.mode = new String('view');
-        component.ngOnChanges();
-        expect(component.getGeneralVitalsData).toHaveBeenCalled();
-        expect(doctorService.getGenericVitals).toHaveBeenCalled();
-        fixture.detectChanges();
-        expect(component.patientVitalsForm.value.weight_Kg).toEqual(
-          data.generalOPDVitalData.data.benAnthropometryDetail.weight_Kg,
-        );
-      }),
-    ));
 
-    it('should get GeneralVitalsData when mode is view and patch bMI', async(
-      inject([DoctorService], (doctorService) => {
-        localStorage.setItem('visitID', '66');
-        localStorage.setItem('beneficiaryRegID', '7416');
-        localStorage.setItem('visitCategory', 'General OPD');
-        component.visitCategory = 'General OPD';
-        spyOn(doctorService, 'getGenericVitals').and.returnValue(
-          Observable.of(data.generalOPDVitalData.data),
-        );
-        spyOn(component, 'getGeneralVitalsData').and.callThrough();
-        component.mode = new String('view');
-        component.ngOnChanges();
-        expect(component.getGeneralVitalsData).toHaveBeenCalled();
-        expect(doctorService.getGenericVitals).toHaveBeenCalled();
-        fixture.detectChanges();
-        expect(component.patientVitalsForm.value.bMI).toEqual(
-          data.generalOPDVitalData.data.benAnthropometryDetail.bMI,
-        );
-      }),
-    ));
 
-    it('should get GeneralVitalsData when mode is view and patch waistCircumference_cm', async(
-      inject([DoctorService], (doctorService) => {
-        localStorage.setItem('visitID', '66');
-        localStorage.setItem('beneficiaryRegID', '7416');
-        localStorage.setItem('visitCategory', 'General OPD');
-        component.visitCategory = 'General OPD';
-        spyOn(doctorService, 'getGenericVitals').and.returnValue(
-          Observable.of(data.generalOPDVitalData.data),
-        );
-        spyOn(component, 'getGeneralVitalsData').and.callThrough();
-        component.mode = new String('view');
-        component.ngOnChanges();
-        expect(component.getGeneralVitalsData).toHaveBeenCalled();
-        expect(doctorService.getGenericVitals).toHaveBeenCalled();
-        fixture.detectChanges();
-        expect(component.patientVitalsForm.value.waistCircumference_cm).toEqual(
-          data.generalOPDVitalData.data.benAnthropometryDetail
-            .waistCircumference_cm,
-        );
-      }),
-    ));
 
-    it('should get GeneralVitalsData when mode is view and patch hipCircumference_cm', async(
-      inject([DoctorService], (doctorService) => {
-        localStorage.setItem('visitID', '66');
-        localStorage.setItem('beneficiaryRegID', '7416');
-        localStorage.setItem('visitCategory', 'General OPD');
-        component.visitCategory = 'General OPD';
-        spyOn(doctorService, 'getGenericVitals').and.returnValue(
-          Observable.of(data.generalOPDVitalData.data),
-        );
-        spyOn(component, 'getGeneralVitalsData').and.callThrough();
-        component.mode = new String('view');
-        component.ngOnChanges();
-        expect(component.getGeneralVitalsData).toHaveBeenCalled();
-        expect(doctorService.getGenericVitals).toHaveBeenCalled();
-        fixture.detectChanges();
-        expect(component.patientVitalsForm.value.hipCircumference_cm).toEqual(
-          data.generalOPDVitalData.data.benAnthropometryDetail
-            .hipCircumference_cm,
-        );
-      }),
-    ));
 
-    it('should get GeneralVitalsData when mode is view and patch waistHipRatio', async(
-      inject([DoctorService], (doctorService) => {
-        localStorage.setItem('visitID', '66');
-        localStorage.setItem('beneficiaryRegID', '7416');
-        localStorage.setItem('visitCategory', 'General OPD');
-        component.visitCategory = 'General OPD';
-        spyOn(doctorService, 'getGenericVitals').and.returnValue(
-          Observable.of(data.generalOPDVitalData.data),
-        );
-        spyOn(component, 'getGeneralVitalsData').and.callThrough();
-        component.mode = new String('view');
-        component.ngOnChanges();
-        expect(component.getGeneralVitalsData).toHaveBeenCalled();
-        expect(doctorService.getGenericVitals).toHaveBeenCalled();
-        fixture.detectChanges();
-        expect(+component.patientVitalsForm.value.waistHipRatio).toEqual(
-          data.generalOPDVitalData.data.benAnthropometryDetail.waistHipRatio,
-        );
-      }),
-    ));
+  describe('IoT dialogs', () => {
+    beforeEach(async () => {
+      await setup();
+      fixture.detectChanges();
+    });
 
-    it('should get GeneralVitalsData when mode is view and patch temperature', async(
-      inject([DoctorService], (doctorService) => {
-        localStorage.setItem('visitID', '66');
-        localStorage.setItem('beneficiaryRegID', '7416');
-        localStorage.setItem('visitCategory', 'General OPD');
-        component.visitCategory = 'General OPD';
-        spyOn(doctorService, 'getGenericVitals').and.returnValue(
-          Observable.of(data.generalOPDVitalData.data),
+    const cases: {
+      fn: keyof GeneralPatientVitalsComponent;
+      api: string;
+      result: any;
+      ctrl: Record<string, any>;
+    }[] = [
+      {
+        fn: 'openIOTWeightModel',
+        api: environment.startWeighturl,
+        result: { result: 60 },
+        ctrl: { weight_Kg: 60 },
+      },
+      {
+        fn: 'openIOTTempModel',
+        api: environment.startTempurl,
+        result: { temperature: 99 },
+        ctrl: { temperature: 99 },
+      },
+      {
+        fn: 'openIOTPulseRateModel',
+        api: environment.startPulseurl,
+        result: { pulseRate: 70 },
+        ctrl: { pulseRate: 70 },
+      },
+      {
+        fn: 'openIOTSPO2Model',
+        api: environment.startPulseurl,
+        result: { spo2: 97 },
+        ctrl: { sPO2: 97 },
+      },
+      {
+        fn: 'openIOTBPModel',
+        api: environment.startBPurl,
+        result: { sys: 120, dia: 80 },
+        ctrl: { systolicBP_1stReading: 120, diastolicBP_1stReading: 80 },
+      },
+      {
+        fn: 'openIOTBGFastingModel',
+        api: environment.startBloodGlucoseurl,
+        result: { result: 90 },
+        ctrl: { bloodGlucose_Fasting: 90 },
+      },
+      {
+        fn: 'openIOTBGRandomModel',
+        api: environment.startBloodGlucoseurl,
+        result: { result: 110 },
+        ctrl: { bloodGlucose_Random: 110 },
+      },
+      {
+        fn: 'openIOTBGPostPrandialModel',
+        api: environment.startBloodGlucoseurl,
+        result: { result: 130 },
+        ctrl: { bloodGlucose_2hr_PP: 130 },
+      },
+      {
+        fn: 'openIOTRBSModel',
+        api: environment.startRBSurl,
+        result: { result: 150 },
+        ctrl: { rbsTestResult: 150 },
+      },
+    ];
+    cases.forEach((c) => {
+      it(`${String(c.fn)} patches ${Object.keys(c.ctrl).join(',')}`, () => {
+        dialog.open.and.returnValue(createDialogRefMock(c.result));
+        (component[c.fn] as any)();
+        expect(dialog.open).toHaveBeenCalledWith(
+          IotcomponentComponent,
+          jasmine.objectContaining({ data: { startAPI: c.api } }),
         );
-        spyOn(component, 'getGeneralVitalsData').and.callThrough();
-        component.mode = new String('view');
-        component.ngOnChanges();
-        expect(component.getGeneralVitalsData).toHaveBeenCalled();
-        expect(doctorService.getGenericVitals).toHaveBeenCalled();
-        fixture.detectChanges();
-        expect(component.patientVitalsForm.value.temperature).toEqual(
-          data.generalOPDVitalData.data.benPhysicalVitalDetail.temperature,
+        Object.entries(c.ctrl).forEach(([k, v]) =>
+          expect(form.controls[k].value).toBe(v),
         );
-      }),
-    ));
+        expect(doctor.setValueToEnableVitalsUpdateButton).toHaveBeenCalledWith(
+          true,
+        );
+      });
+    });
 
-    it('should get GeneralVitalsData when mode is view and pulseRate', async(
-      inject([DoctorService], (doctorService) => {
-        localStorage.setItem('visitID', '66');
-        localStorage.setItem('beneficiaryRegID', '7416');
-        localStorage.setItem('visitCategory', 'General OPD');
-        component.visitCategory = 'General OPD';
-        spyOn(doctorService, 'getGenericVitals').and.returnValue(
-          Observable.of(data.generalOPDVitalData.data),
-        );
-        spyOn(component, 'getGeneralVitalsData').and.callThrough();
-        component.mode = new String('view');
-        component.ngOnChanges();
-        expect(component.getGeneralVitalsData).toHaveBeenCalled();
-        expect(doctorService.getGenericVitals).toHaveBeenCalled();
-        fixture.detectChanges();
-        expect(component.patientVitalsForm.value.pulseRate).toEqual(
-          data.generalOPDVitalData.data.benPhysicalVitalDetail.pulseRate,
-        );
-      }),
-    ));
 
-    it('should get GeneralVitalsData when mode is view and patch systolicBP_1stReading', async(
-      inject([DoctorService], (doctorService) => {
-        localStorage.setItem('visitID', '66');
-        localStorage.setItem('beneficiaryRegID', '7416');
-        localStorage.setItem('visitCategory', 'General OPD');
-        component.visitCategory = 'General OPD';
-        spyOn(doctorService, 'getGenericVitals').and.returnValue(
-          Observable.of(data.generalOPDVitalData.data),
-        );
-        spyOn(component, 'getGeneralVitalsData').and.callThrough();
-        component.mode = new String('view');
-        component.ngOnChanges();
-        expect(component.getGeneralVitalsData).toHaveBeenCalled();
-        expect(doctorService.getGenericVitals).toHaveBeenCalled();
-        fixture.detectChanges();
-        expect(component.patientVitalsForm.value.systolicBP_1stReading).toEqual(
-          data.generalOPDVitalData.data.benPhysicalVitalDetail
-            .systolicBP_1stReading,
-        );
-      }),
-    ));
 
-    it('should get GeneralVitalsData when mode is view and patch diastolicBP_1stReading', async(
-      inject([DoctorService], (doctorService) => {
-        localStorage.setItem('visitID', '66');
-        localStorage.setItem('beneficiaryRegID', '7416');
-        localStorage.setItem('visitCategory', 'General OPD');
-        component.visitCategory = 'General OPD';
-        spyOn(doctorService, 'getGenericVitals').and.returnValue(
-          Observable.of(data.generalOPDVitalData.data),
-        );
-        spyOn(component, 'getGeneralVitalsData').and.callThrough();
-        component.mode = new String('view');
-        component.ngOnChanges();
-        expect(component.getGeneralVitalsData).toHaveBeenCalled();
-        expect(doctorService.getGenericVitals).toHaveBeenCalled();
-        fixture.detectChanges();
-        expect(
-          component.patientVitalsForm.value.diastolicBP_1stReading,
-        ).toEqual(
-          data.generalOPDVitalData.data.benPhysicalVitalDetail
-            .diastolicBP_1stReading,
-        );
-      }),
-    ));
 
-    it('should get GeneralVitalsData when mode is view and patch respiratoryRate', async(
-      inject([DoctorService], (doctorService) => {
-        localStorage.setItem('visitID', '66');
-        localStorage.setItem('beneficiaryRegID', '7416');
-        localStorage.setItem('visitCategory', 'General OPD');
-        component.visitCategory = 'General OPD';
-        spyOn(doctorService, 'getGenericVitals').and.returnValue(
-          Observable.of(data.generalOPDVitalData.data),
-        );
-        spyOn(component, 'getGeneralVitalsData').and.callThrough();
-        component.mode = new String('view');
-        component.ngOnChanges();
-        expect(component.getGeneralVitalsData).toHaveBeenCalled();
-        expect(doctorService.getGenericVitals).toHaveBeenCalled();
-        fixture.detectChanges();
-        expect(component.patientVitalsForm.value.respiratoryRate).toEqual(
-          data.generalOPDVitalData.data.benPhysicalVitalDetail.respiratoryRate,
-        );
-      }),
-    ));
 
-    it('should get GeneralVitalsData when mode is view and patch all fields', async(
-      inject([DoctorService], (doctorService) => {
-        localStorage.setItem('visitID', '66');
-        localStorage.setItem('beneficiaryRegID', '7416');
-        localStorage.setItem('visitCategory', 'General OPD');
-        component.visitCategory = 'General OPD';
-        spyOn(doctorService, 'getGenericVitals').and.returnValue(
-          Observable.of(data.generalOPDVitalData.data),
-        );
-        spyOn(component, 'getGeneralVitalsData').and.callThrough();
-        component.mode = new String('view');
-        component.ngOnChanges();
-        expect(component.getGeneralVitalsData).toHaveBeenCalled();
-        expect(doctorService.getGenericVitals).toHaveBeenCalled();
-        fixture.detectChanges();
-        expect(component.patientVitalsForm.value.height_cm).toEqual(
-          data.generalOPDVitalData.data.benAnthropometryDetail.height_cm,
-        );
-        expect(component.patientVitalsForm.value.weight_Kg).toEqual(
-          data.generalOPDVitalData.data.benAnthropometryDetail.weight_Kg,
-        );
-        expect(component.patientVitalsForm.value.bMI).toEqual(
-          data.generalOPDVitalData.data.benAnthropometryDetail.bMI,
-        );
-        expect(component.patientVitalsForm.value.waistCircumference_cm).toEqual(
-          data.generalOPDVitalData.data.benAnthropometryDetail
-            .waistCircumference_cm,
-        );
-        expect(component.patientVitalsForm.value.hipCircumference_cm).toEqual(
-          data.generalOPDVitalData.data.benAnthropometryDetail
-            .hipCircumference_cm,
-        );
-        expect(+component.patientVitalsForm.value.waistHipRatio).toEqual(
-          data.generalOPDVitalData.data.benAnthropometryDetail.waistHipRatio,
-        );
-        expect(component.patientVitalsForm.value.temperature).toEqual(
-          data.generalOPDVitalData.data.benPhysicalVitalDetail.temperature,
-        );
-        expect(component.patientVitalsForm.value.pulseRate).toEqual(
-          data.generalOPDVitalData.data.benPhysicalVitalDetail.pulseRate,
-        );
-        expect(component.patientVitalsForm.value.systolicBP_1stReading).toEqual(
-          data.generalOPDVitalData.data.benPhysicalVitalDetail
-            .systolicBP_1stReading,
-        );
-        expect(
-          component.patientVitalsForm.value.diastolicBP_1stReading,
-        ).toEqual(
-          data.generalOPDVitalData.data.benPhysicalVitalDetail
-            .diastolicBP_1stReading,
-        );
-        expect(component.patientVitalsForm.value.respiratoryRate).toEqual(
-          data.generalOPDVitalData.data.benPhysicalVitalDetail.respiratoryRate,
-        );
-      }),
-    ));
+
   });
 });

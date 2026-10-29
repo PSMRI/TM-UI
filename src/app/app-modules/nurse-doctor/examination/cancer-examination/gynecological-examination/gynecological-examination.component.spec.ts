@@ -1,5 +1,5 @@
 /*
- * AMRIT � Accessible Medical Records via Integrated Technology
+ * AMRIT – Accessible Medical Records via Integrated Technology
  * Integrated EHR (Electronic Health Records) Solution
  *
  * Copyright (C) "Piramal Swasthya Management and Research Institute"
@@ -19,94 +19,106 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  FormArray,
-} from '@angular/forms';
-import { NO_ERRORS_SCHEMA, DebugElement } from '@angular/core';
-import { MaterialModule } from '../../../../core/material.module';
-
-import { CameraService } from '../../../../core/services/camera.service';
-import { CameraServiceStub } from '../../../../core/mocks/camera-service-stub';
-
-import { CancerUtils } from '../../../shared/utility';
-
-import * as data from '../../../shared/mocks/mock-data';
-import { Observable } from 'rxjs/Rx';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, FormGroup } from '@angular/forms';
+import { of } from 'rxjs';
 
 import { GynecologicalExaminationComponent } from './gynecological-examination.component';
+import { CameraService } from '../../../../core/services/camera.service';
+import {
+  COMMON_TEST_IMPORTS,
+  LANGUAGE_EN,
+  NO_ERRORS_SCHEMA,
+  autoSpy,
+  commonTestProviders,
+} from 'src/testing/test-utils';
 
 describe('GynecologicalExaminationComponent', () => {
   let component: GynecologicalExaminationComponent;
   let fixture: ComponentFixture<GynecologicalExaminationComponent>;
-  let debugElement: any;
-  let fb: any;
+  let camera: any;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, ReactiveFormsModule, MaterialModule],
+  beforeEach(async () => {
+    camera = autoSpy(CameraService);
+
+    await TestBed.configureTestingModule({
+      imports: [...COMMON_TEST_IMPORTS],
       declarations: [GynecologicalExaminationComponent],
+      providers: [
+        ...commonTestProviders(),
+        { provide: CameraService, useValue: camera },
+      ],
       schemas: [NO_ERRORS_SCHEMA],
-      providers: [{ provide: CameraService, useClass: CameraServiceStub }],
-    }).compileComponents();
-  }));
+    })
+      .overrideTemplate(GynecologicalExaminationComponent, '')
+      .compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(GynecologicalExaminationComponent);
     component = fixture.componentInstance;
-    debugElement = fixture.debugElement;
-
-    fb = debugElement.injector.get(FormBuilder);
-    component.gynecologicalExaminationForm = new CancerUtils(
-      fb,
-    ).createGynecologicalExaminationForm();
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should not show RTI/STI suffered (if reports available)', () => {
-    debugElement = fixture.debugElement.query(By.css('#rTIOrSTIDetail'));
-    expect(debugElement).toBeFalsy();
-  });
-
-  it('should not show select file', () => {
-    debugElement = fixture.debugElement.query(By.css('#files'));
-    expect(debugElement).toBeFalsy();
-  });
-
-  it('should show RTI/STI suffered (if reports available) when suffered from any RTI/STI is true', () => {
-    component.gynecologicalExaminationForm.patchValue({
-      sufferedFromRTIOrSTI: true,
+    component.gynecologicalExaminationForm = new FormGroup({
+      sufferedFromRTIOrSTI: new FormControl(null),
+      rTIOrSTIDetail: new FormControl('detail'),
+      observation: new FormControl(null),
+      filePath: new FormControl(null),
+      image: new FormControl(null),
     });
     fixture.detectChanges();
-    debugElement = fixture.debugElement.query(By.css('#rTIOrSTIDetail'));
-    expect(debugElement).toBeTruthy();
   });
 
-  it('should show select file when suffered from any RTI/STI is true', () => {
-    component.gynecologicalExaminationForm.patchValue({
-      sufferedFromRTIOrSTI: true,
-    });
-    fixture.detectChanges();
-    debugElement = fixture.debugElement.query(By.css('#files'));
-    expect(debugElement).toBeTruthy();
+  it('sets the language on init and on ngDoCheck', () => {
+    expect(component.current_language_set).toEqual(LANGUAGE_EN);
+    component.current_language_set = undefined;
+    component.ngDoCheck();
+    expect(component.current_language_set).toEqual(LANGUAGE_EN);
   });
 
-  it('should call annotateImage when image is clicked', () => {
-    spyOn(component, 'annotateImage');
-    debugElement = fixture.debugElement.query(
-      By.css('#annotateGynecologicalImg'),
+  it('checkWithRTIOrSTI clears the RTI/STI detail', () => {
+    component.checkWithRTIOrSTI();
+    expect(
+      component.gynecologicalExaminationForm.value.rTIOrSTIDetail,
+    ).toBeNull();
+  });
+
+  it('exposes form controls through getters', () => {
+    const form = component.gynecologicalExaminationForm;
+    expect(component.sufferedFromRTIOrSTI).toBe(
+      form.get('sufferedFromRTIOrSTI'),
     );
-    debugElement.triggerEventHandler('click', null);
-    expect(component.annotateImage).toHaveBeenCalled();
+    expect(component.observation).toBe(form.get('observation'));
+  });
+
+  it('selectedFiles stores the chosen files as an array', () => {
+    const a = new File(['a'], 'a.pdf');
+    const b = new File(['b'], 'b.pdf');
+    component.selectedFiles({ target: { files: [a, b] } });
+    expect(component.gynecologicalExaminationForm.value.filePath).toEqual([
+      a,
+      b,
+    ]);
+  });
+
+  describe('annotateImage', () => {
+    beforeEach(() => {
+      (component as any).gynaecologicalImage = {
+        nativeElement: { attributes: { src: { nodeValue: 'gyn.png' } } },
+      };
+    });
+
+    it('stores the annotated points with image ID 4', () => {
+      camera.annotate.and.returnValue(of({ markers: [] }));
+      component.annotateImage();
+      expect(camera.annotate).toHaveBeenCalledWith('gyn.png', null, LANGUAGE_EN);
+      expect(component.gynecologicalExaminationForm.value.image).toEqual({
+        markers: [],
+        imageID: 4,
+      });
+      expect(component.gynecologicalExaminationForm.dirty).toBeTrue();
+    });
+
+    it('ignores a cancelled annotation', () => {
+      camera.annotate.and.returnValue(of(undefined));
+      component.annotateImage();
+      expect(component.gynecologicalExaminationForm.value.image).toBeNull();
+    });
   });
 });

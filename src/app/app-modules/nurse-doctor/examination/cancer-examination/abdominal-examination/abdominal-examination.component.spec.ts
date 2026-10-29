@@ -1,5 +1,5 @@
 /*
- * AMRIT � Accessible Medical Records via Integrated Technology
+ * AMRIT – Accessible Medical Records via Integrated Technology
  * Integrated EHR (Electronic Health Records) Solution
  *
  * Copyright (C) "Piramal Swasthya Management and Research Institute"
@@ -19,77 +19,107 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  FormArray,
-} from '@angular/forms';
-import { NO_ERRORS_SCHEMA, DebugElement } from '@angular/core';
-import { MaterialModule } from '../../../../core/material.module';
-
-import { CameraService } from '../../../../core/services/camera.service';
-import { CameraServiceStub } from '../../../../core/mocks/camera-service-stub';
-import { CancerUtils } from '../../../shared/utility';
-
-import * as data from '../../../shared/mocks/mock-data';
-import { Observable } from 'rxjs/Rx';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, FormGroup } from '@angular/forms';
+import { of } from 'rxjs';
 
 import { AbdominalExaminationComponent } from './abdominal-examination.component';
+import { CameraService } from '../../../../core/services/camera.service';
+import {
+  COMMON_TEST_IMPORTS,
+  LANGUAGE_EN,
+  NO_ERRORS_SCHEMA,
+  autoSpy,
+  commonTestProviders,
+} from 'src/testing/test-utils';
 
 describe('AbdominalExaminationComponent', () => {
   let component: AbdominalExaminationComponent;
   let fixture: ComponentFixture<AbdominalExaminationComponent>;
-  let debugElement: any;
-  let fb: any;
+  let camera: any;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, ReactiveFormsModule, MaterialModule],
+  const LYMPH_NODES = [
+    'lymphNode_Inguinal_Left',
+    'lymphNode_Inguinal_Right',
+    'lymphNode_ExternalIliac_Left',
+    'lymphNode_ExternalIliac_Right',
+    'lymphNode_ParaAortic_Left',
+    'lymphNode_ParaAortic_Right',
+  ];
+
+  beforeEach(async () => {
+    camera = autoSpy(CameraService);
+
+    await TestBed.configureTestingModule({
+      imports: [...COMMON_TEST_IMPORTS],
       declarations: [AbdominalExaminationComponent],
+      providers: [
+        ...commonTestProviders(),
+        { provide: CameraService, useValue: camera },
+      ],
       schemas: [NO_ERRORS_SCHEMA],
-      providers: [{ provide: CameraService, useClass: CameraServiceStub }],
-    }).compileComponents();
-  }));
+    })
+      .overrideTemplate(AbdominalExaminationComponent, '')
+      .compileComponents();
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(AbdominalExaminationComponent);
     component = fixture.componentInstance;
-    debugElement = fixture.debugElement;
-
-    fb = debugElement.injector.get(FormBuilder);
-    component.abdominalExaminationForm = new CancerUtils(
-      fb,
-    ).createAbdominalExaminationForm();
+    const controls: Record<string, FormControl> = {
+      lymphNodes_Enlarged: new FormControl(true),
+      observation: new FormControl(null),
+      image: new FormControl(null),
+    };
+    LYMPH_NODES.forEach((n) => (controls[n] = new FormControl(true)));
+    component.abdominalExaminationForm = new FormGroup(controls);
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('sets the language on init and on ngDoCheck', () => {
+    expect(component.current_language_set).toEqual(LANGUAGE_EN);
+    component.current_language_set = undefined;
+    component.ngDoCheck();
+    expect(component.current_language_set).toEqual(LANGUAGE_EN);
   });
 
-  it('should not show lymph nodes', () => {
-    debugElement = fixture.debugElement.query(By.css('#lymphNodesTable'));
-    expect(debugElement).toBeFalsy();
+  it('checkWithLymphNodes clears every lymph node field', () => {
+    component.checkWithLymphNodes();
+    const value = component.abdominalExaminationForm.value;
+    LYMPH_NODES.forEach((n) => expect(value[n]).withContext(n).toBeNull());
+    expect(value.lymphNodes_Enlarged).toBeTrue();
   });
 
-  it('should show lymph nodes when lymph nodes is enlarged', () => {
-    component.abdominalExaminationForm.patchValue({
-      lymphNodes_Enlarged: true,
+  it('exposes form controls through getters', () => {
+    const form = component.abdominalExaminationForm;
+    expect(component.lymphNodes_Enlarged).toBe(form.get('lymphNodes_Enlarged'));
+    expect(component.observation).toBe(form.get('observation'));
+  });
+
+  describe('annotateImage', () => {
+    beforeEach(() => {
+      (component as any).abdominalImage = {
+        nativeElement: { attributes: { src: { nodeValue: 'abdomen.png' } } },
+      };
     });
-    fixture.detectChanges();
-    debugElement = fixture.debugElement.query(By.css('#lymphNodesTable'));
-    expect(debugElement).toBeTruthy;
-  });
 
-  it('should call annotateImage when image is clicked', () => {
-    spyOn(component, 'annotateImage');
-    debugElement = fixture.debugElement.query(By.css('#annotateAbdominalImg'));
-    debugElement.triggerEventHandler('click', null);
-    expect(component.annotateImage).toHaveBeenCalled();
+    it('stores the annotated points with image ID 1', () => {
+      camera.annotate.and.returnValue(of({ markers: [2] }));
+      component.annotateImage();
+      expect(camera.annotate).toHaveBeenCalledWith(
+        'abdomen.png',
+        null,
+        LANGUAGE_EN,
+      );
+      expect(component.abdominalExaminationForm.value.image).toEqual({
+        markers: [2],
+        imageID: 1,
+      });
+      expect(component.abdominalExaminationForm.dirty).toBeTrue();
+    });
+
+    it('ignores a cancelled annotation', () => {
+      camera.annotate.and.returnValue(of(null));
+      component.annotateImage();
+      expect(component.abdominalExaminationForm.dirty).toBeFalse();
+    });
   });
 });

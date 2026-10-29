@@ -1,5 +1,5 @@
 /*
- * AMRIT � Accessible Medical Records via Integrated Technology
+ * AMRIT – Accessible Medical Records via Integrated Technology
  * Integrated EHR (Electronic Health Records) Solution
  *
  * Copyright (C) "Piramal Swasthya Management and Research Institute"
@@ -19,199 +19,144 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-
-import {
-  async,
-  inject,
-  ComponentFixture,
-  TestBed,
-} from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  FormArray,
-} from '@angular/forms';
-import { NO_ERRORS_SCHEMA, DebugElement } from '@angular/core';
-import { MaterialModule } from '../../../../core/material.module';
-
-import { BeneficiaryDetailsService } from '../../../../core/services/beneficiary-details.service';
-import { BeneficiaryDetailsServiceStub } from '../../../../core/mocks/beneficiary-details-service-stub';
-
-import { CancerUtils } from '../../../shared/utility';
-
-import * as data from '../../../shared/mocks/mock-data';
-import { Observable } from 'rxjs/Rx';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
 
 import { SignsAndSymptomsComponent } from './signs-and-symptoms.component';
+import { BeneficiaryDetailsService } from '../../../../core/services/beneficiary-details.service';
+import { CancerUtils } from '../../../shared/utility/cancer-utility';
+import { SessionStorageService } from 'Common-UI/src/registrar/services/session-storage.service';
+import {
+  COMMON_TEST_IMPORTS,
+  LANGUAGE_EN,
+  NO_ERRORS_SCHEMA,
+  commonTestProviders,
+} from 'src/testing/test-utils';
 
 describe('SignsAndSymptomsComponent', () => {
   let component: SignsAndSymptomsComponent;
   let fixture: ComponentFixture<SignsAndSymptomsComponent>;
-  let debugElement: any;
-  let fb: any;
+  let benDetails$: BehaviorSubject<any>;
+  let utils: CancerUtils;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, ReactiveFormsModule, MaterialModule],
+  beforeEach(async () => {
+    benDetails$ = new BehaviorSubject<any>(null);
+
+    await TestBed.configureTestingModule({
+      imports: [...COMMON_TEST_IMPORTS],
       declarations: [SignsAndSymptomsComponent],
-      schemas: [NO_ERRORS_SCHEMA],
       providers: [
+        ...commonTestProviders({
+          session: {
+            serviceLineDetails: JSON.stringify({ vanID: 1, parkingPlaceID: 2 }),
+          },
+        }),
         {
           provide: BeneficiaryDetailsService,
-          useClass: BeneficiaryDetailsServiceStub,
+          useValue: { beneficiaryDetails$: benDetails$.asObservable() },
         },
       ],
-    }).compileComponents();
-  }));
+      schemas: [NO_ERRORS_SCHEMA],
+    })
+      .overrideTemplate(SignsAndSymptomsComponent, '')
+      .compileComponents();
 
-  beforeEach(() => {
+    spyOn(console, 'log');
+    utils = new CancerUtils(
+      TestBed.inject(FormBuilder),
+      TestBed.inject(SessionStorageService),
+    );
     fixture = TestBed.createComponent(SignsAndSymptomsComponent);
     component = fixture.componentInstance;
-    debugElement = fixture.debugElement;
-
-    fb = debugElement.injector.get(FormBuilder);
-    component.signsForm = new CancerUtils(fb).createSignsForm();
+    component.signsForm = utils.createSignsForm();
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('sets the language on init and on ngDoCheck', () => {
+    expect(component.current_language_set).toEqual(LANGUAGE_EN);
+    component.current_language_set = undefined;
+    component.ngDoCheck();
+    expect(component.current_language_set).toEqual(LANGUAGE_EN);
   });
 
-  it('should call getBenificiaryDetails on Initialisation', () => {
-    spyOn(component, 'getBeneficiaryDetails');
-    component.ngOnInit();
-    expect(component.getBeneficiaryDetails).toHaveBeenCalled();
+  describe('beneficiary details', () => {
+    it('defaults every flag to false', () => {
+      expect(component.female).toBeFalse();
+      expect(component.female18).toBeFalse();
+      expect(component.female30).toBeFalse();
+    });
+
+    it('flags adult women by age band', () => {
+      benDetails$.next({ genderName: 'Female', ageVal: 20 });
+      expect(component.female).toBeTrue();
+      expect(component.female18).toBeTrue();
+      expect(component.female30).toBeFalse();
+
+      benDetails$.next({ genderName: 'female', ageVal: 30 });
+      expect(component.female30).toBeTrue();
+    });
+
+    it('treats transgender as female but not for age-based screening', () => {
+      benDetails$.next({ genderName: 'Transgender', ageVal: 40 });
+      expect(component.female).toBeTrue();
+      expect(component.female18).toBeFalse();
+      expect(component.female30).toBeFalse();
+    });
+
+    it('resets the flags for male beneficiaries', () => {
+      benDetails$.next({ genderName: 'Female', ageVal: 40 });
+      benDetails$.next({ genderName: 'Male', ageVal: 40 });
+      expect(component.female).toBeFalse();
+      expect(component.female18).toBeFalse();
+      expect(component.female30).toBeFalse();
+    });
   });
 
-  it('should hide lumpInTheBreast symptom for male beneficiary', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.maleBeneficiary);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('#lumpInTheBreast'));
-      expect(debugElement).toBeFalsy();
-    }),
-  ));
+  it('ngOnDestroy unsubscribes from beneficiary details', () => {
+    const sub = component.beneficiaryDetailsSubs;
+    component.ngOnDestroy();
+    expect(sub.closed).toBeTrue();
+  });
 
-  it('should hide bloodStainedDischargeFromNipple symptom for male beneficiary', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.maleBeneficiary);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#bloodStainedDischargeFromNipple'),
-      );
-      expect(debugElement).toBeFalsy();
-    }),
-  ));
+  describe('getLymphNodes', () => {
+    it('returns the lymph node controls', () => {
+      const nodes = component.getLymphNodes();
+      expect(nodes?.length).toBe(utils.lymphNodesArray.length);
+    });
 
-  it('should hide changeInShapeAndSizeOfBreasts symptom for male beneficiary', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.maleBeneficiary);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#changeInShapeAndSizeOfBreasts'),
-      );
-      expect(debugElement).toBeFalsy();
-    }),
-  ));
+    it('returns null when lymphNodes is not a FormArray', () => {
+      component.signsForm = new FormGroup({});
+      expect(component.getLymphNodes()).toBeNull();
+    });
+  });
 
-  it('should hide vaginalBleedingBetweenPeriods symptom for male beneficiary', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.maleBeneficiary);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#vaginalBleedingBetweenPeriods'),
-      );
-      expect(debugElement).toBeFalsy();
-    }),
-  ));
+  describe('checkLymph', () => {
+    it('resets lymph node rows when nodes are not enlarged', () => {
+      const nodes = component.signsForm.get('lymphNodes') as FormArray;
+      nodes.at(0).setValue({ ...nodes.at(0).value, size_Left: '3cm' });
 
-  it('should hide vaginalBleedingAfterMenopause symptom for male beneficiary', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.maleBeneficiary);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#vaginalBleedingAfterMenopause'),
-      );
-      expect(debugElement).toBeFalsy();
-    }),
-  ));
+      component.checkLymph(false);
 
-  it('should hide foulSmellingVaginalDischarge symptom for male beneficiary', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.maleBeneficiary);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#foulSmellingVaginalDischarge'),
-      );
-      expect(debugElement).toBeFalsy();
-    }),
-  ));
+      expect(nodes.at(0).value.size_Left).toBeNull();
+      expect(component.dataSource.data).toEqual(nodes.controls);
+    });
 
-  it('should show lumpInTheBreast symptom for female beneficiary', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.femaleBeneficiary);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(By.css('#lumpInTheBreast'));
-      expect(debugElement).toBeTruthy();
-    }),
-  ));
+    it('keeps entered rows when nodes are enlarged', () => {
+      const nodes = component.signsForm.get('lymphNodes') as FormArray;
+      nodes.at(0).setValue({ ...nodes.at(0).value, size_Left: '3cm' });
 
-  it('should show bloodStainedDischargeFromNipple symptom for female beneficiary', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.femaleBeneficiary);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#bloodStainedDischargeFromNipple'),
-      );
-      expect(debugElement).toBeTruthy();
-    }),
-  ));
+      component.checkLymph(true);
 
-  it('should show changeInShapeAndSizeOfBreasts symptom for female beneficiary', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.femaleBeneficiary);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#changeInShapeAndSizeOfBreasts'),
-      );
-      expect(debugElement).toBeTruthy();
-    }),
-  ));
+      expect(nodes.at(0).value.size_Left).toBe('3cm');
+      expect(component.dataSource.data.length).toBe(nodes.length);
+    });
+  });
 
-  it('should show vaginalBleedingBetweenPeriods symptom for female beneficiary', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.femaleBeneficiary);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#vaginalBleedingBetweenPeriods'),
-      );
-      expect(debugElement).toBeTruthy();
-    }),
-  ));
-
-  it('should not show vaginalBleedingAfterMenopause symptom for female beneficiary less than 30 years', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.femaleBeneficiary);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#vaginalBleedingAfterMenopause'),
-      );
-      expect(debugElement).toBeFalsy();
-    }),
-  ));
-
-  it('should show foulSmellingVaginalDischarge symptom for female beneficiary', async(
-    inject([BeneficiaryDetailsService], (beneficiaryDetailsService) => {
-      beneficiaryDetailsService.beneficiaryDetails.next(data.femaleBeneficiary);
-      fixture.detectChanges();
-      debugElement = fixture.debugElement.query(
-        By.css('#foulSmellingVaginalDischarge'),
-      );
-      expect(debugElement).toBeTruthy();
-    }),
-  ));
+  it('exposes form values through getters', () => {
+    component.signsForm.patchValue({ lymphNode_Enlarged: true });
+    expect(component.observation).toBe(component.signsForm.get('observation'));
+    expect(component.lymphNode_Enlarged).toBeTrue();
+    expect(component.lymphNodes.length).toBe(utils.lymphNodesArray.length);
+  });
 });

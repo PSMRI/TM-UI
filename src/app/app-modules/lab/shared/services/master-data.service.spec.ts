@@ -1,5 +1,5 @@
 /*
- * AMRIT � Accessible Medical Records via Integrated Technology
+ * AMRIT – Accessible Medical Records via Integrated Technology
  * Integrated EHR (Electronic Health Records) Solution
  *
  * Copyright (C) "Piramal Swasthya Management and Research Institute"
@@ -20,21 +20,40 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-import { TestBed, inject } from '@angular/core/testing';
-
+import { TestBed } from '@angular/core/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
+import { environment } from 'src/environments/environment';
 import { MasterDataService } from './master-data.service';
 
-describe('MasterDataService', () => {
+describe('Lab MasterDataService', () => {
+  let service: MasterDataService;
+  let httpMock: HttpTestingController;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       providers: [MasterDataService],
     });
+    service = TestBed.inject(MasterDataService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
-  it('should be created', inject(
-    [MasterDataService],
-    (service: MasterDataService) => {
-      expect(service).toBeTruthy();
-    },
-  ));
+  afterEach(() => httpMock.verify());
+
+  it('getLabRequirements POSTs ids', () => {
+    let res: any;
+    service.getLabRequirements(1, 2, 3).subscribe((r) => (res = r));
+    const req = httpMock.expectOne(environment.getprescribedTestDataUrl);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({
+      beneficiaryRegID: 1,
+      benVisitID: 2,
+      visitCode: 3,
+    });
+    req.flush({ statusCode: 200 });
+    expect(res.statusCode).toBe(200);
+  });
 });

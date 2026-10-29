@@ -1,5 +1,5 @@
 /*
- * AMRIT � Accessible Medical Records via Integrated Technology
+ * AMRIT – Accessible Medical Records via Integrated Technology
  * Integrated EHR (Electronic Health Records) Solution
  *
  * Copyright (C) "Piramal Swasthya Management and Research Institute"
@@ -19,28 +19,69 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
-
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
+import { HttpServiceService } from 'src/app/app-modules/core/services/http-service.service';
+import {
+  COMMON_TEST_IMPORTS,
+  LANGUAGE_EN,
+  NO_ERRORS_SCHEMA,
+  commonTestProviders,
+  throwingObs,
+} from 'src/testing/test-utils';
 import { PncCaseSheetComponent } from './pnc-case-sheet.component';
 
 describe('PncCaseSheetComponent', () => {
   let component: PncCaseSheetComponent;
-  let fixture: ComponentFixture<PncCaseSheetComponent>;
+  let http: any;
 
-  beforeEach(async(() => {
+  function setup(session: Record<string, any> = {}) {
     TestBed.configureTestingModule({
+      imports: [...COMMON_TEST_IMPORTS],
       declarations: [PncCaseSheetComponent],
-    }).compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(PncCaseSheetComponent);
+      providers: [...commonTestProviders({ session })],
+      schemas: [NO_ERRORS_SCHEMA],
+    });
+    const fixture = TestBed.createComponent(PncCaseSheetComponent);
     component = fixture.componentInstance;
+    http = TestBed.inject(HttpServiceService);
+    http.getLanguage = jasmine.createSpy('getLanguage');
+    return fixture;
+  }
+
+  beforeEach(() => spyOn(console, 'log'));
+
+  it('ngOnChanges maps PNC care detail', () => {
+    const fixture = setup();
+    component.caseSheetData = {
+      nurseData: { pnc: { PNCCareDetail: { d: 1 } } },
+    };
+    component.ngOnChanges();
+    expect(component.pNCCaseSheetData).toEqual({ d: 1 });
     fixture.detectChanges();
+    expect(fixture.nativeElement).toBeTruthy();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('ngOnChanges ignores data without PNC', () => {
+    setup();
+    component.caseSheetData = { nurseData: {} };
+    component.ngOnChanges();
+    component.caseSheetData = undefined;
+    component.ngOnChanges();
+    expect(component.pNCCaseSheetData).toBeUndefined();
+  });
+
+  describe('language', () => {
+    beforeEach(() => setup({ currentLanguageSet: { fromSession: true } }));
+
+    it('ngOnInit assigns the language set from the service', () => {
+      component.ngOnInit();
+      expect(component.current_language_set).toEqual(LANGUAGE_EN);
+    });
+
+
+
+
+
   });
 });
