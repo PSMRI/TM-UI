@@ -46,6 +46,7 @@ import { CameraDialogComponent } from './components/camera-dialog/camera-dialog.
 import { WebcamModule } from 'ngx-webcam';
 import { CanDeactivateGuardService } from './services/can-deactivate-guard.service';
 import { BeneficiaryDetailsComponent } from './components/beneficiary-details/beneficiary-details.component';
+import { ConsentButtonComponent } from 'Common-UI/src/consent/public-api';
 import { ViewRadiologyUploadedFilesComponent } from '../lab/view-radiology-uploaded-files/view-radiology-uploaded-files.component';
 import { PreviousDetailsComponent } from './components/previous-details/previous-details.component';
 import { MatTableModule } from '@angular/material/table';
@@ -91,6 +92,7 @@ import { SharedModule } from './components/shared/shared.module';
     MatTableModule,
     SharedModule,
     RouterModule,
+    ConsentButtonComponent,
   ],
   declarations: [
     CommonDialogComponent,

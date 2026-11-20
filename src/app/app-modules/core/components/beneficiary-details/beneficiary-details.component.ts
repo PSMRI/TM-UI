@@ -36,6 +36,8 @@ import { SessionStorageService } from 'Common-UI/src/registrar/services/session-
 })
 export class BeneficiaryDetailsComponent implements OnInit, DoCheck, OnDestroy {
   beneficiary: any;
+  /** For the Consent button (AMM-2522). */
+  consentRegId: any = null;
   today: any;
   beneficiaryDetailsSubscription: any;
   current_language_set: any;
@@ -57,6 +59,7 @@ export class BeneficiaryDetailsComponent implements OnInit, DoCheck, OnDestroy {
     this.assignSelectedLanguage();
     this.today = new Date();
     this.route.params.subscribe((param) => {
+      this.consentRegId = param['beneficiaryRegID'];
       this.beneficiaryDetailsService.getBeneficiaryDetails(
         param['beneficiaryRegID'],
         benFlowID,
