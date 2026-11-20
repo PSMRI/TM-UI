@@ -58,6 +58,10 @@ export const environment = {
     siteId: 3, // The new Site ID from Matomo
     trackerUrl: 'https://matomo.piramalswasthya.org/',
   },
+  consentManagement: {
+    enabled: String('<%= CONSENT_ENABLED %>') === 'true',
+    apiBase: '<%= CONSENT_API_BASE %>',
+  },
   app: `MMU`,
   RBSTest: `RBS Test`,
   visualAcuityTest: `Visual Acuity Test`,
@@ -476,6 +480,7 @@ export const environment = {
  getPreviousAnthropometryUrl: `${TM_API}anthropometryVitals/getBenHeightDetailsFrmNurse`,
    /* Customization APIs*/
   getAllRegistrationData: `${COMMON_API}customization/fetchAllData`,
+  getConsentConfigUrl: `${COMMON_API}customization/consent/fetchConsentConfig`,
 
   /*Family Tagging Urls */
   relationShipUrl: `${TM_API}registrar/registrarMasterData`,

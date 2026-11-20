@@ -55,6 +55,8 @@ const defaultEnvValues = {
   SITE_KEY:'',
   CAPTCHA_CHALLENGE_URL:'',
   ENABLE_CAPTCHA: false,
+  CONSENT_ENABLED: 'false',
+  CONSENT_API_BASE: '',
 };
 
 // Generate output data

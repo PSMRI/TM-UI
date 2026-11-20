@@ -10,6 +10,10 @@
       [src]="beneficiary?.benImage"
       alt="Patient"
     />
+    <app-consent-button
+      [beneficiaryRegID]="consentRegId"
+      [patientPhone]="beneficiary?.preferredPhoneNum || beneficiary?.benPhoneMaps?.[0]?.phoneNo"
+    ></app-consent-button>
     <table class="table profileData" aria-describedby="benDetails">
       <tr style="font-size: 14px; color: #000000">
         <th id="beneficiaryName">
