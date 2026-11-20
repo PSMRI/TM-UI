@@ -490,7 +490,6 @@ export const environment = {
   getPreviousAnthropometryUrl: `${TM_API}anthropometryVitals/getBenHeightDetailsFrmNurse`,
   /* Customization APIs*/
   getAllRegistrationData: `${COMMON_API}customization/fetchAllData`,
-  getConsentConfigUrl: `${COMMON_API}customization/consent/fetchConsentConfig`,
 
   /*Family Tagging Urls */
   relationShipUrl: `${TM_API}registrar/registrarMasterData`,
