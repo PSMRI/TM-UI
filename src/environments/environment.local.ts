@@ -509,6 +509,7 @@ export const environment = {
 
   // Customization APIs
   getAllRegistrationData: `${COMMON_API}customization/fetchAllData`,
+  getConsentConfigUrl: `${COMMON_API}customization/consent/fetchConsentConfig`,
   getBenIdForhealthID: `${FHIR_API}healthID/getBenIdForhealthID`,
 
   /* Abha V3 APIs */
