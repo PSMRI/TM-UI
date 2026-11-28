@@ -1527,15 +1527,6 @@ export class WorkareaComponent
       this.patientMedicalForm.controls['patientANCForm']
     );
     const required = [];
-    if (environment.isTMOffline) {
-      if (
-        this.enableLungAssessment === true &&
-        this.beneficiaryAge >= 18 &&
-        this.nurseService.isAssessmentDone === false
-      ) {
-        required.push('Please perform Lung Assessment');
-      }
-    }
 
     console.log('pncForm', pncForm);
     if (this.visitCategory === 'PNC') {
@@ -2266,15 +2257,6 @@ export class WorkareaComponent
         'physicalActivityHistory'
       ]
     );
-    if (environment.isTMOffline) {
-      if (
-        this.enableLungAssessment === true &&
-        this.beneficiaryAge >= 18 &&
-        this.nurseService.isAssessmentDone === false
-      ) {
-        required.push('Please perform Lung Assessment');
-      }
-    }
     /* If diabetes suspected then rbs test has to perform under vitals */
     if (
       this.attendant === 'nurse' &&
